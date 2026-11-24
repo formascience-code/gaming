@@ -73,8 +73,12 @@ export function MembraneProteins({ id }: { id: string }) {
       <text transform={`rotate(${31 - angle})`} textAnchor="middle" y="1.1" fontSize="3.6" fontWeight="700" fill="#202b31">{label}</text>
     </g>)}
     {transporter && <g transform="translate(-7 14) rotate(18)">
-      <g transform="rotate(90) scale(.27 .23)"><Protein color="#8fa589"/></g>
-      <path d="M9 0H-9m3-2-3 2 3 2" stroke="#392d49" strokeWidth=".9" fill="none"/>
+      <g fill="#a6b89c" stroke="#52644d" strokeWidth=".56">
+        <ellipse cx="0" cy="-3.15" rx="4.85" ry="2.55"/>
+        <ellipse cx="0" cy="3.15" rx="4.85" ry="2.55"/>
+      </g>
+      <path d="M8.5 0H-8.5m2.5-1.7L-8.5 0l2.5 1.7" stroke="#392d49" strokeWidth=".75"
+        strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </g>}
     {synthase && <g transform="translate(18 7) rotate(16)">
       <g transform="rotate(90) scale(.17)"><Protein color="#a58cb1"/></g>
