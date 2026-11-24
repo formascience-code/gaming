@@ -115,10 +115,10 @@ function drawing(id:string):ReactNode {
     case 'enhancer':return <>
       <path d="M36 105H115C159 105 128 68 150 45C174 14 236 15 260 43C284 70 254 105 300 105H382"
         fill="none" stroke={teal} strokeWidth="4" strokeLinecap="round"/>
-      {tag(154,51,80,'Enhancer',gold)}{tag(301,105,87,'Promoteur')}
-      <ellipse cx="220" cy="67" rx="36" ry="15" fill="#bba9cf" stroke="#624776" strokeWidth="1.6"/>
-      {text(220,72,'Activateur')}
-      <path d="M255 74Q280 75 296 92" fill="none" stroke={dark} strokeWidth="1.5" strokeDasharray="3 4"/>
+      {tag(204,26,80,'Enhancer',gold)}{tag(301,105,87,'Promoteur')}
+      <ellipse cx="204" cy="54" rx="36" ry="15" fill="#bba9cf" stroke="#624776" strokeWidth="1.6"/>
+      {text(204,59,'Activateur')}
+      <path d="M239 59Q275 64 296 92" fill="none" stroke={dark} strokeWidth="1.5" strokeDasharray="3 4"/>
       {arrow(309,380,127)}{text(110,131,'ADN replié')}
     </>;
     case 'pic':return <>
