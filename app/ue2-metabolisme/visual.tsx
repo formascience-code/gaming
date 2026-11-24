@@ -1,5 +1,6 @@
 type Reaction = {
   from: string;
+  carbons?: readonly [number, number];
   to: string;
   enzyme: string;
   action: readonly string[];
@@ -29,7 +30,7 @@ const reactions: Record<string, Reaction> = {
     action: ['Réduit les deux pyruvates', 'sans produire d’ATP'],
   },
   'pdh-bilan': {
-    from: 'Pyruvate (3 C)', to: 'Acétyl-CoA (groupement acétyle à 2 C)', enzyme: 'Complexe PDH',
+    from: 'Pyruvate', to: 'Acétyl-CoA · groupement acétyle', carbons: [3, 2], enzyme: 'Complexe PDH',
     input: 'CoA-SH + NAD⁺', output: 'CO₂ + NADH + H⁺',
     action: ['Décarboxyle et oxyde le pyruvate', 'puis transfère l’acétyle au CoA'],
   },
@@ -39,7 +40,7 @@ const reactions: Record<string, Reaction> = {
     action: ['Condense le groupement acétyle', 'avec le composé à identifier'],
   },
   'krebs-regulation': {
-    from: 'Isocitrate (6 C)', to: 'α-cétoglutarate (5 C)', enzyme: 'Isocitrate déshydrogénase',
+    from: 'Isocitrate', to: 'α-cétoglutarate', carbons: [6, 5], enzyme: 'Isocitrate déshydrogénase',
     input: 'NAD⁺', output: 'CO₂ + NADH + H⁺',
     action: ['Oxyde et décarboxyle', 'l’isocitrate'],
   },
@@ -132,17 +133,18 @@ function moleculeWidth(text: string, fontSize: number) {
   return Math.max(76, text.length * fontSize * .59 + 30);
 }
 
-function Molecule({ x, y, text, accent = 'substrate', small = false }: {
-  x: number; y: number; text: string; accent?: 'substrate' | 'product' | 'cofactor'; small?: boolean;
+function Molecule({ x, y, text, accent = 'substrate', small = false, carbons }: {
+  x: number; y: number; text: string; accent?: 'substrate' | 'product' | 'cofactor'; small?: boolean; carbons?: number;
 }) {
   const [fill, line] = accent === 'product' ? ['#f1f4ea', '#849476'] :
     accent === 'cofactor' ? ['#fff2d9', '#ae8b50'] : ['#fffbf7', '#9b80a1'];
   const fontSize = small ? 20 : 24;
-  const width = moleculeWidth(text, fontSize);
-  const height = small ? 42 : 56;
+  const width = Math.max(moleculeWidth(text, fontSize), carbons ? carbons * 26 + 24 : 0);
+  const height = carbons ? 86 : small ? 42 : 56;
   return <g stroke="none">
     <rect x={x - width / 2} y={y - height / 2} width={width} height={height} rx={height / 2} fill={fill} stroke={line} strokeWidth="2"/>
-    <text x={x} y={y} fontSize={fontSize} dominantBaseline="central" fontWeight="500">{text}</text>
+    <text x={x} y={carbons ? y - 17 : y} fontSize={fontSize} dominantBaseline="central" fontWeight="500">{text}</text>
+    {carbons && <CarbonChain x={x} y={y + 17} count={carbons} color={accent === 'product' ? '#596c55' : '#755582'}/>}
   </g>;
 }
 
@@ -157,9 +159,9 @@ function Nucleotide({ x, y, atp }: { x: number; y: number; atp: boolean }) {
 function ReactionDiagram({ reaction }: { reaction: Reaction }) {
   const phosphorylation = reaction.input === "ATP" && reaction.output === "ADP";
   return <>
-    <Molecule x={465} y={217} text={reaction.from}/>
+    <Molecule x={465} y={reaction.carbons ? 201 : 217} text={reaction.from} carbons={reaction.carbons?.[0]}/>
     <path d="M465 259v207m-12-15 12 15 12-15" stroke="#634675" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    <Molecule x={465} y={512} text={reaction.to} accent="product"/>
+    <Molecule x={465} y={reaction.carbons ? 527 : 512} text={reaction.to} carbons={reaction.carbons?.[1]} accent="product"/>
     {phosphorylation && <>
       <Nucleotide x={309} y={291} atp/>
       <path d="M375 291C425 291 465 323 465 365S425 439 375 439m12-8-12 8 12 8"
