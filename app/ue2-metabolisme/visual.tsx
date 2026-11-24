@@ -227,13 +227,95 @@ const membraneReactions: Record<string, [string, string]> = {
   'chaine-oxygene': ['O₂ + 4 H⁺ + 4 e⁻', '2 H₂O'],
 };
 
+const chainOverviewIds = ['chaine-lieu', 'chaine-atp', 'chaine-oxygene', 'chaine-navette'];
+
+export function hasOverview(id: string) {
+  return chainOverviewIds.includes(id) || id === 'chaine-bilan' || id.startsWith('bilan-');
+}
+
+function DiagramArrows() {
+  return <defs>
+    <marker id="met-electron" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5 0 10Z" fill="#795822"/></marker>
+    <marker id="met-proton" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5 0 10Z" fill="#366e79"/></marker>
+  </defs>;
+}
+
+function RespiratoryOverview() {
+  return <g textAnchor="middle" fontWeight="500" fill="#2b3742" fontSize="20">
+    <DiagramArrows/>
+    <path d="M0 182H840Q968 182 968 310Q968 454 840 454H0" fill="none" stroke="#c86f5d" strokeWidth="14"/>
+    <path d="M0 197H840Q952 197 952 310Q952 439 840 439H0" fill="#f3e2d6" stroke="#e7a28f" strokeWidth="8"/>
+    <text x="475" y="239">Espace intracristal · en continuité avec l’espace intermembranaire</text>
+    <path d="M0 429H914" stroke="#f5bfad" strokeWidth="32"/>
+    {Array.from({ length: 51 }, (_, i) => <g key={i} fill="#a85d50">
+      <circle cx={i * 18} cy="417" r="4"/><circle cx={i * 18} cy="441" r="4"/>
+    </g>)}
+    {[[132, 'I', '#b9c6ac'], [272, 'II', '#dfc17e'], [515, 'III', '#d0bbdc'], [706, 'IV', '#e6a79a']].map(([x, label, color]) => <g key={label} transform={`translate(${x} 429)`}>
+      <rect x="-36" y="-45" width="72" height="90" rx="26" fill={color} stroke="#594768" strokeWidth="2"/>
+      <text y="7" fontWeight="700">{label}</text>
+    </g>)}
+    <g fill="none" stroke="#795822" strokeWidth="3.5" markerEnd="url(#met-electron)">
+      <path d="M163 455Q260 499 348 449"/><path d="M308 433H344"/><path d="M399 429H471"/>
+      <path d="M549 400Q572 367 608 365"/><path d="M647 365Q671 369 683 388"/>
+    </g>
+    <text x="372" y="435" fontWeight="700" fill="#795822">Q</text>
+    <text x="628" y="356" fontSize="17">Cyt. c</text>
+    <g fill="none" stroke="#366e79" strokeWidth="4" markerEnd="url(#met-proton)">
+      {[132, 515, 706].map(x => <path key={x} d={`M${x - 18} 463V309`}/>)}
+      <path d="M875 306V510"/>
+    </g>
+    {[114, 497, 688, 875].map(x => <text key={x} x={x} y="291" fill="#366e79" fontWeight="700">H⁺</text>)}
+    <path d="M875 443V477" stroke="#52644d" strokeWidth="8"/>
+    <rect x="855" y="402" width="40" height="54" rx="14" fill="#a6ab99" stroke="#52644d" strokeWidth="2"/>
+    <ellipse cx="875" cy="493" rx="36" ry="23" fill="#a6ab99" stroke="#52644d" strokeWidth="2"/>
+    <path d="M875 406V509" stroke="#366e79" strokeWidth="3.5" markerEnd="url(#met-proton)"/>
+    <text x="132" y="549" fontSize="18">NADH + H⁺</text>
+    <text x="272" y="549" fontSize="18">Succinate</text>
+    <text x="695" y="549" fontSize="18">O₂ → H₂O</text>
+    <text x="875" y="546" fontSize="17">ATP synthase</text>
+    <text x="875" y="578" fontSize="18" fontWeight="600">ADP + Pᵢ → ATP</text>
+    <text x="475" y="602" fontWeight="600">Matrice mitochondriale</text>
+    <text x="273" y="654" fill="#795822">→ Transfert d’électrons</text>
+    <text x="701" y="654" fill="#366e79">→ Déplacement des H⁺</text>
+  </g>;
+}
+
+function EnergyOverview({ id }: { id: string }) {
+  return <g textAnchor="middle" fontSize="22" fill="#2b3742" fontWeight="600">
+    <DiagramArrows/>
+    <path d="M255 310C255 193 426 165 588 180S924 200 934 342 866 522 664 505 255 513 255 310Z"
+      fill="#f5dbcd" stroke="#c77968" strokeWidth="5"/>
+    <path d="M289 310C300 228 464 216 555 224Q632 228 647 264T696 262Q721 218 746 260T792 271Q857 208 898 318C915 426 850 474 669 455S287 481 289 310Z"
+      fill="#fff0e5" stroke="#c77968" strokeWidth="5"/>
+    <text x="583" y="216" fontSize="17">Mitochondrie</text>
+    <text x="122" y="273" fontSize="17">Cytosol</text>
+    <g fill="none" stroke="#795822" strokeWidth="3" markerEnd="url(#met-electron)">
+      <path d="M130 302Q149 157 499 150Q744 147 804 319" strokeDasharray="7 6"/>
+      <path d="M206 351H270"/><path d="M433 351H478"/><path d="M659 351H733"/>
+      <path d="M126 379V465"/><path d="M565 382V465"/><path d="M820 380V465"/>
+    </g>
+    <text x="693" y="328" fontSize="14">NADH, FADH₂</text>
+    <text x="510" y="135" fontSize="17">Électrons du NADH cytosolique · navettes</text>
+    <Molecule x={125} y={351} text="Glycolyse" small/>
+    <Molecule x={352} y={351} text="Complexe PDH" small/>
+    <Molecule x={565} y={351} text="Cycle de Krebs" small accent="product"/>
+    <Molecule x={820} y={351} text="Chaîne respiratoire" small/>
+    <Molecule x={126} y={491} text="ATP net" small accent="cofactor"/>
+    <Molecule x={565} y={491} text="GTP" small accent="cofactor"/>
+    <Molecule x={820} y={491} text="ATP" small accent="cofactor"/>
+    <text x="500" y="606" fontSize="20">{id === 'bilan-substrat' ? 'ATP et GTP formés directement lors des réactions' :
+      id === 'bilan-coenzymes' ? 'Suivre les coenzymes réduits de la glycolyse, du complexe PDH et de Krebs' :
+      'Le rendement par glucose dépend de la navette utilisée'}</text>
+  </g>;
+}
+
 export function MetabolismVisual({ id }: { id: string }) {
+  if (hasOverview(id)) return chainOverviewIds.includes(id) ? <RespiratoryOverview/> : <EnergyOverview id={id}/>;
   if (id === 'gly-lieu' || id === 'gly-bilan') return <GlycolysisOverview showEnergy={id === 'gly-bilan'}/>;
   const reaction = reactions[id];
   const caption = captions[id];
   const membraneReaction = membraneReactions[id];
   const cycle = id === 'krebs-bilan';
-  const balance = !reaction && !caption && !cycle;
   return <g textAnchor="middle" fill="#2b3742" fontWeight="600" stroke="#fff6ec" strokeWidth="6"
     strokeLinejoin="round" paintOrder="stroke" pointerEvents="none" aria-hidden="true">
     {reaction && <ReactionDiagram reaction={reaction}/>}
@@ -246,13 +328,6 @@ export function MetabolismVisual({ id }: { id: string }) {
     {caption && <>
       <text x="500" y={membraneReaction ? 599 : 547} fontSize="26">{caption[0]}</text>
       <text x="500" y={membraneReaction ? 631 : 583} fontSize="19">{caption[1]}</text>
-    </>}
-    {balance && <>
-      <text x="500" y="478" fontSize="25">Du glucose à l’ATP</text>
-      <text x="500" y="525" fontSize="21">Glycolyse → Complexe PDH → Cycle de Krebs → Chaîne respiratoire</text>
-      <text x="500" y="566" fontSize="19">{id === 'bilan-substrat' ? 'Suivre les ATP et GTP formés directement' :
-        id === 'bilan-coenzymes' ? 'Additionner les coenzymes réduits des trois premières étapes' :
-        'Comparer les contributions des navettes du NADH cytosolique'}</text>
     </>}
   </g>;
 }
