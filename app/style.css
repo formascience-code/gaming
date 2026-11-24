@@ -30,9 +30,9 @@ button:focus-visible,.map:focus-visible{outline:2px solid #80b5b2;outline-offset
 .specimen p{margin:8px 0 0}
 .icon-button{display:grid;place-items:center;width:29px;height:29px;border:1px solid #d9e1d9;background:#f8f8f0;border-radius:7px}
 .specimen .icon-button{position:absolute;right:11px;top:10px}
-.stage{border-radius:16px;position:relative;min-height:580px;height:calc(100dvh - 106px);overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 35% 24%,#dbe0d3,#c5ccba 62%,#b3bba7);color:#2b3742;display:grid}
+.stage{border-radius:16px;position:relative;min-height:580px;height:calc(100dvh - 106px);overflow:hidden;isolation:isolate;background:#fff;color:#2b3742;display:grid}
 .stage-heading{position:absolute;top:23px;left:25px;z-index:1;pointer-events:none}
-.stage-heading span{font-size:.66rem;letter-spacing:.18em;color:#394737;font-weight:600}
+.stage-heading span{font-size:.66rem;letter-spacing:.18em;color:#2b3742;font-weight:600}
 .stage-heading h2{margin:2px 0 0;font-size:1.36rem;letter-spacing:-.035em;font-weight:600}
 .scene-tools{position:absolute;right:20px;top:23px;z-index:2;display:flex;gap:7px}
 .scene-control{display:grid;place-items:center;width:37px;height:37px;border:1px solid #a1c4bb75;border-radius:8px;background:#285661;color:#f5f3df}
