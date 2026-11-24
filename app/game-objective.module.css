@@ -1,102 +1,153 @@
 .dialog {
+  --mission: #3d2248;
+  --gold: #e2bd79;
   box-sizing: border-box;
-  width: min(500px, calc(100% - 32px));
-  max-height: calc(100dvh - 32px);
-  padding: clamp(20px, 5vw, 36px);
+  width: min(480px, calc(100% - 28px));
+  max-height: calc(100dvh - 28px);
+  padding: clamp(20px, 5vw, 32px);
   overflow: auto;
-  color: #f4f6f1;
-  background: radial-gradient(ellipse at top left, #294855, transparent 72%), #15252e;
-  border: 1px solid #65818a;
-  border-top: 3px solid #b6d7a1;
-  border-radius: 16px;
-  box-shadow: 0 24px 80px #0c171dd9;
+  color: var(--ink);
+  background: #faf9f2;
+  border: 1px solid #d9e3d9;
+  border-top: 4px solid var(--mission);
+  border-radius: 14px;
+  box-shadow: 0 18px 56px #273b3c48;
 }
 
 .dialog::backdrop {
-  background: #101b25b8;
-  backdrop-filter: blur(3px);
+  background: #17384285;
+  backdrop-filter: blur(2px);
+}
+
+.dialog h2 {
+  margin: 0 42px 6px 0;
+  color: var(--mission);
+  font-size: clamp(1.65rem, 5vw, 2.15rem);
+  line-height: 1.15;
+  letter-spacing: -.035em;
 }
 
 .close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
+  top: 10px;
+  right: 10px;
+  width: 42px;
+  height: 42px;
   border: 1px solid transparent;
   border-radius: 8px;
   background: transparent;
-  color: #e6ece8;
+  color: var(--mission);
   font-size: 25px;
   cursor: pointer;
 }
 
 .close:hover {
-  border-color: #65818a;
-  background: #ffffff12;
+  background: #efe9f0;
 }
 
-.header h2 {
-  margin: 0 44px 8px 0;
-  font-size: clamp(1.75rem, 6vw, 2.55rem);
-  line-height: 1.15;
-  letter-spacing: -.045em;
-}
-
-.header p,
+.intro,
 .rule {
-  color: #d4e0dd;
-  font-size: .9rem;
-  line-height: 1.65;
+  font-size: .88rem;
+  line-height: 1.55;
 }
 
-.header p {
-  margin: 0 0 20px;
+.intro {
+  margin: 0 0 17px;
 }
 
-.stats {
+.board {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #d9ccd9;
+  border-radius: 11px;
+  background: #f2edf3;
 }
 
-.stat {
+.route {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.route::before {
+  content: '';
+  position: absolute;
+  inset-inline: 15px;
+  top: 50%;
+  border-top: 2px dashed #a693ab;
+}
+
+.route span {
+  position: relative;
   display: grid;
-  align-content: center;
-  gap: 3px;
-  padding: 12px;
-  min-width: 0;
-  border: 1px solid #516e75;
-  border-radius: 9px;
-  background: #102029;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #aa97af;
+  border-radius: 50%;
+  background: #faf9f2;
+  color: var(--mission);
+  font-weight: 700;
+  font-size: .83rem;
 }
 
-.stat strong {
+.route span:first-child {
+  background: var(--mission);
+  border-color: var(--mission);
+  color: #fff8f4;
+}
+
+.route span:last-child {
+  background: var(--gold);
+  border-color: #bb9255;
+}
+
+.reward {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font: 700 1.55rem / 1.1 ui-monospace, monospace;
-  color: #ebf2e8;
+  gap: 10px;
+  padding: 7px 10px;
+  border: 1px solid #d6ad59;
+  border-radius: 8px;
+  background: #fff0d2;
+  color: #772c23;
 }
 
-.stat svg {
-  color: #ff8478;
+.token {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 37px;
+  height: 37px;
+  border: 1px solid #e2bd79;
+  border-radius: 50%;
+  background: #fff8e8;
+  color: #9e3326;
+}
+
+.token svg {
   stroke-width: 2.3;
 }
 
-.stat span {
-  font-size: .75rem;
-  color: #c6d5d2;
+.reward strong,
+.reward small {
+  display: block;
+  line-height: 1.3;
+}
+
+.reward strong {
+  font-size: .88rem;
+}
+
+.reward small {
+  color: #665139;
+  font-size: .72rem;
 }
 
 .rule {
-  margin: 18px 0;
-}
-
-.rule strong {
-  color: #ffaaa0;
+  margin: 14px 0;
 }
 
 .play {
@@ -104,23 +155,28 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  min-height: 48px;
-  padding: 10px 16px;
+  min-height: 46px;
+  padding: 9px 14px;
   border: 0;
   border-radius: 8px;
-  background: #c2dfad;
-  color: #14271f;
+  background: var(--mission);
+  color: #fff8f4;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
 }
 
+.play span {
+  color: var(--gold);
+  font-size: 1.25rem;
+}
+
 .play:hover {
-  background: #d5eac7;
+  background: #56345f;
 }
 
 .play:focus-visible,
 .close:focus-visible {
-  outline: 2px solid #edf7e7;
+  outline: 2px solid var(--mission);
   outline-offset: 3px;
 }
