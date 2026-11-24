@@ -185,3 +185,7 @@ dialog dd{margin:2px 0 0;color:var(--soft)}
 .mission .primary:hover{background:#f0cf92}
 .mission-track li.active .mission-badge{background:#e2bd79;border-color:#e2bd79;color:#3d2248}
 .stage{box-shadow:inset 0 0 0 1px #b7c4ce}
+
+.games-back{color:#3d2248;text-decoration:none;white-space:nowrap}
+.games-back:focus-visible{outline:2px solid #8b6027;outline-offset:2px}
+@media(max-width:360px){.top-tools{flex-wrap:wrap}}
