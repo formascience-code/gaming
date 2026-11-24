@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { challengeLocation, missionLocations } from './mission-location';
 import { GameHeader } from './game-header';
+import { GameObjective } from './game-objective';
 import { recordAttempt } from './game-progress';
 import { gameTitle } from './game-info';
 import { ChallengeVisual, challengeTitle } from './challenge-visual';
@@ -300,6 +301,7 @@ export default function Page() {
     : guidance[index];
 
   return <main className="shell">
+    <GameObjective/>
     <GameHeader title={gameTitle}>
       <a className="control games-back" href="/">← Accueil</a>
 <button className="control restart-button" type="button" disabled={!ready}

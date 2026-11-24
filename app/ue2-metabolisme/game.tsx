@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { CellArt, Marker, structures, type Point } from '../atlas';
 import { GameHeader } from '../game-header';
+import { GameObjective } from '../game-objective';
 import { Quiz, Results, Stethoscope, type Progress, type Question } from '../quiz';
 import { metabolismMissions, metabolismQuestions, metabolismTitle } from './questions';
 import { MembraneProteins, MetabolismVisual, hasOverview } from './visual';
@@ -125,6 +126,7 @@ export default function MetabolismGame() {
   }
 
   return <main className="shell">
+    <GameObjective/>
     <GameHeader title={metabolismTitle}>
       <a className="control games-back" href="/">← Accueil</a>
       <button type="button" className="control restart-button" disabled={!ready || credits === 0 && attempts.current === 0}
