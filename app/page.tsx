@@ -250,6 +250,16 @@ export default function Page() {
   }
   function clickMap(event:MouseEvent<SVGSVGElement>) {
     if(busy.current) return;
+    const organelleId=(event.target as Element).closest('[data-organelle]')?.getAttribute('data-organelle');
+    const organelle=visible.find(item=>item.id===organelleId);
+    if(organelle) {
+      activate(organelle);
+      return;
+    }
+    if(zone!=='nucleus'&&(organelleId==='chromatin'||organelleId==='nucleolus')) {
+      const nucleus=visible.find(item=>item.id==='nucleus');
+      if(nucleus) {activate(nucleus);return;}
+    }
     const matrix=board.current?.getScreenCTM();
     if(!matrix) return;
     const p=new DOMPoint(event.clientX,event.clientY).matrixTransform(matrix.inverse());
@@ -321,6 +331,11 @@ export default function Page() {
           <p className="guidance" aria-live="polite">{moving?'Passage en cours…':notice||(debrief?'Mission réussie. Votre bilan est disponible.':nextQuestion?task:'Vos résultats et vos stéthoscopes sont disponibles dans le bilan.')}</p>
           <button className="primary" disabled={!ready||moving} onClick={startMission}>{buttonText}</button>
         </div>
+        {selected&&<section className="specimen" aria-label="Fiche de la structure" aria-live="polite">
+          <button className="icon-button" aria-label="Fermer la fiche" onClick={()=>setSelected(null)}><Icon name="close" size={15}/></button>
+          <div className="eyebrow">STRUCTURE CELLULAIRE</div>
+          <h3>{selected.label}</h3><p>{selected.description}</p>
+        </section>}
         <section className="route-card" aria-labelledby="route-title">
           <div className="route-head"><h3 id="route-title">Les 5 missions</h3><span>{credits} / {questions.length} stéthoscopes</span></div>
           <progress value={credits} max={questions.length} aria-label="Stéthoscopes du parcours"/>
@@ -337,11 +352,7 @@ export default function Page() {
           })}</ol>
           <p>Chaque bonne réponse rapporte un stéthoscope et ouvre la suite.</p>
         </section>
-        {selected&&<section className="specimen" aria-label="Fiche de la structure">
-          <button className="icon-button" aria-label="Fermer la fiche" onClick={()=>setSelected(null)}><Icon name="close" size={15}/></button>
-          <div className="eyebrow">STRUCTURE CELLULAIRE</div>
-          <h3>{selected.label}</h3><p>{selected.description}</p>
-        </section>}
+
       </aside>
       <div className="visual-column">
       <section ref={stage} className={detail?"stage detail-active":"stage"} aria-label="Plan de la cellule">
@@ -353,7 +364,7 @@ export default function Page() {
           {!detail&&<button className="scene-control" aria-label="Afficher les repères" aria-pressed={labels} onClick={()=>setLabels(x=>!x)}><Icon name="layers"/></button>}
           <button className="scene-control" aria-label="Revenir à la vue extérieure" onClick={reset}><Icon name="reset"/></button>
         </div>
-        <svg ref={map} className="map" viewBox="0 0 1000 740" role="group" aria-label="Carte interactive de la cellule animale"
+        <svg ref={map} className={`map${moving||detail?'':` inspect-${zone}`}`} viewBox="0 0 1000 740" role="group" aria-label="Carte interactive de la cellule animale"
             tabIndex={detail?-1:0} onClick={clickMap} onKeyDown={event=>{
               if(busy.current) return;
               if(event.key.toLowerCase()==='e'&&zone!=='outside'&&!quiz){event.preventDefault();advance();return;}
