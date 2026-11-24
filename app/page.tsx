@@ -7,9 +7,7 @@ import { loadProgress, questions, Stethoscope } from './quiz';
 import styles from './games.module.css';
 
 const units = [
-  { id: 'UE1', title: 'Chimie' },
   { id: 'UE2', title: 'Biochimie' },
-  { id: 'UE4', title: 'Anatomie' },
   { id: 'UE5', title: 'Biologie cellulaire' },
 ] as const;
 
@@ -41,7 +39,7 @@ export default function GamingHome() {
     <main className={styles.library}>
       <section className={styles.intro} aria-labelledby="library-title">
         <h2 id="library-title">Choisissez votre jeu</h2>
-        <p>Explorez la cellule et révisez les mécanismes à votre rythme.</p>
+        <p>Réussissez les défis et gagnez des stéthoscopes.</p>
       </section>
       <div className={styles.units}>
         {units.map(unit => {
@@ -50,17 +48,16 @@ export default function GamingHome() {
           return <section key={unit.id} className={styles.unitBox} aria-labelledby={`unit-${unit.id}`}>
             <header className={styles.unitHeader}>
               <h3 id={`unit-${unit.id}`}><span className={styles.unit}>{unit.id}</span> {unit.title}</h3>
-              <span className={styles.unitTotal}><Stethoscope size={24}/> <strong>{total}</strong> <span>au total</span></span>
+              <span className={styles.unitTotal}><Stethoscope size={24}/> <strong>{total}</strong> <span>stéthoscopes<br/>au total</span></span>
             </header>
-            {unitGames.length === 0 ? <p className={styles.empty}>Aucun jeu pour le moment.</p> :
-              <ul className={styles.cards}>
+            <ul className={styles.cards}>
                 {unitGames.map(game => {
                   const available = 'href' in game;
                   const maximum = available ? questions.length : 20;
                   const score = available ? stats?.score ?? 0 : 0;
-                  return <li key={game.title} className={styles.card}>
+                  return <li key={game.title} className={available ? `${styles.card} ${styles.activeCard}` : styles.card}>
                     <div className={styles.content}>
-                      <span className={styles.labels}>{available ? 'Disponible' : 'À venir'}</span>
+                      <span className={available ? `${styles.labels} ${styles.available}` : styles.labels}>{available ? 'Disponible' : 'À venir'}</span>
                       <h4>{game.title}</h4>
                       <dl className={styles.stats}>
                         <div><dt>Stéthoscopes</dt><dd><Stethoscope size={24}/><strong>{score}</strong><span> / {maximum}</span></dd></div>
@@ -71,7 +68,7 @@ export default function GamingHome() {
                     </div>
                   </li>;
                 })}
-              </ul>}
+              </ul>
           </section>;
         })}
       </div>
