@@ -5,6 +5,7 @@ import { CellArt, Marker, structures, type Point } from '../atlas';
 import { GameHeader } from '../game-header';
 import { Quiz, Results, Stethoscope, type Progress, type Question } from '../quiz';
 import { metabolismMissions, metabolismQuestions, metabolismTitle } from './questions';
+import { MetabolismVisual } from './visual';
 import { readMetabolism, saveMetabolism } from './progress';
 
 type Location = { point: Point; scale: number; label: string };
@@ -12,17 +13,19 @@ type Location = { point: Point; scale: number; label: string };
 const cytosol: Location = { point: [231, 379], scale: 2.9, label: 'Cytosol' };
 const matrix: Location = { point: [295, 229], scale: 4.8, label: 'Matrice mitochondriale' };
 const crista: Location = { point: [284, 258], scale: 7.4, label: 'Membrane interne · crête mitochondriale' };
-const locations = [cytosol, cytosol, matrix, matrix, crista];
+const cell: Location = { point: [335, 314], scale: 1.6, label: 'Du cytosol aux mitochondries' };
+const locations = [cytosol, cytosol, matrix, crista, cell];
 const hints = [
-  'Suis le glucose à l’intérieur de la cellule.',
-  'Explore la voie lactique, puis reviens au pyruvate pour suivre sa voie mitochondriale.',
-  'Suis le pyruvate jusqu’au compartiment où se forme l’acétyl-CoA.',
+  'Suis le glucose dans le cytosol et repère les réactions qui régulent la glycolyse.',
+  'Compare la voie lactique dans le cytosol et la formation d’acétyl-CoA dans la mitochondrie.',
   'Repère le compartiment où se déroule le cycle et retrouve le bilan d’un tour.',
   'Approche-toi d’une crête pour étudier le transfert des électrons et le gradient de protons.',
+  'Rassemble les productions du cytosol et de la mitochondrie pour établir le bilan par glucose.',
 ];
 
 function locate(question: Question) {
   if (question.id === 'pdh-transport' || question.id === 'krebs-compartiment') return crista;
+  if (question.id === 'pdh-bilan') return matrix;
   return locations[question.mission - 1];
 }
 
@@ -135,6 +138,7 @@ export default function MetabolismGame() {
                 stroke="#634675" strokeWidth={detail ? 4 / scale : 3} strokeDasharray={detail ? undefined : '6 5'}/>}
               {!detail && structures.filter(item => ['mito', 'nucleus', 'membrane'].includes(item.id)).map(item => <Marker key={item.id} item={item}/>)}
             </g>
+            {detail && quiz && <MetabolismVisual id={quiz.id}/>}
           </svg>
           <div className="stage-foot"><span><i/> {location?.label ?? 'Cellule animale'}</span>
             <span>{detail ? 'Schéma de principe · hors échelle' : 'Le repère indique où aura lieu le prochain défi.'}</span>
