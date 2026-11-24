@@ -1,0 +1,507 @@
+[
+  {
+    "id": "pore",
+    "mission": 1,
+    "context": "pore",
+    "kind": "qcm",
+    "prompt": "Quelles propositions décrivent correctement l’enveloppe nucléaire ?",
+    "options": [
+      "La membrane externe se prolonge dans celle du réticulum",
+      "Les deux membranes se rejoignent au bord des pores",
+      "Les pores n’occupent que la membrane interne",
+      "Le nucléole est entouré d’une membrane",
+      "L’espace périnucléaire communique librement avec le cytosol"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "hints": [
+      "Distinguez les membranes des compartiments qu’elles délimitent.",
+      "Au bord d’un pore, suivez les deux membranes jusqu’à leur jonction."
+    ],
+    "explanation": "L’enveloppe nucléaire est double. Les membranes se rejoignent au bord des pores, et l’espace périnucléaire est en continuité avec la lumière du réticulum.",
+    "alternative": {
+      "prompt": "Les membranes nucléaires interne et externe restent séparées au bord de chaque pore.",
+      "answer": [
+        1
+      ]
+    },
+    "rationales": [
+      "La membrane externe est en continuité avec la membrane du réticulum endoplasmique.",
+      "Les deux membranes se raccordent au bord de l’ouverture.",
+      "Le pore traverse l’enveloppe là où ses deux membranes se rejoignent.",
+      "Le nucléole est un domaine du nucléoplasme dépourvu de membrane.",
+      "L’espace périnucléaire prolonge la lumière du réticulum. La membrane externe le sépare du cytosol."
+    ]
+  },
+  {
+    "id": "chromatine",
+    "mission": 1,
+    "context": "chromatine",
+    "kind": "qcd",
+    "prompt": "Un nucléosome contient de l’ADN enroulé autour d’un octamère d’histones.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      0
+    ],
+    "hints": [
+      "Pensez au premier niveau de compaction de l’ADN.",
+      "Le cœur contient deux copies de chacune des histones H2A, H2B, H3 et H4."
+    ],
+    "explanation": "Le cœur du nucléosome est un octamère. H1 est une histone de liaison associée à l’ADN de liaison, distincte du cœur.",
+    "alternative": {
+      "prompt": "L’histone H1 fait partie de l’octamère autour duquel s’enroule l’ADN du nucléosome.",
+      "answer": [
+        1
+      ]
+    },
+    "rationales": []
+  },
+  {
+    "id": "brins",
+    "mission": 2,
+    "context": "gène",
+    "kind": "qcm",
+    "prompt": "Quelles propositions sont exactes pendant l’élongation d’un pré-ARNm ?",
+    "options": [
+      "Le brin matrice est lu dans le sens 3′ → 5′",
+      "L’ARN grandit dans le sens 5′ → 3′",
+      "Les nucléotides sont ajoutés à l’extrémité 5′ de l’ARN",
+      "La polymérase utilise simultanément les deux brins d’ADN comme matrices du même ARN",
+      "Le pré-ARNm a la même séquence que le brin matrice, à U et T près"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "hints": [
+      "L’appariement impose l’antiparallélisme entre matrice et ARN.",
+      "Un nucléotide s’ajoute au groupement 3′-OH du dernier ribonucléotide."
+    ],
+    "explanation": "La polymérase lit la matrice de 3′ vers 5′ et ajoute les ribonucléotides à l’extrémité 3′ de l’ARN.",
+    "alternative": {
+      "prompt": "Le brin matrice et le transcrit sont antiparallèles dans la région où ils s’apparient.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": [
+      "La polymérase avance le long du brin matrice de son extrémité 3′ vers son extrémité 5′.",
+      "Chaque ajout à l’extrémité 3′ fait grandir l’ARN dans le sens 5′ → 3′.",
+      "Le nucléotide entrant est ajouté sur le groupement 3′-OH de l’ARN naissant.",
+      "Pour ce transcrit, un seul des deux brins sert de matrice.",
+      "Le pré-ARNm est complémentaire et antiparallèle au brin matrice. Sa partie transcrite correspond au brin codant, lu de 5′ vers 3′, avec U à la place de T. Exemple : matrice 3′-TAC-5′, ARN 5′-AUG-3′, brin codant 5′-ATG-3′."
+    ]
+  },
+  {
+    "id": "pic",
+    "mission": 2,
+    "context": "gène",
+    "kind": "qcm",
+    "prompt": "Pour un promoteur contenant une boîte TATA, quelle proposition est exacte ?",
+    "options": [
+      "TBP reconnaît la boîte TATA",
+      "La boîte TATA est le codon d’initiation de la traduction",
+      "La fixation de TBP épisse le premier intron",
+      "Le complexe de pré-initiation se forme au niveau du signal de polyadénylation",
+      "L’ARN polymérase II reconnaît seule tous les promoteurs"
+    ],
+    "answer": [
+      0
+    ],
+    "hints": [
+      "Un promoteur intervient en amont de la synthèse d’ARN.",
+      "TBP signifie TATA-binding protein."
+    ],
+    "explanation": "TBP reconnaît la boîte TATA lorsqu’elle est présente. Les facteurs généraux participent à l’assemblage du complexe de pré-initiation.",
+    "alternative": {
+      "prompt": "TBP peut se fixer à la boîte TATA lors de l’assemblage du complexe de pré-initiation de la transcription.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": [
+      "TBP se fixe à la boîte TATA lorsqu’elle est présente.",
+      "La boîte TATA est une séquence d’ADN du promoteur. AUG est le codon d’initiation habituel dans l’ARNm.",
+      "TBP intervient dans l’initiation de la transcription. Le spliceosome réalise l’épissage.",
+      "Le complexe se forme au promoteur, près du site où débute la transcription.",
+      "Les facteurs généraux de transcription participent à la reconnaissance du promoteur et au recrutement de l’ARN polymérase II."
+    ]
+  },
+  {
+    "id": "ctd",
+    "mission": 2,
+    "context": "gène",
+    "kind": "qcd",
+    "prompt": "L’état de phosphorylation du domaine CTD de l’ARN polymérase II reste constant du début à la fin de la transcription.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      1
+    ],
+    "hints": [
+      "Le CTD est une plateforme de recrutement dont l’état change au cours de la transcription.",
+      "La fixation de facteurs de maturation peut être couplée à la transcription."
+    ],
+    "explanation": "La modification du CTD accompagne les transitions de la transcription et favorise le recrutement de facteurs qui prennent en charge l’ARN naissant.",
+    "alternative": {
+      "prompt": "L’état de phosphorylation du CTD peut influer sur les facteurs associés à l’ARN polymérase II.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": []
+  },
+  {
+    "id": "coiffe",
+    "mission": 3,
+    "context": "pré-ARNm",
+    "kind": "qcm",
+    "prompt": "Quelles caractéristiques correspondent à la coiffe d’un pré-ARNm eucaryote ?",
+    "options": [
+      "Elle est ajoutée à l’extrémité 5′",
+      "Elle contient une 7-méthylguanosine liée par un pont 5′–5′ triphosphate",
+      "Elle est ajoutée par la poly(A) polymérase",
+      "Elle est constituée d’une succession d’adénosines",
+      "Elle est ajoutée seulement après l’export nucléaire"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "hints": [
+      "La coiffe et la queue poly(A) concernent des extrémités opposées.",
+      "La coiffe comporte une guanosine méthylée et une liaison inhabituelle entre deux positions 5′."
+    ],
+    "explanation": "La coiffe est posée à l’extrémité 5′ du transcrit naissant. Elle contient une 7-méthylguanosine reliée par un pont triphosphate 5′–5′.",
+    "alternative": {
+      "prompt": "La 7-méthylguanosine de la coiffe est rattachée à l’extrémité 3′ du transcrit.",
+      "answer": [
+        1
+      ]
+    },
+    "rationales": [
+      "La coiffe est posée à l’extrémité 5′ de l’ARN naissant.",
+      "La 7-méthylguanosine est rattachée par un pont triphosphate 5′–5′.",
+      "La poly(A) polymérase synthétise la queue poly(A) à l’extrémité 3′.",
+      "La succession d’adénosines constitue la queue poly(A).",
+      "La coiffe est ajoutée dans le noyau, au cours de la transcription."
+    ]
+  },
+  {
+    "id": "epissage",
+    "mission": 3,
+    "context": "pré-ARNm",
+    "kind": "qcm",
+    "prompt": "Quelles propositions décrivent l’épissage spliceosomal canonique ?",
+    "options": [
+      "L’adénosine du point de branchement participe à la formation du lasso",
+      "Les deux exons adjacents sont ligaturés",
+      "L’intron est excisé sous forme d’un ADN simple brin",
+      "La première réaction relie directement les deux exons",
+      "Tous les transcrits d’un même gène ont nécessairement la même combinaison d’exons"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "hints": [
+      "L’épissage comporte deux réactions de transestérification.",
+      "Le 2′-OH de l’adénosine du point de branchement attaque le site d’épissage 5′."
+    ],
+    "explanation": "La première réaction forme une liaison 2′–5′ et le lasso. La seconde relie les deux exons et libère l’intron sous forme de lasso.",
+    "alternative": {
+      "prompt": "La liaison qui ferme le lasso intronique canonique implique le 2′-OH de l’adénosine du point de branchement.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": [
+      "Le 2′-OH de cette adénosine forme la liaison 2′–5′ du lasso.",
+      "La deuxième réaction réunit les deux exons qui bordent l’intron.",
+      "L’intron excisé est un ARN, libéré sous forme de lasso.",
+      "La première réaction forme le lasso et libère le 3′-OH du premier exon. Les exons sont réunis à la deuxième étape.",
+      "L’épissage alternatif peut produire différentes combinaisons d’exons."
+    ]
+  },
+  {
+    "id": "polya",
+    "mission": 3,
+    "context": "pré-ARNm",
+    "kind": "qcd",
+    "prompt": "Pour un pré-ARNm polyadénylé classique, la queue poly(A) est ajoutée après clivage de son extrémité 3′, sans lecture d’une matrice d’ADN par la poly(A) polymérase.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      0
+    ],
+    "hints": [
+      "Distinguez le signal de polyadénylation de la queue poly(A).",
+      "Le clivage fournit l’extrémité sur laquelle la poly(A) polymérase travaille."
+    ],
+    "explanation": "La machinerie reconnaît le signal de polyadénylation, clive le transcrit puis la poly(A) polymérase ajoute des adénosines sans matrice.",
+    "alternative": {
+      "prompt": "Les adénosines ajoutées par la poly(A) polymérase sont copiées à partir d’une série de thymidines de l’ADN matrice.",
+      "answer": [
+        1
+      ]
+    },
+    "rationales": []
+  },
+  {
+    "id": "export",
+    "mission": 3,
+    "context": "pré-ARNm",
+    "kind": "qcd",
+    "prompt": "Pour rejoindre le cytoplasme, un ARNm mature traverse directement les bicouches de l’enveloppe nucléaire.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      1
+    ],
+    "hints": [
+      "L’enveloppe nucléaire sépare deux compartiments.",
+      "Un ARNm est associé à des protéines qui contribuent à sa prise en charge pour l’export."
+    ],
+    "explanation": "L’ARNm est exporté sous forme de complexe ribonucléoprotéique. Le complexe du pore nucléaire constitue la voie de passage.",
+    "alternative": {
+      "prompt": "Lors de son export, un ARNm mature peut franchir un complexe de pore nucléaire sous forme de particule ribonucléoprotéique.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": []
+  },
+  {
+    "id": "codons",
+    "mission": 4,
+    "context": "ARNm",
+    "kind": "qcm",
+    "prompt": "Quelles propositions sont exactes pour le code génétique standard ?",
+    "options": [
+      "Un codon est un triplet lu sur l’ARNm dans le sens 5′ → 3′",
+      "Plusieurs codons peuvent désigner le même acide aminé",
+      "Un codon stop est décodé par un ARNt portant un acide aminé dans la traduction canonique",
+      "Le wobble concerne la première base du codon",
+      "Chaque acide aminé n’a qu’un seul codon synonyme"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "hints": [
+      "La dégénérescence décrit une propriété du tableau des codons.",
+      "La troisième base du codon est celle qui peut participer à un appariement wobble."
+    ],
+    "explanation": "Le code est dégénéré et le ribosome lit l’ARNm de 5′ vers 3′. Le wobble concerne la troisième base du codon, appariée à la première de l’anticodon.",
+    "alternative": {
+      "prompt": "Dans le code standard, des codons distincts peuvent être synonymes.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": [
+      "Chaque codon comporte trois nucléotides de l’ARNm, lus dans le sens 5′ → 3′.",
+      "Le code est dégénéré. Par exemple, GAA et GAG codent le glutamate.",
+      "Dans la terminaison canonique, le stop est reconnu par un facteur de libération.",
+      "Le wobble concerne la troisième base du codon et la première de l’anticodon.",
+      "La plupart des acides aminés sont spécifiés par plusieurs codons."
+    ]
+  },
+  {
+    "id": "arntr",
+    "mission": 4,
+    "context": "ARNm",
+    "kind": "qcd",
+    "prompt": "Le codon 5′-AUG-3′ s’apparie de façon antiparallèle avec l’anticodon 3′-UAC-5′.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      0
+    ],
+    "hints": [
+      "L’appariement suit la complémentarité A–U et G–C.",
+      "Vérifiez à la fois les bases et le sens des deux séquences."
+    ],
+    "explanation": "Le codon 5′-AUG-3′ s’apparie à 3′-UAC-5′, soit 5′-CAU-3′ si l’anticodon est écrit dans le sens conventionnel.",
+    "alternative": {
+      "prompt": "L’anticodon complémentaire et antiparallèle au codon 5′-AUG-3′ s’écrit 5′-CAU-3′.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": []
+  },
+  {
+    "id": "charge",
+    "mission": 4,
+    "context": "ARNm",
+    "kind": "qcm",
+    "prompt": "Quelles propositions décrivent l’aminoacylation d’un ARNt ?",
+    "options": [
+      "Elle utilise de l’ATP et passe par un aminoacyl-AMP",
+      "Elle forme une liaison ester avec l’adénosine terminale du CCA 3′",
+      "Elle est effectuée par la sous-unité 40S",
+      "Elle fixe l’acide aminé sur l’anticodon",
+      "Elle hydrolyse une liaison peptidique du polypeptide naissant"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "hints": [
+      "L’ARNt porte l’anticodon et le site d’attachement de l’acide aminé à des endroits distincts.",
+      "Une aminoacyl-ARNt synthétase active d’abord l’acide aminé avec l’ATP."
+    ],
+    "explanation": "La synthétase forme un aminoacyl-AMP, puis transfère l’acide aminé à l’adénosine terminale du CCA de l’ARNt en formant une liaison ester.",
+    "alternative": {
+      "prompt": "Une aminoacyl-ARNt synthétase peut activer l’acide aminé avant son transfert à l’ARNt.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": [
+      "L’acide aminé est activé par l’ATP sous forme d’aminoacyl-AMP.",
+      "L’acide aminé se lie à un groupement hydroxyle de l’adénosine terminale dans la séquence CCA.",
+      "Une aminoacyl-ARNt synthétase réalise le chargement.",
+      "L’anticodon reconnaît le codon. L’acide aminé est attaché à l’extrémité 3′ de l’ARNt.",
+      "L’aminoacylation forme une liaison ester entre l’acide aminé et l’ARNt."
+    ]
+  },
+  {
+    "id": "init",
+    "mission": 5,
+    "context": "ribosome",
+    "kind": "qcm",
+    "prompt": "Quelles propositions sont exactes pour l’initiation eucaryote dépendante de la coiffe ?",
+    "options": [
+      "eIF4E reconnaît la coiffe 5′",
+      "Le contexte de Kozak influence la sélection d’un AUG",
+      "L’ARNt initiateur s’installe d’abord au site A du ribosome",
+      "La sous-unité 60S balaie seule l’ARNm",
+      "Le balayage commence normalement sur la queue poly(A) et va de 3′ vers 5′"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "hints": [
+      "Le complexe de pré-initiation balaie l’ARNm à partir de sa région 5′.",
+      "Distinguez le facteur qui reconnaît la coiffe et le contexte de séquence qui entoure l’AUG."
+    ],
+    "explanation": "eIF4E reconnaît la coiffe et le contexte de Kozak contribue au choix de l’AUG. L’ARNt initiateur occupe le site P.",
+    "alternative": {
+      "prompt": "L’ARNt initiateur est positionné au site P pendant l’initiation canonique.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": [
+      "eIF4E reconnaît la coiffe 5′ de l’ARNm.",
+      "Les nucléotides autour d’AUG influencent son efficacité comme site d’initiation.",
+      "L’ARNt initiateur est placé au site P.",
+      "Le complexe de pré-initiation comprend la sous-unité 40S. La 60S rejoint le complexe après la sélection de l’AUG.",
+      "Dans ce mécanisme, le balayage part de la région 5′ et progresse vers 3′."
+    ]
+  },
+  {
+    "id": "elong",
+    "mission": 5,
+    "context": "ribosome",
+    "kind": "qcm",
+    "prompt": "Quelles propositions décrivent un cycle d’élongation ?",
+    "options": [
+      "La chaîne du site P est transférée sur l’acide aminé porté par l’ARNt du site A",
+      "Après la translocation, le nouvel ARNt peptidyl se retrouve au site P",
+      "Le peptide passe de l’ARNt du site A vers celui du site P lors de la formation de la liaison peptidique",
+      "La translocation recule l’ARNm d’un codon",
+      "L’ARNt déchargé quitte normalement le ribosome par le site A"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "hints": [
+      "Distinguez la formation de la liaison peptidique du déplacement des ARNt.",
+      "Le nouvel aminoacyl-ARNt arrive au site A. L’ARNt déchargé quitte le ribosome par le site E."
+    ],
+    "explanation": "La chaîne passe de P vers A pendant le transfert peptidique. La translocation positionne ensuite l’ARNt peptidyl au site P et l’ARNt déchargé au site E.",
+    "alternative": {
+      "prompt": "Après formation de la liaison peptidique et avant translocation, le polypeptide est porté par l’ARNt du site A.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": [
+      "La chaîne portée par l’ARNt du site P est transférée à l’acide aminé du site A.",
+      "La translocation déplace le nouvel ARNt peptidyl du site A au site P.",
+      "Le transfert peptidique va de l’ARNt du site P vers l’acide aminé au site A.",
+      "La translocation fait avancer le ribosome d’un codon vers l’extrémité 3′ de l’ARNm.",
+      "L’ARNt déchargé atteint le site E avant sa sortie."
+    ]
+  },
+  {
+    "id": "stop",
+    "mission": 5,
+    "context": "ribosome",
+    "kind": "qcd",
+    "prompt": "Lors de la terminaison canonique, le facteur de libération reconnaît un codon stop situé au site P du ribosome.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      1
+    ],
+    "hints": [
+      "Un codon stop ne spécifie pas d’acide aminé dans le code standard.",
+      "Le polypeptide est libéré par hydrolyse de la liaison ester qui le relie à l’ARNt."
+    ],
+    "explanation": "Le facteur de libération reconnaît le stop au site A et favorise l’hydrolyse de la liaison entre la chaîne et l’ARNt du site P.",
+    "alternative": {
+      "prompt": "Lors de la terminaison canonique, le codon stop est reconnu au site A du ribosome.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": []
+  },
+  {
+    "id": "regulation",
+    "mission": 5,
+    "context": "ribosome",
+    "kind": "qcd",
+    "prompt": "La liaison de 4E-BP à eIF4E peut freiner l’initiation de la traduction dépendante de la coiffe.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      0
+    ],
+    "hints": [
+      "La disponibilité d’un facteur d’initiation peut être régulée par une protéine partenaire.",
+      "Lorsque 4E-BP lie eIF4E, elle empêche son association efficace avec eIF4G."
+    ],
+    "explanation": "En séquestrant eIF4E, 4E-BP limite la formation du complexe d’initiation associé à la coiffe. Sa phosphorylation peut lever cette inhibition.",
+    "alternative": {
+      "prompt": "L’association de 4E-BP à eIF4E facilite l’assemblage du complexe d’initiation dépendant de la coiffe.",
+      "answer": [
+        1
+      ]
+    },
+    "rationales": []
+  }
+]
