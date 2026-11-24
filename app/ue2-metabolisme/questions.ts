@@ -3,10 +3,10 @@ import type { Question } from '../quiz';
 export const metabolismTitle = 'UE2-Métabolisme';
 
 export const metabolismMissions = [
-  'Glycolyse et régulation de la glycolyse',
+  'Glycolyse et régulation',
   'Devenirs du pyruvate',
-  'Cycle de Krebs et régulation du cycle de Krebs',
-  'Chaîne respiratoire mitochondriale',
+  'Cycle de Krebs et régulation',
+  'Chaîne respiratoire',
   'Bilan énergétique',
 ];
 

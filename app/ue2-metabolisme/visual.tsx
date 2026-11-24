@@ -13,57 +13,86 @@ const reactions: Record<string, Reaction> = {
   'krebs-regulation': { title: 'Décarboxylation oxydative de l’isocitrate', from: 'Isocitrate + NAD⁺', to: 'α-cétoglutarate + CO₂ + NADH,H⁺', enzyme: 'Isocitrate déshydrogénase', note: 'L’ATP et l’ADP renseignent sur l’état énergétique mitochondrial' },
 };
 
-const membrane: Record<string, { title: string; protein: string; upper: string; lower: string; note: string; down: boolean }> = {
-  'pdh-transport': { title: 'Entrée du pyruvate dans la mitochondrie', protein: 'Transporteur du pyruvate', upper: 'Pyruvate + H⁺', lower: 'Pyruvate + H⁺', note: 'Symport à travers la membrane interne', down: true },
-  'krebs-compartiment': { title: 'Oxydation du succinate', protein: 'Succinate déshydrogénase', upper: 'Espace intermembranaire', lower: 'Succinate → Fumarate', note: 'Le site catalytique est du côté matriciel', down: false },
-  'chaine-atp': { title: 'Phosphorylation oxydative', protein: 'ATP synthase', upper: 'H⁺ H⁺ H⁺ H⁺ H⁺', lower: 'ADP + Pᵢ → ATP', note: 'Le gradient électrochimique fournit l’énergie de la réaction', down: true },
-  'chaine-navette': { title: 'Transfert des équivalents réducteurs', protein: 'Membrane interne', upper: 'Équivalents réducteurs du cytosol', lower: 'Électrons vers la chaîne', note: 'Les navettes relaient les électrons par des intermédiaires', down: false },
+const membraneIds = ['pdh-transport', 'krebs-compartiment', 'chaine-atp', 'chaine-navette', 'chaine-lieu', 'chaine-oxygene'];
+
+const shape = 'M-28 1C-31-9-22-18-11-17C-3-16 1-22 10-17C17-13 27-16 30-6C34 4 26 14 15 15C6 14 0 22-10 18C-18 15-26 14-28 1Z';
+
+function Protein({ color = '#706188' }: { color?: string }) {
+  return <path d={shape} fill={color} stroke="#392d49" strokeWidth="2"/>;
+}
+
+const complexes = [
+  { label: 'I', x: -42, y: 7, angle: 8, color: '#8fa589' },
+  { label: 'II', x: -23, y: 19, angle: 5, color: '#c2a05a' },
+  { label: 'III', x: -7, y: 14, angle: 22, color: '#a58cb1' },
+  { label: 'IV', x: 18, y: 7, angle: 16, color: '#bd7b75' },
+];
+
+export function MembraneProteins({ id }: { id: string }) {
+  if (!membraneIds.includes(id)) return null;
+  const shown = id === 'chaine-lieu' ? complexes : id === 'chaine-oxygene' ? complexes.slice(3) :
+    id === 'krebs-compartiment' ? complexes.slice(1, 2) : [];
+  const transporter = id === 'pdh-transport';
+  const synthase = id === 'chaine-atp';
+  const navette = id === 'chaine-navette';
+  return <g transform="translate(274 242) rotate(-31)" aria-hidden="true">
+    {shown.map(({label, x, y, angle, color}) => <g key={label} transform={`translate(${x} ${y}) rotate(${angle})`}>
+      <g transform="rotate(90) scale(.22 .16)"><Protein color={color}/></g>
+      <text transform={`rotate(${31 - angle})`} textAnchor="middle" y="1.1" fontSize="3.6" fontWeight="700" fill="#202b31">{label}</text>
+    </g>)}
+    {transporter && <g transform="translate(-7 14) rotate(18)">
+      <g transform="rotate(90) scale(.27 .23)"><Protein color="#8fa589"/></g>
+      <path d="M9 0H-9m3-2-3 2 3 2" stroke="#392d49" strokeWidth=".9" fill="none"/>
+    </g>}
+    {synthase && <g transform="translate(18 7) rotate(16)">
+      <g transform="rotate(90) scale(.17)"><Protein color="#a58cb1"/></g>
+      <path d="M2 0H8" stroke="#533962" strokeWidth="2"/>
+      <g transform="translate(11 0) scale(.19)"><Protein color="#a58cb1"/></g>
+      <path d="M-10 0H-4m-2-1.4 2 1.4-2 1.4" stroke="#392d49" strokeWidth=".85" fill="none"/>
+    </g>}
+    {navette && <g transform="translate(-7 14) rotate(18)">
+      <g transform="rotate(90) scale(.22 .17)"><Protein color="#8fa589"/></g>
+      <g transform="translate(-10 -5) scale(.14)"><Protein color="#a58cb1"/></g>
+      <g transform="translate(10 5) scale(.14)"><Protein color="#c2a05a"/></g>
+    </g>}
+  </g>;
+}
+
+const captions: Record<string, [string, string]> = {
+  'pdh-transport': ['Transporteur du pyruvate', 'Pyruvate + H⁺ · vers la matrice'],
+  'krebs-compartiment': ['Succinate déshydrogénase', 'Succinate → fumarate · côté matriciel'],
+  'chaine-atp': ['ATP synthase', 'Le flux de H⁺ entraîne la formation d’ATP'],
+  'chaine-navette': ['Navettes du NADH cytosolique', 'Les équivalents réducteurs sont relayés jusqu’à la chaîne'],
+  'chaine-lieu': ['Complexes I, II, III et IV', 'NADH,H⁺ et succinate alimentent la chaîne en électrons'],
+  'chaine-oxygene': ['Complexe IV', 'Cytochrome c réduit → complexe IV → O₂'],
 };
 
 export function MetabolismVisual({ id }: { id: string }) {
   const reaction = reactions[id];
-  const transport = membrane[id];
-  const chain = id === 'chaine-lieu' || id === 'chaine-oxygene';
-  const title = reaction?.title ?? transport?.title ?? (chain ? 'Chaîne respiratoire dans la membrane interne' : 'Suivre l’énergie d’un glucose');
-
-  return <g transform="translate(120 425)" fontSize="20" fill="#2b3742" textAnchor="middle">
-    <path d="M380 0V-23" stroke="#634675" strokeWidth="3"/>
-    <rect width="760" height="228" rx="20" fill="#fffaf4" stroke="#aa92b2" strokeWidth="2"/>
-    <text x="380" y="35" fontSize="24" fontWeight="600">{title}</text>
-    {reaction ? <>
-      <text x="380" y="82" fill="#634675">{reaction.enzyme}</text>
-      <text x="178" y="123" fontSize="19">{reaction.from}</text>
-      <path d="M321 115h90m-14-8 14 8-14 8" stroke="#634675" strokeWidth="3" fill="none"/>
-      <text x="585" y="123" fontSize="19">{reaction.to}</text>
-      {id === 'krebs-bilan' && <path d="M619 136c-36 41-422 41-480 4m16 3-16-3 5 14" stroke="#634675" strokeWidth="2" fill="none"/>}
-      <text x="380" y="205" fontSize="16">{reaction.note}</text>
-    </> : transport ? <>
-      <rect x="56" y="101" width="648" height="39" rx="6" fill="#efaa97" opacity=".62"/>
-      <path d="M56 101H704M56 140H704" fill="none" stroke="#b95f50" strokeWidth="3"/>
-      <rect x="226" y="101" width="307" height="39" rx="14" fill="#634675"/>
-      <text x="380" y="127" fill="white">{transport.protein}</text>
-      <text x="380" y="80">{transport.upper}</text><text x="390" y="178">{transport.lower}</text>
-      {transport.down && <path d="M555 79v86m-8-10 8 10 8-10" stroke="#634675" strokeWidth="3" fill="none"/>}
-      <text x="116" y="80" fontSize="14">Hors matrice</text><text x="103" y="176" fontSize="15">Matrice</text>
-      <text x="380" y="207" fontSize="16">{transport.note}</text>
-    </> : chain ? <>
-      <text x="380" y="76" fontSize="17">Espace intermembranaire</text>
-      <path d="M55 100H705V140H55Z" fill="#efaa97" stroke="#b95f50" strokeWidth="2"/>
-      {['I', 'II', 'III', 'IV'].map((item, i) => <g key={item}>
-        <rect x={108 + i * 162} y="93" width="58" height="54" rx="11" fill={item === 'IV' ? '#935447' : '#634675'}/>
-        <text x={137 + i * 162} y="128" fill="white">{item}</text>
-      </g>)}
-      <text x="380" y="178" fontSize="17">{id === 'chaine-oxygene' ? 'Cytochrome c réduit → complexe IV → O₂' : 'NADH,H⁺ et succinate alimentent la chaîne en électrons'}</text>
-      <text x="380" y="206" fontSize="16">Matrice mitochondriale</text>
-    </> : <>
-      <text x="135" y="90" fontSize="16">CYTOSOL</text><text x="465" y="90" fontSize="16">MITOCHONDRIE</text>
-      <text x="135" y="129">Glycolyse</text><text x="330" y="129">Complexe PDH</text>
-      <text x="503" y="129">Krebs</text><text x="645" y="129">Chaîne</text>
-      <path d="M200 123h36m-9-6 9 6-9 6m184-6h35m-9-6 9 6-9 6m101-6h43m-9-6 9 6-9 6" stroke="#634675" strokeWidth="2.5" fill="none"/>
-      <text x="380" y="184" fontSize="17">{id === 'bilan-substrat' ? 'ATP de glycolyse + GTP formé sur deux tours de Krebs' :
+  const caption = captions[id];
+  const balance = !reaction && !caption;
+  return <g textAnchor="middle" fill="#2b3742" fontWeight="600" stroke="#fff6ec" strokeWidth="6"
+    strokeLinejoin="round" paintOrder="stroke" pointerEvents="none" aria-hidden="true">
+    {reaction && <>
+      <text x="500" y="262" fontSize="25">{reaction.title}</text>
+      <text x="245" y="392" fontSize="22">{reaction.from}</text>
+      <path d="M398 383h204m-16-10 16 10-16 10" stroke="#523a60" strokeWidth="4" fill="none"/>
+      <g transform="translate(500 335) scale(1.45)"><Protein/></g>
+      <text x="500" y="440" fontSize="21">{reaction.enzyme}</text>
+      {id === 'krebs-bilan' && <path d="M727 416C695 497 304 497 269 420m0 15v-15l15 8" stroke="#523a60" strokeWidth="3" fill="none"/>}
+      <text x="755" y="392" fontSize="22">{reaction.to}</text>
+      <text x="500" y="518" fontSize="19">{reaction.note}</text>
+    </>}
+    {caption && <>
+      <text x="500" y="547" fontSize="26">{caption[0]}</text>
+      <text x="500" y="583" fontSize="19">{caption[1]}</text>
+    </>}
+    {balance && <>
+      <text x="500" y="478" fontSize="25">Du glucose à l’ATP</text>
+      <text x="500" y="525" fontSize="21">Glycolyse → Complexe PDH → Cycle de Krebs → Chaîne respiratoire</text>
+      <text x="500" y="566" fontSize="19">{id === 'bilan-substrat' ? 'Suivre les ATP et GTP formés directement' :
         id === 'bilan-coenzymes' ? 'Additionner les coenzymes réduits des trois premières étapes' :
-        'Le rendement des NADH cytosoliques dépend de la navette utilisée'}</text>
-      <text x="380" y="209" fontSize="15">Bilan rapporté à un glucose</text>
+        'Comparer les contributions des navettes du NADH cytosolique'}</text>
     </>}
   </g>;
 }

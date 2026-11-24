@@ -5,7 +5,7 @@ import { CellArt, Marker, structures, type Point } from '../atlas';
 import { GameHeader } from '../game-header';
 import { Quiz, Results, Stethoscope, type Progress, type Question } from '../quiz';
 import { metabolismMissions, metabolismQuestions, metabolismTitle } from './questions';
-import { MetabolismVisual } from './visual';
+import { MembraneProteins, MetabolismVisual } from './visual';
 import { readMetabolism, saveMetabolism } from './progress';
 
 type Location = { point: Point; scale: number; label: string };
@@ -134,8 +134,9 @@ export default function MetabolismGame() {
             style={{ cursor: 'default' }}>
             <g id="cell-board" style={{ transform }}>
               <CellArt nucleusRef={nucleus} cellRef={outline}/>
-              {point && <circle cx={point[0]} cy={point[1]} r={detail ? 32 / scale : 20} fill="none"
+              {point && !detail && <circle cx={point[0]} cy={point[1]} r={detail ? 32 / scale : 20} fill="none"
                 stroke="#634675" strokeWidth={detail ? 4 / scale : 3} strokeDasharray={detail ? undefined : '6 5'}/>}
+              {detail && quiz && <MembraneProteins id={quiz.id}/>}
               {!detail && structures.filter(item => ['mito', 'nucleus', 'membrane'].includes(item.id)).map(item => <Marker key={item.id} item={item}/>)}
             </g>
             {detail && quiz && <MetabolismVisual id={quiz.id}/>}
