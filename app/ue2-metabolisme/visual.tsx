@@ -1,14 +1,48 @@
-type Reaction = { from: string; to: string; enzyme: string; note: string };
+type Reaction = {
+  from: string;
+  to: string;
+  enzyme: string;
+  action: readonly string[];
+  input?: string;
+  output?: string;
+};
+
+const pfkReaction = {
+  from: 'Fructose-6-phosphate',
+  to: 'Fructose-1,6-bisphosphate',
+  input: 'ATP',
+  output: 'ADP',
+  action: ['Transfère le phosphate', 'terminal de l’ATP sur le sucre'],
+};
 
 const reactions: Record<string, Reaction> = {
-  'gly-pfk': { from: 'Fructose-6-P + ATP', to: 'Fructose-1,6-bisP + ADP', enzyme: 'Enzyme à identifier', note: 'Transfert du phosphate terminal de l’ATP' },
-  'gly-regulation': { from: 'Fructose-6-P + ATP', to: 'Fructose-1,6-bisP + ADP', enzyme: 'PFK1', note: 'L’ATP peut se fixer sur le site catalytique ou sur un site régulateur' },
-  'lac-nad': { from: 'Pyruvate', to: 'Lactate', enzyme: 'Lactate déshydrogénase', note: 'Au cours de la réaction, le coenzyme cède ses électrons' },
-  'lac-bilan': { from: '2 pyruvates', to: '2 lactates', enzyme: 'Lactate déshydrogénase', note: 'La réduction du pyruvate régénère le NAD⁺' },
-  'pdh-bilan': { from: 'Pyruvate + CoA-SH + NAD⁺', to: 'Acétyl-CoA', enzyme: 'Complexe PDH', note: 'Le groupement acétyle conserve deux des trois carbones du pyruvate' },
-  'krebs-entree': { from: 'Acétyl-CoA (2 C) + ? (4 C)', to: 'Citrate (6 C) + CoA-SH', enzyme: 'Citrate synthase', note: 'Le composé à identifier est régénéré en fin de cycle' },
-  'krebs-bilan': { from: 'Acétyl-CoA + oxaloacétate', to: 'Citrate → … → malate', enzyme: 'Cycle de Krebs', note: 'Le malate est oxydé en oxaloacétate, qui peut entrer dans un nouveau tour' },
-  'krebs-regulation': { from: 'Isocitrate + NAD⁺', to: 'α-cétoglutarate + CO₂ + NADH,H⁺', enzyme: 'Isocitrate déshydrogénase', note: 'L’ATP et l’ADP renseignent sur l’état énergétique mitochondrial' },
+  'gly-pfk': { ...pfkReaction, enzyme: 'À identifier' },
+  'gly-regulation': { ...pfkReaction, enzyme: 'PFK1' },
+  'lac-nad': {
+    from: 'Pyruvate', to: 'Lactate', enzyme: 'Lactate déshydrogénase',
+    input: 'NADH + H⁺', output: 'NAD⁺',
+    action: ['Réduit le pyruvate', 'et régénère le NAD⁺'],
+  },
+  'lac-bilan': {
+    from: '2 pyruvates', to: '2 lactates', enzyme: 'Lactate déshydrogénase',
+    input: '2 NADH + 2 H⁺', output: '2 NAD⁺',
+    action: ['Réduit les deux pyruvates', 'sans produire d’ATP'],
+  },
+  'pdh-bilan': {
+    from: 'Pyruvate (3 C)', to: 'Acétyl-CoA (groupement acétyle à 2 C)', enzyme: 'Complexe PDH',
+    input: 'CoA-SH + NAD⁺', output: 'CO₂ + NADH + H⁺',
+    action: ['Décarboxyle et oxyde le pyruvate', 'puis transfère l’acétyle au CoA'],
+  },
+  'krebs-entree': {
+    from: 'Acétyl-CoA + ? (4 C)', to: 'Citrate (6 C)', enzyme: 'Citrate synthase',
+    input: 'H₂O', output: 'CoA-SH',
+    action: ['Condense le groupement acétyle', 'avec le composé à identifier'],
+  },
+  'krebs-regulation': {
+    from: 'Isocitrate (6 C)', to: 'α-cétoglutarate (5 C)', enzyme: 'Isocitrate déshydrogénase',
+    input: 'NAD⁺', output: 'CO₂ + NADH + H⁺',
+    action: ['Oxyde et décarboxyle', 'l’isocitrate'],
+  },
 };
 
 const membraneIds = ['pdh-transport', 'krebs-compartiment', 'chaine-atp', 'chaine-navette', 'chaine-lieu', 'chaine-oxygene'];
@@ -92,26 +126,88 @@ function GlycolysisOverview({ showEnergy }: { showEnergy: boolean }) {
   </g>;
 }
 
+function moleculeWidth(text: string, fontSize: number) {
+  return Math.max(76, text.length * fontSize * .59 + 30);
+}
+
+function Molecule({ x, y, text, accent = 'substrate', small = false }: {
+  x: number; y: number; text: string; accent?: 'substrate' | 'product' | 'cofactor'; small?: boolean;
+}) {
+  const [fill, line] = accent === 'product' ? ['#f1f4ea', '#849476'] :
+    accent === 'cofactor' ? ['#fff2d9', '#ae8b50'] : ['#fffbf7', '#9b80a1'];
+  const fontSize = small ? 20 : 24;
+  const width = moleculeWidth(text, fontSize);
+  const height = small ? 42 : 56;
+  return <g stroke="none">
+    <rect x={x - width / 2} y={y - height / 2} width={width} height={height} rx={height / 2} fill={fill} stroke={line} strokeWidth="2"/>
+    <text x={x} y={y} fontSize={fontSize} dominantBaseline="central" fontWeight="500">{text}</text>
+  </g>;
+}
+
+function ReactionDiagram({ reaction }: { reaction: Reaction }) {
+  const inlet = 224 + moleculeWidth(reaction.input ?? "", 20) / 2 + 9;
+  const outlet = 224 + moleculeWidth(reaction.output ?? "", 20) / 2 + 9;
+  return <>
+    <Molecule x={465} y={217} text={reaction.from}/>
+    <path d="M465 259v207m-12-15 12 15 12-15" stroke="#634675" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    <Molecule x={465} y={512} text={reaction.to} accent="product"/>
+    {reaction.input && <>
+      <Molecule x={224} y={288} text={reaction.input} accent="cofactor" small/>
+      <path d={`M${inlet} 288C392 288 409 311 458 326m-14 3 14-3-10-10`} stroke="#916b32" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </>}
+    {reaction.output && <>
+      <Molecule x={224} y={435} text={reaction.output} accent="cofactor" small/>
+      <path d={`M458 382C404 396 391 435 ${outlet} 435m13-8-13 8 13 8`} stroke="#916b32" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </>}
+    <g transform="translate(502 312)" textAnchor="start">
+      <rect width="100" height="32" rx="8" fill="#e4d4ea" stroke="none"/>
+      <text x="50" y="21" textAnchor="middle" fontSize="16" letterSpacing="1.6" fill="#563763" stroke="none">ENZYME</text>
+      <text y="60" fontSize="23">{reaction.enzyme}</text>
+      <text y="92" fontSize="19" fontWeight="500">
+        {reaction.action.map((line, i) => <tspan key={line} x="0" dy={i ? 25 : 0}>{line}</tspan>)}
+      </text>
+    </g>
+  </>;
+}
+
+function KrebsOverview() {
+  return <>
+    <Molecule x={490} y={218} text="Acétyl-CoA + oxaloacétate"/>
+    <Molecule x={677} y={368} text="Citrate"/>
+    <Molecule x={491} y={516} text="Malate" accent="product"/>
+    <Molecule x={300} y={368} text="Oxaloacétate" accent="product"/>
+    <g fill="none" stroke="#634675" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M589 247Q675 263 677 328m-10-13 10 13 9-13"/>
+      <path d="M677 408Q666 479 551 508m10-12-10 12 15 4"/>
+      <path d="M429 508Q307 480 300 408m-8 15 8-15 11 11"/>
+      <path d="M300 328Q305 263 385 247m-11-5 11 5-9 10"/>
+    </g>
+    <text x="490" y="380" fontSize="23">Un tour du cycle</text>
+    <text x="490" y="585" fontSize="18" fontWeight="500">Le malate est oxydé en oxaloacétate.</text>
+  </>;
+}
+
+const membraneReactions: Record<string, [string, string]> = {
+  'krebs-compartiment': ['Succinate', 'Fumarate'],
+  'chaine-atp': ['ADP + Pᵢ', 'ATP'],
+  'chaine-oxygene': ['O₂ + 4 H⁺ + 4 e⁻', '2 H₂O'],
+};
+
 export function MetabolismVisual({ id }: { id: string }) {
   if (id === 'gly-lieu' || id === 'gly-bilan') return <GlycolysisOverview showEnergy={id === 'gly-bilan'}/>;
   const reaction = reactions[id];
   const caption = captions[id];
-  const balance = !reaction && !caption;
+  const membraneReaction = membraneReactions[id];
+  const cycle = id === 'krebs-bilan';
+  const balance = !reaction && !caption && !cycle;
   return <g textAnchor="middle" fill="#2b3742" fontWeight="600" stroke="#fff6ec" strokeWidth="6"
     strokeLinejoin="round" paintOrder="stroke" pointerEvents="none" aria-hidden="true">
-    {reaction && <>
-      <text x="410" y="230" fontSize="25">{reaction.from}</text>
-      <path d="M410 266v185m-13-18 13 18 13-18" stroke="#523a60" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-      <g stroke="none">
-        <rect x="568" y="323" width="118" height="38" rx="9" fill="#e4d4ea"/>
-        <text x="627" y="349" fontSize="18" letterSpacing="2" fill="#563763">ENZYME</text>
-        <text x="627" y="393" fontSize="21" stroke="#fff6ec" strokeWidth="5">
-          {reaction.enzyme === 'Enzyme à identifier' ? 'À identifier' : reaction.enzyme}
-        </text>
-      </g>
-      <text x="410" y="508" fontSize="25">{reaction.to}</text>
-      {id === 'krebs-bilan' && <path d="M260 488C125 460 125 281 260 246m-16-4 16 4-12 12" stroke="#523a60" strokeWidth="3" fill="none"/>}
-      <text x="500" y="593" fontSize="19" fontWeight="500">{reaction.note}</text>
+    {reaction && <ReactionDiagram reaction={reaction}/>}
+    {cycle && <KrebsOverview/>}
+    {membraneReaction && <>
+      <Molecule x={340} y={481} text={membraneReaction[0]} small/>
+      <path d="M452 481h98m-13-8 13 8-13 8" stroke="#634675" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+      <Molecule x={655} y={481} text={membraneReaction[1]} accent="product" small/>
     </>}
     {caption && <>
       <text x="500" y="547" fontSize="26">{caption[0]}</text>
