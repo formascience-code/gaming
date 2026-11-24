@@ -51,8 +51,8 @@ export const CellArt=memo(function CellArt({nucleusRef,cellRef,detailId,detailAr
   detailId?:string;
   detailArt?:ReactNode;
 }) {
-  const ribosomeDetail=detailId&&['codons','arntr','init','elong','stop','regulation'].includes(detailId);
-  const nuclearDetail=detailId&&['chromatine','adn-liaison','enhancer','brins','pic','ctd','coiffe','epissage','polya'].includes(detailId);
+  const ribosomeDetail=detailId&&['codons','arntr','aug-interne','init','elong','stop','regulation'].includes(detailId);
+  const nuclearDetail=detailId&&['chromatine','adn-liaison','enhancer','selectivite-transcription','brins','pic','ctd','coiffe','epissage','polya'].includes(detailId);
   return <>
     <defs>
       <filter id="paper" x="-25%" y="-30%" width="165%" height="175%" colorInterpolationFilters="sRGB"><feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#233837" floodOpacity=".29"/></filter>
