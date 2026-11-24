@@ -241,8 +241,9 @@ function KrebsOverview({ id }: { id: string }) {
           markerEnd={index === activeStep ? 'url(#krebs-entry-arrowhead)' : undefined}/>;
       })}
     </g>
-    <path d="M500 109C500 132 479 142 502 157" fill="none" stroke="#916b32" strokeWidth="3.8"
-      strokeLinecap="round" markerEnd="url(#krebs-entry-arrowhead)"/>
+    <path d="M500 109C500 131 471 159 500 160" fill="none"
+      stroke={identifyEntry ? '#916b32' : '#634675'} strokeWidth={identifyEntry ? 5.6 : 3.8}
+      strokeLinecap="round"/>
     {intermediates.map((item, index) => <CycleMolecule key={item.name} {...item} unknown={identifyEntry && index === 0} highlighted={activeStep >= 0 && (index === activeStep || index === activeStep + 1)}/>)}
     <CycleMolecule x={500} y={76} name="Acétyl-CoA" count={2} highlighted/>
     <text x="500" y={membraneStep ? 296 : regulation ? 337 : 380} fontSize="30">Cycle de Krebs</text>
