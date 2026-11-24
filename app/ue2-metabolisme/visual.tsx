@@ -34,11 +34,6 @@ const reactions: Record<string, Reaction> = {
     input: 'CoA-SH + NAD⁺', output: 'CO₂ + NADH + H⁺',
     action: ['Décarboxyle et oxyde le pyruvate', 'puis transfère l’acétyle au CoA'],
   },
-  'krebs-regulation': {
-    from: 'Isocitrate', to: 'α-cétoglutarate', carbons: [6, 5], enzyme: 'Isocitrate déshydrogénase',
-    input: 'NAD⁺', output: 'CO₂ + NADH + H⁺',
-    action: ['Oxyde et décarboxyle', 'l’isocitrate'],
-  },
 };
 
 const membraneIds = ['pdh-transport', 'krebs-compartiment', 'chaine-atp', 'chaine-navette', 'chaine-lieu', 'chaine-oxygene'];
@@ -65,7 +60,7 @@ function ComplexIIProtein() {
 export function MembraneProteins({ id }: { id: string }) {
   if (!membraneIds.includes(id)) return null;
   const shown = id === 'chaine-lieu' ? complexes : id === 'chaine-oxygene' ? complexes.slice(3) :
-    id === 'krebs-compartiment' ? complexes.slice(1, 2) : [];
+    [];
   const transporter = id === 'pdh-transport';
   const synthase = id === 'chaine-atp';
   const navette = id === 'chaine-navette';
@@ -201,7 +196,11 @@ function CycleMolecule({ x, y, name, count, highlighted = false, unknown = false
   </g>;
 }
 
-function KrebsOverview({ identifyEntry }: { identifyEntry: boolean }) {
+function KrebsOverview({ id }: { id: string }) {
+  const identifyEntry = id === 'krebs-entree';
+  const regulation = id === 'krebs-regulation';
+  const membraneStep = id === 'krebs-compartiment';
+  const activeStep = identifyEntry ? 0 : regulation ? 2 : membraneStep ? 5 : -1;
   const names = [
     'Oxaloacétate', 'Citrate', 'Isocitrate', 'α-cétoglutarate',
     'Succinyl-CoA', 'Succinate', 'Fumarate', 'Malate',
@@ -237,15 +236,28 @@ function KrebsOverview({ identifyEntry }: { identifyEntry: boolean }) {
       {angles.map((angle, index) => {
         const start = edge(index, 1);
         const end = edge((index + 1) % names.length, -1);
-        return <path key={angle} d={`M${start.x} ${start.y}A${radius} ${radius} 0 0 1 ${end.x} ${end.y}`}/>;
+        return <path key={angle} d={`M${start.x} ${start.y}A${radius} ${radius} 0 0 1 ${end.x} ${end.y}`}
+          stroke={index === activeStep ? '#916b32' : undefined} strokeWidth={index === activeStep ? 5.6 : undefined}
+          markerEnd={index === activeStep ? 'url(#krebs-entry-arrowhead)' : undefined}/>;
       })}
     </g>
     <path d="M500 109C500 132 479 142 502 157" fill="none" stroke="#916b32" strokeWidth="3.8"
       strokeLinecap="round" markerEnd="url(#krebs-entry-arrowhead)"/>
-    {intermediates.map((item, index) => <CycleMolecule key={item.name} {...item} unknown={identifyEntry && index === 0}/>)}
+    {intermediates.map((item, index) => <CycleMolecule key={item.name} {...item} unknown={identifyEntry && index === 0} highlighted={activeStep >= 0 && (index === activeStep || index === activeStep + 1)}/>)}
     <CycleMolecule x={500} y={76} name="Acétyl-CoA" count={2} highlighted/>
-    <text x="500" y="380" fontSize="34">Cycle de Krebs</text>
-    <text x="500" y="415" fontSize="17" fontWeight="500">{identifyEntry ? 'Première réaction · citrate synthase' : 'L’oxaloacétate est régénéré à chaque tour.'}</text>
+    <text x="500" y={membraneStep ? 296 : regulation ? 337 : 380} fontSize="30">Cycle de Krebs</text>
+    {membraneStep ? <>
+      <path d="M397 354h206" stroke="#a85d50" strokeWidth="22"/>
+      <path d="M397 354h206" stroke="#f5bfad" strokeWidth="16"/>
+      <g transform="translate(500 354) rotate(90) scale(4.5)"><ComplexIIProtein/></g>
+      <text x="500" y="384" fontSize="12" stroke="none">II</text>
+      <text x="500" y="424" fontSize="19">Succinate déshydrogénase</text>
+      <text x="500" y="451" fontSize="16">Succinate → fumarate · côté matriciel</text>
+    </> : regulation ? <>
+      <text x="500" y="373" fontSize="20">Isocitrate déshydrogénase</text>
+      <text x="500" y="405" fontSize="17">NAD⁺ → NADH + H⁺</text>
+      <text x="500" y="432" fontSize="17">Libération de CO₂</text>
+    </> : <text x="500" y="415" fontSize="17" fontWeight="500">{identifyEntry ? 'Première réaction · citrate synthase' : 'L’oxaloacétate est régénéré à chaque tour.'}</text>}
   </>;
 }
 
@@ -351,13 +363,13 @@ export function MetabolismVisual({ id }: { id: string }) {
   if (hasOverview(id)) return chainOverviewIds.includes(id) ? <RespiratoryOverview/> : <EnergyOverview id={id}/>;
   if (id === 'gly-lieu' || id === 'gly-bilan') return <GlycolysisOverview showEnergy={id === 'gly-bilan'}/>;
   const reaction = reactions[id];
-  const caption = captions[id];
-  const membraneReaction = membraneReactions[id];
-  const cycle = id === 'krebs-bilan' || id === 'krebs-entree';
+  const cycle = id.startsWith('krebs-');
+  const caption = cycle ? undefined : captions[id];
+  const membraneReaction = cycle ? undefined : membraneReactions[id];
   return <g textAnchor="middle" fill="#2b3742" fontWeight="600" stroke="#fff6ec" strokeWidth="6"
     strokeLinejoin="round" paintOrder="stroke" pointerEvents="none" aria-hidden="true">
     {reaction && <ReactionDiagram reaction={reaction}/>}
-    {cycle && <KrebsOverview identifyEntry={id === 'krebs-entree'}/>}
+    {cycle && <KrebsOverview id={id}/>}
     {membraneReaction && <>
       <Molecule x={340} y={535} text={membraneReaction[0]} small/>
       <path d="M452 535h98m-13-8 13 8-13 8" stroke="#634675" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
