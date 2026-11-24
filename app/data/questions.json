@@ -62,6 +62,32 @@
     "rationales": []
   },
   {
+    "id": "adn-liaison",
+    "mission": 1,
+    "context": "chromatine",
+    "kind": "qcd",
+    "prompt": "Tout l’ADN de la chromatine est enroulé autour des octamères d’histones.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      1
+    ],
+    "hints": [
+      "Observez l’ADN qui dépasse du nucléosome sur le schéma.",
+      "Repérez le segment appelé « ADN de liaison »."
+    ],
+    "explanation": "Une partie de l’ADN s’enroule autour des octamères d’histones. Des segments d’ADN de liaison relient les nucléosomes voisins.",
+    "alternative": {
+      "prompt": "L’ADN de liaison se situe entre des nucléosomes voisins.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": []
+  },
+  {
     "id": "brins",
     "mission": 2,
     "context": "gène",
@@ -154,6 +180,32 @@
       "prompt": "L’état de phosphorylation du CTD peut influer sur les facteurs associés à l’ARN polymérase II.",
       "answer": [
         0
+      ]
+    },
+    "rationales": []
+  },
+  {
+    "id": "enhancer",
+    "mission": 2,
+    "context": "gène",
+    "kind": "qcd",
+    "prompt": "Un facteur de transcription activateur peut augmenter la transcription en se fixant à un enhancer éloigné du promoteur.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      0
+    ],
+    "hints": [
+      "Repérez l’enhancer et le promoteur sur le schéma.",
+      "Le repliement de l’ADN peut rapprocher deux régions éloignées le long de la séquence."
+    ],
+    "explanation": "Un activateur peut se fixer à un enhancer. Le repliement de l’ADN peut rapprocher ce site du promoteur et favoriser l’initiation de la transcription.",
+    "alternative": {
+      "prompt": "Pour agir sur la transcription, un enhancer doit obligatoirement être adjacent au promoteur.",
+      "answer": [
+        1
       ]
     },
     "rationales": []
