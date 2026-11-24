@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { CellArt } from './atlas';
+import { useEffect, useState } from 'react';
 import { GameHeader } from './game-header';
 import { getAttempts } from './game-progress';
 import { loadProgress, questions, Stethoscope } from './quiz';
@@ -15,15 +14,13 @@ const units = [
 ] as const;
 
 const games = [
-  { unit: 'UE2', title: 'Synthèse des protéines', summary: 'Du noyau au ribosome, suivez le trajet de l’information génétique.', crop: '115 80 810 560', color: 'protein', href: '/ue2-synthese-des-proteines' },
-  { unit: 'UE2', title: 'Métabolisme', summary: 'Glycolyse dans le cytosol, cycle de Krebs dans la matrice et chaîne respiratoire dans la membrane interne des mitochondries.', crop: '125 135 460 321', color: 'metabolism' },
-  { unit: 'UE5', title: 'La mitochondrie', summary: 'Explorez la double membrane, les crêtes et la matrice mitochondriale.', crop: '145 158 257 178', color: 'mitochondria' },
-  { unit: 'UE5', title: 'Le système endomembranaire', summary: 'Suivez le trafic entre le réticulum endoplasmique, le Golgi et les vésicules.', crop: '419 188 453 314', color: 'endomembrane' },
+  { unit: 'UE2', title: 'Synthèse des protéines', href: '/ue2-synthese-des-proteines' },
+  { unit: 'UE2', title: 'Métabolisme' },
+  { unit: 'UE5', title: 'La mitochondrie' },
+  { unit: 'UE5', title: 'Le système endomembranaire' },
 ] as const;
 
 export default function GamingHome() {
-  const nucleusRef = useRef<SVGCircleElement>(null);
-  const cellRef = useRef<SVGPathElement>(null);
   const [stats, setStats] = useState<{ score: number; attempts: number }>();
   useEffect(() => {
     function refreshStats() {
@@ -46,9 +43,6 @@ export default function GamingHome() {
         <h2 id="library-title">Choisissez votre jeu</h2>
         <p>Explorez la cellule et révisez les mécanismes à votre rythme.</p>
       </section>
-      <svg width="0" height="0" className={styles.atlas} aria-hidden="true">
-        <defs><g id="catalogue-cell"><CellArt nucleusRef={nucleusRef} cellRef={cellRef}/></g></defs>
-      </svg>
       <div className={styles.units}>
         {units.map(unit => {
           const unitGames = games.filter(game => game.unit === unit.id);
@@ -56,29 +50,28 @@ export default function GamingHome() {
           return <section key={unit.id} className={styles.unitBox} aria-labelledby={`unit-${unit.id}`}>
             <header className={styles.unitHeader}>
               <h3 id={`unit-${unit.id}`}><span className={styles.unit}>{unit.id}</span> {unit.title}</h3>
-              <span className={styles.unitTotal}><Stethoscope size={18}/> {total} stéthoscope{total > 1 ? 's' : ''} au total</span>
+              <span className={styles.unitTotal}><Stethoscope size={24}/> <strong>{total}</strong> <span>au total</span></span>
             </header>
             {unitGames.length === 0 ? <p className={styles.empty}>Aucun jeu pour le moment.</p> :
-              <div className={styles.cards}>
+              <ul className={styles.cards}>
                 {unitGames.map(game => {
                   const available = 'href' in game;
-                  return <article key={game.title} className={styles.card}>
-                    <div className={`${styles.art} ${styles[game.color]}`}>
-                      <svg viewBox={game.crop} preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#catalogue-cell"/></svg>
-                    </div>
+                  const maximum = available ? questions.length : 20;
+                  const score = available ? stats?.score ?? 0 : 0;
+                  return <li key={game.title} className={styles.card}>
                     <div className={styles.content}>
                       <span className={styles.labels}>{available ? 'Disponible' : 'À venir'}</span>
                       <h4>{game.title}</h4>
-                      <p>{game.summary}</p>
                       <dl className={styles.stats}>
-                        <div><dt><Stethoscope size={16}/> Stéthoscopes</dt><dd>{available ? stats?.score ?? '–' : 0} / {available ? questions.length : 20}</dd></div>
+                        <div><dt>Stéthoscopes</dt><dd><Stethoscope size={24}/><strong>{score}</strong><span> / {maximum}</span></dd></div>
                         <div><dt>Tentatives</dt><dd>{available ? stats?.attempts ?? '–' : 0}</dd></div>
                       </dl>
+                      <progress className={styles.progress} value={score} max={maximum} aria-label={`Progression – ${game.title}`}/>
                       {available && <a className={styles.play} href={game.href} aria-label={`Jouer à ${game.unit} – ${game.title}`}>{stats?.attempts ? 'Reprendre' : 'Jouer'} <span aria-hidden="true">→</span></a>}
                     </div>
-                  </article>;
+                  </li>;
                 })}
-              </div>}
+              </ul>}
           </section>;
         })}
       </div>
