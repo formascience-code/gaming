@@ -31,6 +31,8 @@ function locate(question: Question) {
 
 export default function MetabolismGame() {
   const [progress, setProgress] = useState<Progress>({ solved: {}, assistance: {} });
+  const [flight, setFlight] = useState<{ x: number; y: number; dx: number; dy: number } | null>(null);
+  const counter = useRef<HTMLButtonElement>(null);
   const [ready, setReady] = useState(false);
   const [quiz, setQuiz] = useState<Question | null>(null);
   const [wide, setWide] = useState(false);
@@ -53,6 +55,7 @@ export default function MetabolismGame() {
   const current = quiz ?? next;
   const mission = current?.mission ?? metabolismMissions.length;
   const credits = Object.keys(progress.solved).length;
+  const displayedCredits = credits - (flight ? 1 : 0);
   const location = current ? locate(current) : null;
   const detail = Boolean(quiz && !wide);
   const scale = detail ? location?.scale ?? 1 : 1;
@@ -66,6 +69,21 @@ export default function MetabolismGame() {
   function persist(value: Progress) {
     setProgress(value);
     saveMetabolism(value, attempts.current);
+  }
+
+  function award(question: Question) {
+    if (progress.solved[question.id]) return;
+    persist({
+      ...progress,
+      solved: { ...progress.solved, [question.id]: progress.assistance[question.id] ? 'avec aide' : 'spontanée' },
+    });
+
+    const goal = counter.current?.getBoundingClientRect();
+    const visible = stage.current?.getBoundingClientRect();
+    if (!goal?.width || !visible?.width || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const x = visible.left + visible.width * .52;
+    const y = Math.max(72, Math.min(window.innerHeight - 40, visible.top + visible.height * .52));
+    setFlight({ x, y, dx: goal.left + goal.width / 2 - x, dy: goal.top + goal.height / 2 - y });
   }
 
   function open(question: Question) {
@@ -85,9 +103,9 @@ export default function MetabolismGame() {
       <a className="control games-back" href="/">← Accueil</a>
       <button type="button" className="control restart-button" disabled={!ready || credits === 0 && attempts.current === 0}
         onClick={() => restart.current?.showModal()}>Recommencer</button>
-      <button type="button" className="credit-counter stethoscope-counter"
-        onClick={() => setResults(true)} aria-label={`Bilan · ${credits} stéthoscopes`}>
-        <Stethoscope size={17}/><strong>{credits}</strong>
+      <button ref={counter} type="button" className="credit-counter stethoscope-counter"
+        onClick={() => setResults(true)} aria-label={`Bilan · ${displayedCredits} stéthoscopes`}>
+        <Stethoscope size={17}/><strong>{displayedCredits}</strong>
       </button>
     </GameHeader>
 
@@ -148,12 +166,12 @@ export default function MetabolismGame() {
       </div>
 
       {quiz && <Quiz key={quiz.id} question={quiz} questionBank={metabolismQuestions} missionTitles={metabolismMissions}
-        helpUsed={progress.assistance[quiz.id] ?? 0} creditCount={credits} celebrating={false}
+        helpUsed={progress.assistance[quiz.id] ?? 0} creditCount={credits} celebrating={Boolean(flight)}
         position={group.indexOf(quiz) + 1} missionTotal={group.length}
         unlockText={!following ? 'Parcours terminé !' : following.mission !== quiz.mission ? 'Mission accomplie !' : 'Défi suivant débloqué.'}
         continueLabel={!following ? 'Voir le bilan' : following.mission !== quiz.mission ? 'Mission suivante' : 'Défi suivant'}
         onHelp={level => persist({ ...progress, assistance: { ...progress.assistance, [quiz.id]: level } })}
-        onCorrect={() => persist({ ...progress, solved: { ...progress.solved, [quiz.id]: progress.assistance[quiz.id] ? 'avec aide' : 'spontanée' } })}
+        onCorrect={() => award(quiz)}
         onClose={() => { setQuiz(null); start.current?.focus(); }}
         onContinue={() => {
           if (following) open(following);
@@ -161,6 +179,9 @@ export default function MetabolismGame() {
         }}/>}
     </div>
 
+    {flight&&<div className="stethoscope-flight" style={{left:flight.x,top:flight.y,
+      '--flight-x':`${flight.dx}px`,'--flight-y':`${flight.dy}px`} as React.CSSProperties}
+      aria-hidden="true" onAnimationEnd={()=>setFlight(null)}><Stethoscope size={38}/></div>}
     {results && <Results progress={progress} questionBank={metabolismQuestions} missionTitles={metabolismMissions} onClose={() => setResults(false)}/>}
     <dialog ref={restart} className="quiz-dialog restart-dialog" aria-labelledby="metabolism-restart">
       <h2 id="metabolism-restart">Recommencer le métabolisme ?</h2>
@@ -168,6 +189,7 @@ export default function MetabolismGame() {
       <div className="restart-actions"><button type="button" className="control" onClick={() => restart.current?.close()}>Annuler</button>
         <button type="button" className="primary" onClick={() => {
           restart.current?.close();
+          setFlight(null);
           attempts.current += 1;
           persist({ solved: {}, assistance: {} });
           setQuiz(null);
