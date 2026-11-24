@@ -56,7 +56,7 @@ export default function Page() {
   const [moving,setMoving]=useState(false);
   const [zoomed,setZoomed]=useState(false);
   const [target,setTarget]=useState<Point|null>(null);
-  const [selected,setSelected]=useState<Structure|null>(null);
+
   const [labels,setLabels]=useState(true);
   const [help,setHelp]=useState(false);
   const [notice,setNotice]=useState('');
@@ -165,14 +165,12 @@ export default function Page() {
     }
   }
   function showQuiz(question:Question) {
-    setSelected(null);
     setNotice('');
     setWideView(false);
     setQuiz(question);
   }
   function advance(passage=false, onArrival?:()=>void) {
     if(busy.current||debrief) return;
-    setSelected(null);
     setNotice('');
     if(zone==='outside') animate([inside],'cytoplasm');
     if(zone==='cytoplasm') {
@@ -199,7 +197,6 @@ export default function Page() {
     if(!previous.debrief) return;
     writeProgress({...previous,debrief:undefined});
     if(!nextQuestion) {setResults(true);return;}
-    setSelected(null);
     setNotice('');
     const destination=nextQuestion.mission<4?'nucleus':'cytoplasm';
     const openChallenge=()=>showQuiz(nextQuestion);
@@ -218,7 +215,6 @@ export default function Page() {
     setMoving(false);
     setZoomed(false);
     setZone('outside');
-    setSelected(null);
     setNotice('');
     setTarget(null);
   }
@@ -250,16 +246,6 @@ export default function Page() {
   }
   function clickMap(event:MouseEvent<SVGSVGElement>) {
     if(busy.current) return;
-    const organelleId=(event.target as Element).closest('[data-organelle]')?.getAttribute('data-organelle');
-    const organelle=visible.find(item=>item.id===organelleId);
-    if(organelle) {
-      activate(organelle);
-      return;
-    }
-    if(zone!=='nucleus'&&(organelleId==='chromatin'||organelleId==='nucleolus')) {
-      const nucleus=visible.find(item=>item.id==='nucleus');
-      if(nucleus) {activate(nucleus);return;}
-    }
     const matrix=board.current?.getScreenCTM();
     if(!matrix) return;
     const p=new DOMPoint(event.clientX,event.clientY).matrixTransform(matrix.inverse());
@@ -279,7 +265,6 @@ export default function Page() {
     if(busy.current) return;
     if(item.id==='pore'){if(!quiz) advance();return;}
     if(item.id==='ribosome'&&!debrief&&nextQuestion&&mission>=4){if(!quiz) showQuiz(nextQuestion);return;}
-    setSelected(previous=>previous?.id===item.id?null:item);
   }
   const visible=structures.filter(item=>{
     if(item.id==='ribosome') return zone==='cytoplasm'&&Boolean(nextQuestion&&mission>=4);
@@ -331,11 +316,6 @@ export default function Page() {
           <p className="guidance" aria-live="polite">{moving?'Passage en cours…':notice||(debrief?'Mission réussie. Votre bilan est disponible.':nextQuestion?task:'Vos résultats et vos stéthoscopes sont disponibles dans le bilan.')}</p>
           <button className="primary" disabled={!ready||moving} onClick={startMission}>{buttonText}</button>
         </div>
-        {selected&&<section className="specimen" aria-label="Fiche de la structure" aria-live="polite">
-          <button className="icon-button" aria-label="Fermer la fiche" onClick={()=>setSelected(null)}><Icon name="close" size={15}/></button>
-          <div className="eyebrow">STRUCTURE CELLULAIRE</div>
-          <h3>{selected.label}</h3><p>{selected.description}</p>
-        </section>}
         <section className="route-card" aria-labelledby="route-title">
           <div className="route-head"><h3 id="route-title">Les 5 missions</h3><span>{credits} / {questions.length} stéthoscopes</span></div>
           <progress value={credits} max={questions.length} aria-label="Stéthoscopes du parcours"/>
@@ -364,7 +344,7 @@ export default function Page() {
           {!detail&&<button className="scene-control" aria-label="Afficher les repères" aria-pressed={labels} onClick={()=>setLabels(x=>!x)}><Icon name="layers"/></button>}
           <button className="scene-control" aria-label="Revenir à la vue extérieure" onClick={reset}><Icon name="reset"/></button>
         </div>
-        <svg ref={map} className={`map${moving||detail?'':` inspect-${zone}`}`} viewBox="0 0 1000 740" role="group" aria-label="Carte interactive de la cellule animale"
+        <svg ref={map} className="map" viewBox="0 0 1000 740" role="group" aria-label="Carte interactive de la cellule animale"
             tabIndex={detail?-1:0} onClick={clickMap} onKeyDown={event=>{
               if(busy.current) return;
               if(event.key.toLowerCase()==='e'&&zone!=='outside'&&!quiz){event.preventDefault();advance();return;}
@@ -378,7 +358,7 @@ export default function Page() {
               if(valid(p)) put(p);
             }}>
           <g ref={board} className={zoomed&&!quiz&&!debrief?'zoomed':''} style={{transform:mapTransform}} id="cell-board">
-            <CellArt nucleusRef={nucleusShape} cellRef={cellShape} showGolgi={selected?.id==='golgi'}
+            <CellArt nucleusRef={nucleusShape} cellRef={cellShape}
               detailId={detail?quiz?.id:undefined}
               detailArt={detail&&quiz?<ChallengeVisual id={quiz.id} point={focusPoint}/>:undefined}/>
             {locationQuestion&&!detail&&<circle cx={focusPoint[0]} cy={focusPoint[1]} r="19"
@@ -389,7 +369,7 @@ export default function Page() {
               <circle r="8" fill="#234b58" stroke="#fff5e4" strokeWidth="3"/>
               <circle r="2" fill="#fff9e9"/>
             </g>}
-            {labels&&!moving&&!detail&&visible.map(item=><Marker key={item.id} item={item} onClick={()=>activate(item)} selected={selected?.id===item.id}/>)}
+            {labels&&!moving&&!detail&&visible.map(item=><Marker key={item.id} item={item} onClick={!quiz&&(item.id==='pore'||item.id==='ribosome')?()=>activate(item):undefined}/>)}
           </g>
         </svg>
         <div className="stage-foot"><span><i/> {names[index]}</span><span>{detail?'Schéma de principe · hors échelle':locationLabel?`À observer · ${locationLabel}`:missionLocation.label}</span></div>
