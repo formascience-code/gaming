@@ -47,10 +47,8 @@ const reactions: Record<string, Reaction> = {
 
 const membraneIds = ['pdh-transport', 'krebs-compartiment', 'chaine-atp', 'chaine-navette', 'chaine-lieu', 'chaine-oxygene'];
 
-const shape = 'M-28 1C-31-9-22-18-11-17C-3-16 1-22 10-17C17-13 27-16 30-6C34 4 26 14 15 15C6 14 0 22-10 18C-18 15-26 14-28 1Z';
-
 function Protein({ color = '#706188' }: { color?: string }) {
-  return <path d={shape} fill={color} stroke="#392d49" strokeWidth="2"/>;
+  return <ellipse rx="28" ry="17" fill={color} stroke="#392d49" strokeWidth="2"/>;
 }
 
 const complexes = [
@@ -96,7 +94,7 @@ export function MembraneProteins({ id }: { id: string }) {
 
 const captions: Record<string, [string, string]> = {
   'pdh-transport': ['Transporteur du pyruvate', 'Pyruvate + H⁺ · vers la matrice'],
-  'krebs-compartiment': ['Succinate déshydrogénase', 'Succinate → fumarate · côté matriciel'],
+  'krebs-compartiment': ['Succinate déshydrogénase', 'Réaction du côté matriciel'],
   'chaine-atp': ['ATP synthase', 'Le flux de H⁺ entraîne la formation d’ATP'],
   'chaine-navette': ['Navettes du NADH cytosolique', 'Les équivalents réducteurs sont relayés jusqu’à la chaîne'],
   'chaine-lieu': ['Complexes I, II, III et IV', 'NADH,H⁺ et succinate alimentent la chaîne en électrons'],
@@ -241,13 +239,13 @@ export function MetabolismVisual({ id }: { id: string }) {
     {reaction && <ReactionDiagram reaction={reaction}/>}
     {cycle && <KrebsOverview/>}
     {membraneReaction && <>
-      <Molecule x={340} y={481} text={membraneReaction[0]} small/>
-      <path d="M452 481h98m-13-8 13 8-13 8" stroke="#634675" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+      <Molecule x={340} y={535} text={membraneReaction[0]} small/>
+      <path d="M452 535h98m-13-8 13 8-13 8" stroke="#634675" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
       <Molecule x={655} y={481} text={membraneReaction[1]} accent="product" small/>
     </>}
     {caption && <>
-      <text x="500" y="547" fontSize="26">{caption[0]}</text>
-      <text x="500" y="583" fontSize="19">{caption[1]}</text>
+      <text x="500" y={membraneReaction ? 599 : 547} fontSize="26">{caption[0]}</text>
+      <text x="500" y={membraneReaction ? 631 : 583} fontSize="19">{caption[1]}</text>
     </>}
     {balance && <>
       <text x="500" y="478" fontSize="25">Du glucose à l’ATP</text>
