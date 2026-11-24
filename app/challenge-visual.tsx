@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { Point } from './atlas';
 
 const titles:Record<string,string>={
-  pore:'Enveloppe et pore nucléaire',chromatine:'Un nucléosome',brins:'Les deux brins d’ADN et l’ARN naissant',
+  pore:'Enveloppe et pore nucléaire',chromatine:'Un nucléosome','adn-liaison':'Nucléosome et ADN de liaison',enhancer:'Un enhancer éloigné du promoteur',brins:'Les deux brins d’ADN et l’ARN naissant',
   pic:'Assemblage au promoteur',ctd:'Le CTD de l’ARN polymérase II',coiffe:'Coiffe du transcrit',
   epissage:'De l’intron en lasso aux exons réunis',polya:'Clivage et queue poly(A)',export:'Export d’un ARNm',
   codons:'Lecture de l’ARNm par triplets',arntr:'Appariement codon–anticodon',charge:'Chargement d’un ARNt',
@@ -91,6 +91,7 @@ function drawing(id:string):ReactNode {
   switch(id){
     case 'pore':return porePicture(false);
     case 'export':return porePicture(true);
+    case 'adn-liaison':
     case 'chromatine':return <>
       <defs><linearGradient id="histone-color" x1="0%" y1="0%" x2="0%" y2="100%"><stop stopColor="#f5e1ae"/><stop offset="1" stopColor="#d4aa6f"/></linearGradient></defs>
       <path d="M29 77H112C124 77 130 72 136 63C144 45 170 39 199 37
@@ -110,6 +111,15 @@ function drawing(id:string):ReactNode {
       {text(204,18,'Brin codant 5′–ATG–3′')}{strand(94,325,32)}
       {text(203,57,'Brin matrice 3′–TAC–5′')}{strand(94,325,70,blue)}
       {arrow(100,320,84)}{strand(94,285,104,coral)}{text(202,128,'ARN 5′–AUG–3′')}
+    </>;
+    case 'enhancer':return <>
+      <path d="M36 105H115C159 105 128 68 150 45C174 14 236 15 260 43C284 70 254 105 300 105H382"
+        fill="none" stroke={teal} strokeWidth="4" strokeLinecap="round"/>
+      {tag(154,51,80,'Enhancer',gold)}{tag(301,105,87,'Promoteur')}
+      <ellipse cx="220" cy="67" rx="36" ry="15" fill="#bba9cf" stroke="#624776" strokeWidth="1.6"/>
+      {text(220,72,'Activateur')}
+      <path d="M255 74Q280 75 296 92" fill="none" stroke={dark} strokeWidth="1.5" strokeDasharray="3 4"/>
+      {arrow(309,380,127)}{text(110,131,'ADN replié')}
     </>;
     case 'pic':return <>
       <Polymerase x={273} y={63}/>
