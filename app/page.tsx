@@ -20,11 +20,13 @@ const games = [
 
 function UnitEmblem({ unit }: { unit: 'UE2' | 'UE5' }) {
   return <svg className={styles.emblem} viewBox="0 0 112 78" aria-hidden="true">
-    {unit === 'UE2' ? <g>
-      <path d="M28 52 46 28 71 31 85 52 68 67 45 64Z M46 28 39 12 M71 31 89 15" fill="none" stroke="#896797" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/>
-      <g fill="#684374"><circle cx="28" cy="52" r="5"/><circle cx="71" cy="31" r="6"/><circle cx="68" cy="67" r="4"/></g>
-      <g fill="#fffaf2" stroke="#896797" strokeWidth="2"><circle cx="46" cy="28" r="6"/><circle cx="45" cy="64" r="4"/><circle cx="89" cy="15" r="5"/></g>
-      <g fill="#c2a05a"><circle cx="39" cy="12" r="4"/><circle cx="85" cy="52" r="5"/></g>
+    {unit === 'UE2' ? <g transform="rotate(32 56 39)">
+      <path d="M44 10H68 M41 16H71 M42 22H70 M46 28H66 M46 50H66 M42 56H70 M41 62H71 M44 68H68"
+        fill="none" stroke="#a88650" strokeWidth="1.6" strokeLinecap="round"/>
+      <path d="M66 6C76 18 71 29 56 39S36 60 46 72"
+        fill="none" stroke="#aa8ab6" strokeWidth="2.8" strokeLinecap="round"/>
+      <path d="M46 6C36 18 41 29 56 39S76 60 66 72"
+        fill="none" stroke="#563562" strokeWidth="2.8" strokeLinecap="round"/>
     </g> : <g>
       <path d="M21 48C20 33 32 21 46 20C58 19 65 11 80 15C97 20 102 39 92 53C85 65 73 69 58 69C42 69 24 65 21 48Z" fill="#f5f8ee" stroke="#687e61" strokeWidth="2.4"/>
       <path d="M22 48C26 61 44 67 58 66C75 66 85 60 92 50" fill="none" stroke="#b1bfa6" strokeWidth="2"/>
@@ -53,10 +55,10 @@ export default function GamingHome() {
   }, []);
 
   return <div className="shell">
-    <GameHeader title="Jeux de révision">{null}</GameHeader>
+    <GameHeader/>
     <main className={styles.library}>
       <section className={styles.intro} aria-labelledby="library-title">
-        <h2 id="library-title">Choisis ton jeu</h2>
+        <h1 id="library-title">Choisis ton jeu</h1>
         <p>Choisis un défi et suis ta progression.</p>
       </section>
       <div className={styles.units}>
@@ -76,10 +78,10 @@ export default function GamingHome() {
                   const available = 'href' in game;
                   const maximum = available ? questions.length : 20;
                   const score = available ? stats?.score ?? 0 : 0;
-                  return <li key={game.title} className={available ? `${styles.card} ${styles.activeCard}` : styles.card}>
+                  return <li key={game.title} className={styles.card}>
                     <div className={styles.content}>
                       <div className={styles.details}>
-                        <span className={available ? `${styles.labels} ${styles.available}` : styles.labels}>{available ? 'Disponible' : 'À venir'}</span>
+                        {!available && <span className={styles.labels}>À venir</span>}
                         <h4>{game.title}</h4>
                         <p className={styles.attempts}>{available ? stats?.attempts ?? 0 : 0} {(available ? stats?.attempts : 0) === 1 ? 'tentative' : 'tentatives'}</p>
                       </div>
