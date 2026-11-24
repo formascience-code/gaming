@@ -126,20 +126,20 @@ export function Quiz({question,helpUsed,onHelp,onCorrect,onClose,onContinue,cred
           {isQcm&&<strong>{String.fromCharCode(65+i)}</strong>}<span>{options[index]}</span>{correctionOpen&&<b className="verdict">{current.answer.includes(index)?'Exact':'Faux'}</b>}
         </label>)}
       </fieldset>
-      {feedback!=='success'&&feedback!=='explain'&&<div className="quiz-support">
-        {hints<2&&<button className="control" type="button" onClick={reveal}>Indice {hints+1}</button>}
-        {hints>0&&<ol>{question.hints.slice(0,hints).map(hint=><li key={hint}>{hint}</li>)}</ol>}
-        {feedback==='wrong'&&<p role="status">Réessayez. Vous pouvez utiliser les indices sans perdre de stéthoscope.</p>}
-      </div>}
       {feedback==='success'&&<div className="quiz-reward" role="status">
         <Stethoscope size={28}/>
         <div><strong>+1 stéthoscope gagné !</strong><p>{unlockText}</p><small>{creditCount} / {questions.length} au total</small></div>
       </div>}
       {feedback!=='explain'&&<div className="correction-tools">
+        {feedback!=='success'&&hints<2&&<button className="control" type="button" onClick={reveal}>Indice {hints+1}</button>}
         <button className="control" type="button" aria-expanded={correctionOpen} onClick={requestCorrection}>
           {correctionOpen?'Masquer le corrigé':'Afficher le corrigé'}
         </button>
-        {feedback!=='success'&&<small>Le stéthoscope se gagne ensuite avec un défi équivalent.</small>}
+      </div>}
+      {feedback!=='success'&&feedback!=='explain'&&<div className="quiz-support">
+        {hints>0&&<ol>{question.hints.slice(0,hints).map(hint=><li key={hint}>{hint}</li>)}</ol>}
+        {feedback==='wrong'&&<p role="status">Réessayez. Vous pouvez utiliser les indices sans perdre de stéthoscope.</p>}
+        <small>Le stéthoscope se gagne ensuite avec un défi équivalent.</small>
       </div>}
       {correctionOpen&&<section className="quiz-feedback" aria-label="Corrigé détaillé">
         <strong>Corrigé détaillé</strong>
