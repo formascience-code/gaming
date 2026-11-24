@@ -1,12 +1,10 @@
 type Reaction = { from: string; to: string; enzyme: string; note: string };
 
 const reactions: Record<string, Reaction> = {
-  'gly-lieu': { from: 'Glucose · 6 C', to: '2 pyruvates · 3 C chacun', enzyme: '10 réactions', note: 'Phase d’investissement puis phase de rendement' },
-  'gly-bilan': { from: 'Glucose + NAD⁺', to: 'Pyruvate + NADH,H⁺', enzyme: 'Glycolyse', note: '2 ATP investis · 4 ATP formés' },
   'gly-pfk': { from: 'Fructose-6-P + ATP', to: 'Fructose-1,6-bisP + ADP', enzyme: 'Enzyme à identifier', note: 'Transfert du phosphate terminal de l’ATP' },
   'gly-regulation': { from: 'Fructose-6-P + ATP', to: 'Fructose-1,6-bisP + ADP', enzyme: 'PFK1', note: 'L’ATP peut se fixer sur le site catalytique ou sur un site régulateur' },
   'lac-nad': { from: 'Pyruvate', to: 'Lactate', enzyme: 'Lactate déshydrogénase', note: 'Au cours de la réaction, le coenzyme cède ses électrons' },
-  'lac-bilan': { from: 'Glucose', to: '2 pyruvates → 2 lactates', enzyme: 'Glycolyse', note: 'La réduction du pyruvate régénère le NAD⁺' },
+  'lac-bilan': { from: '2 pyruvates', to: '2 lactates', enzyme: 'Lactate déshydrogénase', note: 'La réduction du pyruvate régénère le NAD⁺' },
   'pdh-bilan': { from: 'Pyruvate + CoA-SH + NAD⁺', to: 'Acétyl-CoA', enzyme: 'Complexe PDH', note: 'Le groupement acétyle conserve deux des trois carbones du pyruvate' },
   'krebs-entree': { from: 'Acétyl-CoA (2 C) + ? (4 C)', to: 'Citrate (6 C) + CoA-SH', enzyme: 'Citrate synthase', note: 'Le composé à identifier est régénéré en fin de cycle' },
   'krebs-bilan': { from: 'Acétyl-CoA + oxaloacétate', to: 'Citrate → … → malate', enzyme: 'Cycle de Krebs', note: 'Le malate est oxydé en oxaloacétate, qui peut entrer dans un nouveau tour' },
@@ -67,7 +65,35 @@ const captions: Record<string, [string, string]> = {
   'chaine-oxygene': ['Complexe IV', 'Cytochrome c réduit → complexe IV → O₂'],
 };
 
+function CarbonChain({ x, y, count, color }: { x: number; y: number; count: number; color: string }) {
+  const first = x - (count - 1) * 13;
+  return <g>
+    <path d={`M${first} ${y}H${x + (count - 1) * 13}`} stroke={color} strokeWidth="3"/>
+    {Array.from({ length: count }, (_, i) =>
+      <circle key={i} cx={first + i * 26} cy={y} r="8.5" fill={color} stroke="#fffaf5" strokeWidth="2"/>)}
+  </g>;
+}
+
+function GlycolysisOverview({ showEnergy }: { showEnergy: boolean }) {
+  return <g textAnchor="middle" fill="#2b3742" fontWeight="500">
+    <text x="500" y="190" fontSize="28" fontWeight="600">Glycolyse · 10 réactions</text>
+    <rect x="384" y="222" width="232" height="103" rx="24" fill="#fffbf6" stroke="#9d819f" strokeWidth="2"/>
+    <text x="500" y="259" fontSize="24">Glucose · 6 C</text>
+    <CarbonChain x={500} y={296} count={6} color="#755582"/>
+    <path d="M500 342v79m-12-14 12 14 12-14" stroke="#755582" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    {[374, 626].map(x => <g key={x}>
+      <rect x={x - 111} y="442" width="222" height="104" rx="24" fill="#f2f4ec" stroke="#8d9a80" strokeWidth="2"/>
+      <text x={x} y="478" fontSize="23">Pyruvate · 3 C</text>
+      <CarbonChain x={x} y={516} count={3} color="#596c55"/>
+    </g>)}
+    <text x="500" y="588" fontSize="18" fill="#4d5056">
+      {showEnergy ? '2 ATP investis · 4 ATP formés' : 'Les six carbones du glucose se répartissent entre deux pyruvates'}
+    </text>
+  </g>;
+}
+
 export function MetabolismVisual({ id }: { id: string }) {
+  if (id === 'gly-lieu' || id === 'gly-bilan') return <GlycolysisOverview showEnergy={id === 'gly-bilan'}/>;
   const reaction = reactions[id];
   const caption = captions[id];
   const balance = !reaction && !caption;
@@ -76,8 +102,13 @@ export function MetabolismVisual({ id }: { id: string }) {
     {reaction && <>
       <text x="410" y="230" fontSize="25">{reaction.from}</text>
       <path d="M410 266v185m-13-18 13 18 13-18" stroke="#523a60" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-      <g transform="translate(625 345) scale(1.45)"><Protein/></g>
-      <text x="625" y="403" fontSize="21">{reaction.enzyme}</text>
+      <g stroke="none">
+        <rect x="568" y="323" width="118" height="38" rx="9" fill="#e4d4ea"/>
+        <text x="627" y="349" fontSize="18" letterSpacing="2" fill="#563763">ENZYME</text>
+        <text x="627" y="393" fontSize="21" stroke="#fff6ec" strokeWidth="5">
+          {reaction.enzyme === 'Enzyme à identifier' ? 'À identifier' : reaction.enzyme}
+        </text>
+      </g>
       <text x="410" y="508" fontSize="25">{reaction.to}</text>
       {id === 'krebs-bilan' && <path d="M260 488C125 460 125 281 260 246m-16-4 16 4-12 12" stroke="#523a60" strokeWidth="3" fill="none"/>}
       <text x="500" y="593" fontSize="19" fontWeight="500">{reaction.note}</text>
