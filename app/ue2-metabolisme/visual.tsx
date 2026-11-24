@@ -158,7 +158,7 @@ function Nucleotide({ x, y, atp }: { x: number; y: number; atp: boolean }) {
 
 function ReactionDiagram({ reaction }: { reaction: Reaction }) {
   const phosphorylation = reaction.input === "ATP" && reaction.output === "ADP";
-  const lactate = reaction.enzyme === 'Lactate déshydrogénase';
+  const rounded = reaction.enzyme === 'Lactate déshydrogénase' || reaction.enzyme === 'Complexe PDH';
   const inlet = 224 + moleculeWidth(reaction.input ?? "", 20) / 2 + 9;
   const outlet = 224 + moleculeWidth(reaction.output ?? "", 20) / 2 + 9;
   return <>
@@ -171,17 +171,17 @@ function ReactionDiagram({ reaction }: { reaction: Reaction }) {
         fill="none" stroke="#634675" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
       <Nucleotide x={309} y={439} atp={false}/>
     </>}
-    {lactate && reaction.input && reaction.output && <>
+    {rounded && reaction.input && reaction.output && <>
       <Molecule x={275} y={288} text={reaction.input} accent="cofactor" small/>
       <path d={`M${286 + moleculeWidth(reaction.input, 20) / 2} 288C427 288 465 323 465 365S427 435 ${286 + moleculeWidth(reaction.output, 20) / 2} 435m12-8-12 8 12 8`}
         fill="none" stroke="#916b32" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
       <Molecule x={275} y={435} text={reaction.output} accent="cofactor" small/>
     </>}
-    {reaction.input && !phosphorylation && !lactate && <>
+    {reaction.input && !phosphorylation && !rounded && <>
       <Molecule x={224} y={288} text={reaction.input} accent="cofactor" small/>
       <path d={`M${inlet} 288C392 288 409 311 458 326m-14 3 14-3-10-10`} stroke="#916b32" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </>}
-    {reaction.output && !phosphorylation && !lactate && <>
+    {reaction.output && !phosphorylation && !rounded && <>
       <Molecule x={224} y={435} text={reaction.output} accent="cofactor" small/>
       <path d={`M458 382C404 396 391 435 ${outlet} 435m13-8-13 8 13 8`} stroke="#916b32" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </>}
