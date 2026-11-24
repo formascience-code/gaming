@@ -45,10 +45,9 @@ const fibers=[
 ];
 const freeRibosomes=[freeRibosome,[356,203],[364,215],[375,208],[389,270],[396,282],[381,283],[355,388],[366,399],[341,400],[332,492],[344,502],[322,503],[814,235],[827,230],[826,243],[868,378],[882,385],[855,384],[695,603],[708,611],[709,598],[291,570],[302,577],[292,583]];
 const vesicles:[[number,number,number,string],...Array<[number,number,number,string]>]=[[235,320,15,'#d3be75'],[264,342,12,'#e6d098'],[197,303,10,'#e5d098'],[354,144,16,'#95ba93'],[397,157,11,'#a1bc97'],[188,457,17,'#9fbd98'],[422,609,13,'#e3b795'],[459,624,9,'#dfba92'],[842,292,14,'#a4c6a0'],[759,584,12,'#a4c6a0']];
-export const CellArt=memo(function CellArt({nucleusRef,cellRef,showGolgi,detailId,detailArt}:{
+export const CellArt=memo(function CellArt({nucleusRef,cellRef,detailId,detailArt}:{
   nucleusRef:React.RefObject<SVGCircleElement|null>;
   cellRef:React.RefObject<SVGPathElement|null>;
-  showGolgi:boolean;
   detailId?:string;
   detailArt?:ReactNode;
 }) {
@@ -71,18 +70,18 @@ export const CellArt=memo(function CellArt({nucleusRef,cellRef,showGolgi,detailI
     </g>
     {vesicles.map(([x,y,r,c])=><circle key={x} cx={x} cy={y} r={r} fill={c} stroke="#fff3dd" strokeWidth="1.2" filter="url(#paper)"/>)}
     <g fill="#315e62" opacity=".83">{freeRibosomes.filter(point=>!ribosomeDetail||point!==freeRibosome).map(([x,y])=><circle key={x+','+y} cx={x} cy={y} r="3.1"/>)}</g>
-    <g data-organelle="er" fill="none" strokeLinecap="round" strokeLinejoin="round" filter="url(#paper)">
+    <g fill="none" strokeLinecap="round" strokeLinejoin="round" filter="url(#paper)">
       {reticulum.map(d=><path d={d} key={d} stroke="#429b9e" strokeWidth="13"/>)}
       {reticulum.map(d=><path d={d} key={d} stroke="#83c8c5" strokeWidth="7"/>)}
     </g>
-    <path data-organelle="er" d="M485 396C485 423 459 430 464 451C474 487 518 521 568 530" fill="none" stroke="#429b9e" strokeWidth="12" strokeLinecap="round"/>
-    <path data-organelle="er" d="M485 396C485 423 459 430 464 451C474 487 518 521 568 530" fill="none" stroke="#83c8c5" strokeWidth="6" strokeLinecap="round"/>
-    <g data-organelle="er" fill="#2c6469">{rerDots.map(([x,y])=><circle key={x+','+y} cx={x} cy={y} r="3"/>)}</g>
+    <path d="M485 396C485 423 459 430 464 451C474 487 518 521 568 530" fill="none" stroke="#429b9e" strokeWidth="12" strokeLinecap="round"/>
+    <path d="M485 396C485 423 459 430 464 451C474 487 518 521 568 530" fill="none" stroke="#83c8c5" strokeWidth="6" strokeLinecap="round"/>
+    <g fill="#2c6469">{rerDots.map(([x,y])=><circle key={x+','+y} cx={x} cy={y} r="3"/>)}</g>
     <g transform="translate(414 296)" strokeLinecap="round" fill="none" filter="url(#paper)">
       <path d="M0 17c-29 13-42 38-33 65s-5 39-20 50M-12 41c-21 5-40-3-48 15s10 22 5 39m24-15c10 5 15 19 8 28" stroke="#549598" strokeWidth="11"/>
       <path d="M0 17c-29 13-42 38-33 65s-5 39-20 50M-12 41c-21 5-40-3-48 15s10 22 5 39m24-15c10 5 15 19 8 28" stroke="#8fc0b8" strokeWidth="6"/>
     </g>
-    <g data-organelle="golgi" filter="url(#paper)">
+    <g filter="url(#paper)">
       <path d="M693 118C718 125 736 154 764 148C790 141 800 128 809 139C821 157 786 174 760 171C729 172 699 151 686 137C676 126 682 116 693 118Z" fill="#377e85"/>
       <path d="M677 145C700 156 726 181 755 183C781 184 803 162 815 175C827 193 790 210 753 207C718 204 683 177 667 161C659 149 666 139 677 145Z" fill="#368e93"/>
       <path d="M671 177C697 192 711 214 748 220C773 224 797 210 809 222C820 240 778 250 747 244C715 238 689 221 676 207C649 184 655 168 671 177Z" fill="#4ba5a4"/>
@@ -90,9 +89,8 @@ export const CellArt=memo(function CellArt({nucleusRef,cellRef,showGolgi,detailI
       <circle cx="768" cy="116" r="9" fill="#5ca3a2"/><circle cx="789" cy="107" r="6" fill="#438d95"/><circle cx="824" cy="158" r="5" fill="#438d95"/>
       <circle cx="735" cy="286" r="6" fill="#80bdba"/><circle cx="710" cy="268" r="4" fill="#6db8b3"/>
     </g>
-    {showGolgi&&<g fontSize="13" fontWeight="600" fill="#214c53"><path d="M803 125l-15 14M804 269l-16-4" stroke="#214c53" fill="none"/><text x="807" y="124">trans</text><text x="810" y="274">cis</text></g>}
     {[[274,242,-31,1],[282,534,24,.97],[473,592,-8,.86],[838,372,-62,.73]].map(([x,y,r,s])=>
-      <g key={x} data-organelle="mito" transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`} filter="url(#paper)">
+      <g key={x} transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`} filter="url(#paper)">
         <path d={outlineMito} fill="#efaa97" stroke="#b95f50" strokeWidth="3.1"/>
         <path d={foldsMito} fill="#f8d5c7" stroke="#c96956" strokeWidth="4.2" strokeLinejoin="round"/>
       </g>)}
@@ -103,23 +101,23 @@ export const CellArt=memo(function CellArt({nucleusRef,cellRef,showGolgi,detailI
         <ellipse cy="-33" rx="13.5" ry="6" fill="#ead2ac" stroke="#9f8870" strokeWidth="1.3" />
       </g>)}
     </g>
-    <circle data-organelle="nucleus" cx="618" cy="352" r="145" fill="#93c6c6" filter="url(#paper)"/>
-    <circle data-organelle="nucleus" ref={nucleusRef} cx="618" cy="352" r="131" fill="#b9dbd8"/>
-    <g data-organelle="nucleus" clipPath="url(#nuclear-field)">
-      <g data-organelle="chromatin" fill="#719da4" opacity=".50">
+    <circle cx="618" cy="352" r="145" fill="#93c6c6" filter="url(#paper)"/>
+    <circle ref={nucleusRef} cx="618" cy="352" r="131" fill="#b9dbd8"/>
+    <g clipPath="url(#nuclear-field)">
+      <g fill="#719da4" opacity=".50">
         <path d="M500 313C521 228 575 221 601 230C575 256 579 257 551 269C527 278 530 302 500 313Z"/>
         <path d="M705 253C748 278 761 314 744 347C727 330 715 329 714 301C711 280 693 273 705 253Z"/>
         <path d="M520 422C548 425 554 449 594 447C608 446 614 470 605 483C569 483 515 451 520 422Z"/>
         <path d="M677 463C675 439 701 439 713 418C731 392 745 403 743 422C732 450 707 480 677 463Z"/>
       </g>
-      <g data-organelle="chromatin" fill="none" stroke="#689ba1" strokeWidth="2.7" strokeLinecap="round" opacity=".8">
+      <g fill="none" stroke="#689ba1" strokeWidth="2.7" strokeLinecap="round" opacity=".8">
         <path d="M518 361C503 355 513 329 531 332C553 337 556 367 543 381C526 399 548 417 570 410C595 402 572 386 593 375C612 366 621 388 609 404C596 422 617 440 639 429"/>
         <path d="M550 306C560 284 582 311 595 296C613 272 581 258 596 243C608 231 630 253 625 267C617 289 647 296 658 275C670 251 690 256 698 271"/>
         <path d="M705 305C725 301 734 333 714 339C701 344 683 325 668 336C649 352 681 358 694 355C719 354 734 376 719 391C708 400 685 387 684 412"/>
         {!nuclearDetail&&<path d="M567 323C552 349 598 357 609 335C621 309 644 312 650 330C657 353 630 354 626 372"/>}
         <path d="M637 454C652 472 675 467 687 457"/>
       </g>
-      <path data-organelle="nucleolus" d="M631 386C640 369 660 367 675 374C694 384 694 404 681 418C668 430 640 426 632 414C626 405 625 396 631 386Z" fill="#f3e7bd" stroke="#e3d5a6" strokeWidth="2" filter="url(#paper)"/>
+      <path d="M631 386C640 369 660 367 675 374C694 384 694 404 681 418C668 430 640 426 632 414C626 405 625 396 631 386Z" fill="#f3e7bd" stroke="#e3d5a6" strokeWidth="2" filter="url(#paper)"/>
     </g>
     <g mask="url(#envelope-cuts)" fill="none" stroke="#3f8c94">
       <circle cx="618" cy="352" r="145" strokeWidth="3.7"/>
@@ -144,20 +142,20 @@ export const CellArt=memo(function CellArt({nucleusRef,cellRef,showGolgi,detailI
   </>;
 });
 
-export function Marker({item,onClick,selected}:{
-  item:Structure;onClick:()=>void;selected:boolean;
+export function Marker({item,onClick}:{
+  item:Structure;onClick?:()=>void;
 }) {
   const [x,y]=item.tag;
   const width=item.label.length*7.0+28;
   const label=item.id==='pore'?'Pore nucléaire — Franchir':item.label;
   return <>
     <path d={`M${item.point.join(' ')} L${x} ${y}`} fill="none" stroke={item.color} strokeWidth="1.6" pointerEvents="none"/>
-    <circle cx={item.point[0]} cy={item.point[1]} r="8" fill="transparent" className="map-marker" onClick={e=>{e.stopPropagation();onClick();}}/>
+    {onClick&&<circle cx={item.point[0]} cy={item.point[1]} r="8" fill="transparent" className="map-marker" onClick={e=>{e.stopPropagation();onClick();}}/>}
     <circle cx={item.point[0]} cy={item.point[1]} r="5.1" fill={item.color} stroke="#fff9eb" strokeWidth="1.8" pointerEvents="none"/>
-    <g role="button" tabIndex={0} aria-label={label} aria-pressed={item.id==='pore'?undefined:selected}
-      className={'map-marker '+(item.id==='pore'?'pore-label':'')} onClick={e=>{e.stopPropagation();onClick();}}
-      onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();onClick();}}}>
-    <rect x={x-width/2} y={y-15} width={width} height="30" rx="7" fill={item.id==='pore'?'#225561':'#fff9ee'} stroke={selected?'#407e82':item.id==='pore'?'#a9d1cb':'#dfd3bf'} strokeWidth="1.25"/>
+    <g role={onClick?'button':undefined} tabIndex={onClick?0:undefined} aria-label={onClick?label:undefined}
+      className={onClick?`map-marker${item.id==='pore'?' pore-label':''}`:undefined} onClick={e=>{e.stopPropagation();onClick?.();}}
+      onKeyDown={e=>{if(onClick&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopPropagation();onClick();}}}>
+    <rect x={x-width/2} y={y-15} width={width} height="30" rx="7" fill={item.id==='pore'?'#225561':'#fff9ee'} stroke={item.id==='pore'?'#a9d1cb':'#dfd3bf'} strokeWidth="1.25"/>
     <text x={x} y={y+4.5} fill={item.id==='pore'?'#fffaf2':'#29434a'} textAnchor="middle" fontSize="12.6" fontWeight="600">{item.label}</text>
     </g>
   </>;
