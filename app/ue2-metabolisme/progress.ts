@@ -13,6 +13,9 @@ export function readMetabolism(): { progress: Progress; attempts: number } {
       if (solved === 'spontanée' || solved === 'avec aide') progress.solved[id] = solved;
       if (Number.isInteger(help) && help >= 1 && help <= 3) progress.assistance[id] = help;
     }
+    const debrief = saved?.progress?.debrief;
+    const group = metabolismQuestions.filter(question => question.mission === debrief);
+    if (group.length && group.every(question => progress.solved[question.id])) progress.debrief = debrief;
     const attempts = saved?.attempts;
     return { progress, attempts: Number.isSafeInteger(attempts) && attempts > 0 ? attempts : 0 };
   } catch {

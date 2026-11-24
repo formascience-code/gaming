@@ -23,6 +23,14 @@ const hints = [
   'Rassemble les productions du cytosol et de la mitochondrie pour établir le bilan par glucose.',
 ];
 
+const missionSummaries = [
+  'Dans le cytosol, un glucose donne deux pyruvates et deux ATP nets. L’ATP en excès freine la PFK1.',
+  'La voie lactique régénère le NAD⁺ dans le cytosol. Dans la matrice, le complexe PDH transforme le pyruvate en acétyl-CoA.',
+  'Dans la matrice, un tour de Krebs régénère l’oxaloacétate et produit notamment trois NADH,H⁺ et un GTP.',
+  'Les complexes de la membrane interne établissent un gradient de protons. Leur retour vers la matrice alimente l’ATP synthase.',
+  'Le bilan par glucose additionne les productions du cytosol et de la mitochondrie. Avec la convention du cours, la navette utilisée mène à 38 ou 36 équivalents ATP.',
+];
+
 function locate(question: Question) {
   if (question.id === 'pdh-transport' || question.id === 'krebs-compartiment') return crista;
   if (question.id === 'pdh-bilan') return matrix;
@@ -43,6 +51,7 @@ export default function MetabolismGame() {
   const outline = useRef<SVGPathElement>(null);
   const restart = useRef<HTMLDialogElement>(null);
   const start = useRef<HTMLButtonElement>(null);
+  const debriefHeading = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const saved = readMetabolism();
@@ -52,11 +61,13 @@ export default function MetabolismGame() {
   }, []);
 
   const next = metabolismQuestions.find(question => !progress.solved[question.id]);
+  const debrief = progress.debrief;
+  const showDebrief = Boolean(debrief && !quiz);
   const current = quiz ?? next;
-  const mission = current?.mission ?? metabolismMissions.length;
+  const mission = quiz?.mission ?? debrief ?? next?.mission ?? metabolismMissions.length;
   const credits = Object.keys(progress.solved).length;
   const displayedCredits = credits - (flight ? 1 : 0);
-  const location = current ? locate(current) : null;
+  const location = showDebrief ? locations[mission - 1] : current ? locate(current) : null;
   const detail = Boolean(quiz && !wide);
   const scale = detail ? location?.scale ?? 1 : 1;
   const point = location?.point;
@@ -65,6 +76,11 @@ export default function MetabolismGame() {
     : undefined;
   const following = quiz ? metabolismQuestions[metabolismQuestions.indexOf(quiz) + 1] : undefined;
   const group = metabolismQuestions.filter(question => question.mission === mission);
+  const earned = group.filter(question => progress.solved[question.id]).length;
+
+  useEffect(() => {
+    if (showDebrief) debriefHeading.current?.focus();
+  }, [showDebrief]);
 
   function persist(value: Progress) {
     setProgress(value);
@@ -73,10 +89,12 @@ export default function MetabolismGame() {
 
   function award(question: Question) {
     if (progress.solved[question.id]) return;
-    persist({
-      ...progress,
-      solved: { ...progress.solved, [question.id]: progress.assistance[question.id] ? 'avec aide' : 'spontanée' },
-    });
+    const solved: Progress['solved'] = {
+      ...progress.solved,
+      [question.id]: progress.assistance[question.id] ? 'avec aide' : 'spontanée',
+    };
+    const complete = group.every(item => solved[item.id]);
+    persist({ ...progress, solved, debrief: complete ? question.mission : undefined });
 
     const goal = counter.current?.getBoundingClientRect();
     const visible = stage.current?.getBoundingClientRect();
@@ -98,6 +116,12 @@ export default function MetabolismGame() {
     }
   }
 
+  function leaveDebrief() {
+    persist({ ...progress, debrief: undefined });
+    if (next) open(next);
+    else setResults(true);
+  }
+
   return <main className="shell">
     <GameHeader title={metabolismTitle}>
       <a className="control games-back" href="/">← Accueil</a>
@@ -109,19 +133,20 @@ export default function MetabolismGame() {
       </button>
     </GameHeader>
 
-    <div className={quiz ? 'workspace challenge-open' : 'workspace'}>
+    <div className={quiz || showDebrief ? 'workspace challenge-open' : 'workspace'}>
       <aside className="sidebar">
         <section className="mission">
-          <div className="eyebrow">{current ? `MISSION 0${mission} / 05` : 'PARCOURS TERMINÉ'}</div>
-          <h2>{current ? metabolismMissions[mission - 1] : 'Métabolisme énergétique'}</h2>
+          <div className="eyebrow">{current || showDebrief ? `MISSION 0${mission} / 05` : 'PARCOURS TERMINÉ'}</div>
+          <h2>{current || showDebrief ? metabolismMissions[mission - 1] : 'Métabolisme énergétique'}</h2>
           {location && <div className="zone-pill"><i/> {location.label}</div>}
-          <p className="mission-count">{group.filter(question => progress.solved[question.id]).length} / {group.length} stéthoscopes pour cette mission</p>
-          <p className="guidance">{current ? hints[mission - 1] : 'Retrouve tes résultats et tes stéthoscopes dans le bilan.'}</p>
+          <p className="mission-count">{earned} / {group.length} stéthoscopes pour cette mission</p>
+          <p className="guidance">{showDebrief ? 'Mission réussie. Ton bilan est disponible.' : current ? hints[mission - 1] : 'Retrouve tes résultats et tes stéthoscopes dans le bilan.'}</p>
           <button ref={start} className="primary" disabled={!ready} onClick={() => {
             if (quiz) document.getElementById('quiz-title')?.focus();
+            else if (showDebrief) debriefHeading.current?.focus();
             else if (next) open(next);
             else setResults(true);
-          }}>{quiz ? 'Retour au défi' : next ? 'Relever le défi' : 'Voir le bilan'}</button>
+          }}>{quiz ? 'Retour au défi' : showDebrief ? 'Voir le bilan de la mission' : next ? 'Relever le défi' : 'Voir le bilan'}</button>
         </section>
 
         <section className="route-card" aria-labelledby="metabolism-route">
@@ -132,9 +157,10 @@ export default function MetabolismGame() {
             const done = questions.filter(question => progress.solved[question.id]).length;
             const complete = done === questions.length;
             const active = !complete && mission === index + 1;
+            const unlocked = showDebrief && next?.mission === index + 1;
             return <li key={title} className={complete ? 'complete' : active ? 'active' : 'locked'} aria-current={active ? 'step' : undefined}>
               <span className="mission-badge">{complete ? '✓' : index + 1}</span>
-              <div><strong>{title}</strong><small>{complete ? 'Accomplie' : active ? 'En cours' : 'Verrouillée'} · {done}/{questions.length}</small></div>
+              <div><strong>{title}</strong><small>{complete ? 'Accomplie' : active ? 'En cours' : unlocked ? 'Débloquée' : 'Verrouillée'} · {done}/{questions.length}</small></div>
             </li>;
           })}</ol>
           <p>Chaque bonne réponse rapporte un stéthoscope et ouvre la suite.</p>
@@ -169,14 +195,29 @@ export default function MetabolismGame() {
         helpUsed={progress.assistance[quiz.id] ?? 0} creditCount={credits} celebrating={Boolean(flight)}
         position={group.indexOf(quiz) + 1} missionTotal={group.length}
         unlockText={!following ? 'Parcours terminé !' : following.mission !== quiz.mission ? 'Mission accomplie !' : 'Défi suivant débloqué.'}
-        continueLabel={!following ? 'Voir le bilan' : following.mission !== quiz.mission ? 'Mission suivante' : 'Défi suivant'}
+        continueLabel={debrief ? 'Voir le bilan de la mission' : 'Défi suivant'}
         onHelp={level => persist({ ...progress, assistance: { ...progress.assistance, [quiz.id]: level } })}
         onCorrect={() => award(quiz)}
         onClose={() => { setQuiz(null); start.current?.focus(); }}
         onContinue={() => {
-          if (following) open(following);
-          else { setQuiz(null); setResults(true); }
+          if (debrief || !following) setQuiz(null);
+          else open(following);
         }}/>}
+      {showDebrief && <section className="mission-debrief quiz-panel" aria-labelledby="metabolism-debrief-title">
+        <div className="debrief-award"><Stethoscope size={34}/></div>
+        <p className="eyebrow">Mission {mission} sur {metabolismMissions.length}</p>
+        <h2 id="metabolism-debrief-title" ref={debriefHeading} tabIndex={-1}>Mission réussie !</h2>
+        <p className="debrief-mission">{metabolismMissions[mission - 1]}</p>
+        <div className="debrief-score"><strong>{earned}</strong><span>stéthoscopes gagnés<br/>dans cette mission</span></div>
+        <p className="debrief-total">{credits} / {metabolismQuestions.length} stéthoscopes au total</p>
+        <div className="debrief-location"><strong>{location?.label}</strong><p>{missionSummaries[mission - 1]}</p></div>
+        {next ? <div className="debrief-unlock">
+          <span className="eyebrow">Mission {next.mission} débloquée</span>
+          <strong>{metabolismMissions[next.mission - 1]}</strong>
+          <span>Destination · {locate(next).label}</span>
+        </div> : <div className="debrief-unlock"><strong>Parcours terminé !</strong></div>}
+        <button className="primary" onClick={leaveDebrief}>{next ? `Accéder à la mission ${next.mission}` : 'Voir le bilan final'}</button>
+      </section>}
     </div>
 
     {flight&&<div className="stethoscope-flight" style={{left:flight.x,top:flight.y,
