@@ -186,19 +186,40 @@ function ReactionDiagram({ reaction }: { reaction: Reaction }) {
 }
 
 function KrebsOverview() {
+  const intermediates = [
+    { x: 477, y: 157, text: 'Oxaloacétate · 4 C' },
+    { x: 730, y: 220, text: 'Citrate · 6 C' },
+    { x: 798, y: 352, text: 'Isocitrate · 6 C' },
+    { x: 736, y: 486, text: 'α-cétoglutarate · 5 C' },
+    { x: 480, y: 566, text: 'Succinyl-CoA · 4 C' },
+    { x: 248, y: 486, text: 'Succinate · 4 C' },
+    { x: 191, y: 352, text: 'Fumarate · 4 C' },
+    { x: 252, y: 220, text: 'Malate · 4 C' },
+  ];
+  const pathways = [
+    'M594 161Q662 170 690 197',
+    'M767 246Q798 278 800 321',
+    'M800 382Q797 427 768 457',
+    'M692 514Q644 553 602 559',
+    'M358 559Q309 550 281 515',
+    'M221 457Q190 427 191 382',
+    'M191 322Q192 279 223 246',
+    'M293 192Q326 166 361 161',
+  ];
   return <>
-    <Molecule x={490} y={218} text="Acétyl-CoA + oxaloacétate"/>
-    <Molecule x={677} y={368} text="Citrate"/>
-    <Molecule x={491} y={516} text="Malate" accent="product"/>
-    <Molecule x={300} y={368} text="Oxaloacétate" accent="product"/>
-    <g fill="none" stroke="#634675" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M589 247Q675 263 677 328m-10-13 10 13 9-13"/>
-      <path d="M677 408Q666 479 551 508m10-12-10 12 15 4"/>
-      <path d="M429 508Q307 480 300 408m-8 15 8-15 11 11"/>
-      <path d="M300 328Q305 263 385 247m-11-5 11 5-9 10"/>
+    <defs>
+      <marker id="krebs-arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.8" markerHeight="3.8" orient="auto">
+        <path d="M1 1l7 4-7 4" fill="none" stroke="#634675" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+      </marker>
+    </defs>
+    <g fill="none" stroke="#634675" strokeWidth="3.8" strokeLinecap="round" markerEnd="url(#krebs-arrowhead)">
+      {pathways.map(path => <path key={path} d={path}/>)}
+      <path d="M739 142Q694 142 652 173" strokeDasharray="5 5"/>
     </g>
-    <text x="490" y="380" fontSize="23">Un tour du cycle</text>
-    <text x="490" y="585" fontSize="18" fontWeight="500">Le malate est oxydé en oxaloacétate.</text>
+    {intermediates.map(item => <Molecule key={item.text} {...item} small accent={item.text.startsWith('Oxaloacétate') ? 'product' : 'substrate'}/>)}
+    <Molecule x={829} y={142} text="Acétyl-CoA · 2 C" accent="cofactor" small/>
+    <text x="493" y="347" fontSize="34">Cycle de Krebs</text>
+    <text x="493" y="383" fontSize="19" fontWeight="500">L’oxaloacétate est régénéré à chaque tour.</text>
   </>;
 }
 

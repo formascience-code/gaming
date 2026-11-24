@@ -12,6 +12,7 @@ type Location = { point: Point; scale: number; label: string };
 
 const cytosol: Location = { point: [213, 389], scale: 13, label: 'Cytosol' };
 const matrix: Location = { point: [295, 229], scale: 4.8, label: 'Matrice mitochondriale' };
+const matrixDetail: Location = { point: [327, 210], scale: 48, label: 'Matrice mitochondriale' };
 const crista: Location = { point: [284, 258], scale: 7.4, label: 'Membrane interne · crête mitochondriale' };
 const cell: Location = { point: [335, 314], scale: 1.6, label: 'Du cytosol aux mitochondries' };
 const locations = [cytosol, cytosol, matrix, crista, cell];
@@ -32,6 +33,7 @@ const missionSummaries = [
 ];
 
 function locate(question: Question) {
+  if (question.id === 'krebs-bilan') return matrixDetail;
   if (question.id === 'pdh-transport' || question.id === 'krebs-compartiment') return crista;
   if (question.id === 'pdh-bilan') return matrix;
   return locations[question.mission - 1];
