@@ -189,26 +189,27 @@ function UnknownMolecule({ x, y }: { x: number; y: number }) {
 }
 
 function KrebsOverview({ identifyEntry }: { identifyEntry: boolean }) {
-  const intermediates = [
-    { x: 477, y: 157, text: 'Oxaloacétate · 4 C' },
-    { x: 670, y: 230, text: 'Citrate · 6 C' },
-    { x: 740, y: 352, text: 'Isocitrate · 6 C' },
-    { x: 669, y: 482, text: 'α-cétoglutarate · 5 C' },
-    { x: 480, y: 566, text: 'Succinyl-CoA · 4 C' },
-    { x: 293, y: 482, text: 'Succinate · 4 C' },
-    { x: 219, y: 352, text: 'Fumarate · 4 C' },
-    { x: 293, y: 230, text: 'Malate · 4 C' },
+  const names = [
+    'Oxaloacétate · 4 C', 'Citrate · 6 C', 'Isocitrate · 6 C', 'α-cétoglutarate · 5 C',
+    'Succinyl-CoA · 4 C', 'Succinate · 4 C', 'Fumarate · 4 C', 'Malate · 4 C',
   ];
-  const pathways = [
-    'M593 176Q635 192 652 214',
-    'M711 254Q740 281 740 322',
-    'M740 382Q737 426 711 447',
-    'M617 515Q600 541 586 549',
-    'M370 549Q333 535 314 511',
-    'M250 447Q219 416 219 382',
-    'M219 322Q222 280 249 254',
-    'M338 211Q363 190 381 183',
-  ];
+  const radius = 230;
+  const step = Math.PI / 4;
+  const angleAt = (index: number) => -Math.PI / 2 + (index - .5) * step;
+  const pointAt = (angle: number) => ({ x: 500 + radius * Math.cos(angle), y: 390 + radius * Math.sin(angle) });
+  const intermediates = names.map((text, index) => ({ ...pointAt(angleAt(index)), text }));
+  const pathways = names.map((text, index) => {
+    const next = (index + 1) % names.length;
+    const clearance = (label: string, angle: number, hidden: boolean) => {
+      const halfWidth = hidden ? 46 : moleculeWidth(label, 20) / 2;
+      return (Math.min((halfWidth + 11) / Math.abs(Math.sin(angle)), 32 / Math.abs(Math.cos(angle))) + 2) / radius;
+    };
+    const angle = angleAt(index);
+    const nextAngle = angle + step;
+    const start = pointAt(angle + clearance(text, angle, identifyEntry && index === 0));
+    const end = pointAt(nextAngle - clearance(names[next], nextAngle, identifyEntry && next === 0));
+    return `M${start.x} ${start.y}A${radius} ${radius} 0 0 1 ${end.x} ${end.y}`;
+  });
   return <>
     <defs>
       <marker id="krebs-arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.8" markerHeight="3.8" orient="auto">
@@ -217,13 +218,13 @@ function KrebsOverview({ identifyEntry }: { identifyEntry: boolean }) {
     </defs>
     <g fill="none" stroke="#634675" strokeWidth="3.8" strokeLinecap="round" markerEnd="url(#krebs-arrowhead)">
       {pathways.map(path => <path key={path} d={path}/>)}
-      <path d="M739 142Q680 140 635 190" strokeDasharray="5 5"/>
+      <path d="M500 111V157" stroke="#916b32"/>
     </g>
-    {identifyEntry && <UnknownMolecule x={477} y={157}/>}
+    {identifyEntry && <UnknownMolecule x={intermediates[0].x} y={intermediates[0].y}/>}
     {intermediates.slice(identifyEntry ? 1 : 0).map(item => <Molecule key={item.text} {...item} small accent={item.text.startsWith('Oxaloacétate') ? 'product' : 'substrate'}/>)}
-    <Molecule x={829} y={142} text="Acétyl-CoA · 2 C" accent="cofactor" small/>
-    <text x="493" y="347" fontSize="34">Cycle de Krebs</text>
-    <text x="493" y="383" fontSize="19" fontWeight="500">{identifyEntry ? 'Première réaction · citrate synthase' : 'L’oxaloacétate est régénéré à chaque tour.'}</text>
+    <Molecule x={500} y={81} text="Acétyl-CoA · 2 C" accent="cofactor" small/>
+    <text x="500" y="380" fontSize="34">Cycle de Krebs</text>
+    <text x="500" y="415" fontSize="17" fontWeight="500">{identifyEntry ? 'Première réaction · citrate synthase' : 'L’oxaloacétate est régénéré à chaque tour.'}</text>
   </>;
 }
 
