@@ -7,6 +7,13 @@ import { getAttempts } from './game-progress';
 import { loadProgress, questions, Stethoscope } from './quiz';
 import styles from './games.module.css';
 
+const units = [
+  { id: 'UE1', title: 'Chimie' },
+  { id: 'UE2', title: 'Biochimie' },
+  { id: 'UE4', title: 'Anatomie' },
+  { id: 'UE5', title: 'Biologie cellulaire' },
+] as const;
+
 const games = [
   { unit: 'UE2', title: 'Synthèse des protéines', summary: 'Du noyau au ribosome, suivez le trajet de l’information génétique.', crop: '115 80 810 560', color: 'protein', href: '/ue2-synthese-des-proteines' },
   { unit: 'UE2', title: 'Métabolisme', summary: 'Glycolyse dans le cytosol, cycle de Krebs dans la matrice et chaîne respiratoire dans la membrane interne des mitochondries.', crop: '125 135 460 321', color: 'metabolism' },
@@ -42,24 +49,38 @@ export default function GamingHome() {
       <svg width="0" height="0" className={styles.atlas} aria-hidden="true">
         <defs><g id="catalogue-cell"><CellArt nucleusRef={nucleusRef} cellRef={cellRef}/></g></defs>
       </svg>
-      <div className={styles.cards}>
-        {games.map(game => <article key={game.title} className={styles.card}>
-          <div className={`${styles.art} ${styles[game.color]}`}>
-            <svg viewBox={game.crop} preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#catalogue-cell"/></svg>
-          </div>
-          <div className={styles.content}>
-            <div className={styles.labels}><span className={styles.unit}>{game.unit}</span><span>{'href' in game ? 'Disponible' : 'À venir'}</span></div>
-            <h3>{game.title}</h3>
-            <p>{game.summary}</p>
-            {'href' in game && <>
-              <dl className={styles.stats}>
-                <div><dt><Stethoscope size={16}/> Stéthoscopes</dt><dd>{stats?.score ?? '–'} / {questions.length}</dd></div>
-                <div><dt>Tentatives</dt><dd>{stats?.attempts ?? '–'}</dd></div>
-              </dl>
-              <a className={styles.play} href={game.href} aria-label={`Jouer à ${game.unit} – ${game.title}`}>{stats?.attempts ? 'Reprendre' : 'Jouer'} <span aria-hidden="true">→</span></a>
-            </>}
-          </div>
-        </article>)}
+      <div className={styles.units}>
+        {units.map(unit => {
+          const unitGames = games.filter(game => game.unit === unit.id);
+          const total = unitGames.reduce((sum, game) => sum + ('href' in game ? stats?.score ?? 0 : 0), 0);
+          return <section key={unit.id} className={styles.unitBox} aria-labelledby={`unit-${unit.id}`}>
+            <header className={styles.unitHeader}>
+              <h3 id={`unit-${unit.id}`}><span className={styles.unit}>{unit.id}</span> {unit.title}</h3>
+              <span className={styles.unitTotal}><Stethoscope size={18}/> {total} stéthoscope{total > 1 ? 's' : ''} au total</span>
+            </header>
+            {unitGames.length === 0 ? <p className={styles.empty}>Aucun jeu pour le moment.</p> :
+              <div className={styles.cards}>
+                {unitGames.map(game => {
+                  const available = 'href' in game;
+                  return <article key={game.title} className={styles.card}>
+                    <div className={`${styles.art} ${styles[game.color]}`}>
+                      <svg viewBox={game.crop} preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#catalogue-cell"/></svg>
+                    </div>
+                    <div className={styles.content}>
+                      <span className={styles.labels}>{available ? 'Disponible' : 'À venir'}</span>
+                      <h4>{game.title}</h4>
+                      <p>{game.summary}</p>
+                      <dl className={styles.stats}>
+                        <div><dt><Stethoscope size={16}/> Stéthoscopes</dt><dd>{available ? stats?.score ?? '–' : 0} / {available ? questions.length : 20}</dd></div>
+                        <div><dt>Tentatives</dt><dd>{available ? stats?.attempts ?? '–' : 0}</dd></div>
+                      </dl>
+                      {available && <a className={styles.play} href={game.href} aria-label={`Jouer à ${game.unit} – ${game.title}`}>{stats?.attempts ? 'Reprendre' : 'Jouer'} <span aria-hidden="true">→</span></a>}
+                    </div>
+                  </article>;
+                })}
+              </div>}
+          </section>;
+        })}
       </div>
       <p className={styles.storage}>Les statistiques sont enregistrées dans ce navigateur.</p>
     </main>
