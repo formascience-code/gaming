@@ -250,34 +250,43 @@ function DiagramArrows() {
 function RespiratoryOverview() {
   return <g textAnchor="middle" fontWeight="500" fill="#2b3742" fontSize="20">
     <DiagramArrows/>
-    <path d="M0 182H840Q968 182 968 310Q968 454 840 454H0" fill="none" stroke="#c86f5d" strokeWidth="14"/>
-    <path d="M0 197H840Q952 197 952 310Q952 439 840 439H0" fill="#f3e2d6" stroke="#e7a28f" strokeWidth="8"/>
+    <path d="M0 182H818C910 182 960 231 960 306S910 429 818 429H0" fill="#f3e2d6"/>
+    <path d="M0 182H818C910 182 960 231 960 306S910 429 818 429H0"
+      fill="none" stroke="#a85d50" strokeWidth="36"/>
+    <path d="M0 182H818C910 182 960 231 960 306S910 429 818 429H0"
+      fill="none" stroke="#f5bfad" strokeWidth="29"/>
     <text x="475" y="239">Espace intracristal · en continuité avec l’espace intermembranaire</text>
-    <path d="M0 429H914" stroke="#f5bfad" strokeWidth="32"/>
-    {Array.from({ length: 51 }, (_, i) => <g key={i} fill="#a85d50">
+    <text x="34" y="398" fontSize="15" textAnchor="start">Membrane interne</text>
+    {Array.from({ length: 46 }, (_, i) => <g key={i} fill="#a85d50">
       <circle cx={i * 18} cy="417" r="4"/><circle cx={i * 18} cy="441" r="4"/>
     </g>)}
     {([[132, 'I', '#b9c6ac'], [272, 'II', '#dfc17e'], [515, 'III', '#d0bbdc'], [706, 'IV', '#e6a79a']] as const).map(([x, label, color]) => <g key={label} transform={`translate(${x} 429)`}>
-      <rect x="-36" y="-45" width="72" height="90" rx="26" fill={color} stroke="#594768" strokeWidth="2"/>
-      <text y="7" fontWeight="700">{label}</text>
+      <rect x="-36" y={label === "II" ? 3 : -45} width="72" height={label === "II" ? 57 : 90} rx={label === "II" ? 20 : 26} fill={color} stroke="#594768" strokeWidth="2"/>
+      <text y={label === "II" ? 36 : 7} fontWeight="700">{label}</text>
     </g>)}
     <g fill="none" stroke="#795822" strokeWidth="3.5" markerEnd="url(#met-electron)">
-      <path d="M163 455Q260 499 348 449"/><path d="M308 433H344"/><path d="M399 429H471"/>
-      <path d="M549 400Q572 367 608 365"/><path d="M647 365Q671 369 683 388"/>
+      <path d="M169 420H347"/>
+      <path d="M306 446Q327 437 347 430"/>
+      <path d="M399 429H471"/>
+      <path d="M549 400Q573 367 596 365"/>
+      <path d="M661 365Q678 369 686 388"/>
+      <path d="M145 520V478"/><path d="M272 520V492"/>
+      <path d="M712 478V514"/>
     </g>
-    <text x="372" y="435" fontWeight="700" fill="#795822">Q</text>
-    <text x="628" y="356" fontSize="17">Cyt. c</text>
+    <ellipse cx="373" cy="429" rx="20" ry="17" fill="#fff2d9" stroke="#916b32" strokeWidth="2"/>
+    <text x="373" y="435" fontWeight="700" fill="#795822">Q</text>
+    <rect x="601" y="346" width="56" height="34" rx="17" fill="#fff2d9" stroke="#916b32" strokeWidth="2"/>
+    <text x="629" y="369" fontSize="15">Cyt. c</text>
     <g fill="none" stroke="#366e79" strokeWidth="4" markerEnd="url(#met-proton)">
       {[132, 515, 706].map(x => <path key={x} d={`M${x - 18} 463V309`}/>)}
-      <path d="M875 306V510"/>
     </g>
     {[114, 497, 688, 875].map(x => <text key={x} x={x} y="291" fill="#366e79" fontWeight="700">H⁺</text>)}
     <path d="M875 443V477" stroke="#52644d" strokeWidth="8"/>
     <rect x="855" y="402" width="40" height="54" rx="14" fill="#a6ab99" stroke="#52644d" strokeWidth="2"/>
     <ellipse cx="875" cy="493" rx="36" ry="23" fill="#a6ab99" stroke="#52644d" strokeWidth="2"/>
-    <path d="M875 406V509" stroke="#366e79" strokeWidth="3.5" markerEnd="url(#met-proton)"/>
-    <text x="132" y="549" fontSize="18">NADH + H⁺</text>
-    <text x="272" y="549" fontSize="18">Succinate</text>
+    <path d="M875 306V525" stroke="#366e79" strokeWidth="3.5" markerEnd="url(#met-proton)"/>
+    <text x="142" y="549" fontSize="17">NADH + H⁺ → NAD⁺</text>
+    <text x="344" y="549" fontSize="17">Succinate → fumarate</text>
     <text x="695" y="549" fontSize="18">O₂ → H₂O</text>
     <text x="875" y="546" fontSize="17">ATP synthase</text>
     <text x="875" y="578" fontSize="18" fontWeight="600">ADP + Pᵢ → ATP</text>
