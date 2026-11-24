@@ -179,8 +179,8 @@ function ReactionDiagram({ reaction }: { reaction: Reaction }) {
       <path d={`M458 382C404 396 391 435 ${outlet} 435m13-8-13 8 13 8`} stroke="#916b32" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </>}
     <g transform="translate(502 312)" textAnchor="start">
-      <rect width="100" height="32" rx="8" fill="#e4d4ea" stroke="none"/>
-      <text x="50" y="21" textAnchor="middle" fontSize="16" letterSpacing="1.6" fill="#563763" stroke="none">ENZYME</text>
+      <rect width="136" y="-4" height="38" rx="9" fill="#e4d4ea" stroke="none"/>
+      <text x="68" y="23" textAnchor="middle" fontSize="23" letterSpacing="1.6" fill="#563763" stroke="none">ENZYME</text>
       <text y="60" fontSize="23">{reaction.enzyme}</text>
       <text y="92" fontSize="19" fontWeight="500">
         {reaction.action.map((line, i) => <tspan key={line} x="0" dy={i ? 25 : 0}>{line}</tspan>)}
