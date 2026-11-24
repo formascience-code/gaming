@@ -170,7 +170,7 @@ export default function Page() {
     setWideView(false);
     setQuiz(question);
   }
-  function advance(passage=false) {
+  function advance(passage=false, onArrival?:()=>void) {
     if(busy.current||debrief) return;
     setSelected(null);
     setNotice('');
@@ -180,7 +180,7 @@ export default function Page() {
         showQuiz(questions[0]);
         return;
       }
-      animate([...cytoplasmRoute(outerPore),pore,nuclearArrival],'nucleus');
+      animate([...cytoplasmRoute(outerPore),pore,nuclearArrival],'nucleus',onArrival);
     }
     if(zone==='nucleus') animate([nuclearArrival,pore,outerPore],'cytoplasm');
     map.current?.focus({preventScroll:true});
@@ -392,7 +392,10 @@ export default function Page() {
       onHelp={level=>{const p=savedProgress.current;writeProgress({...p,assistance:{...p.assistance,[quiz.id]:level}});}}
       onCorrect={()=>award(quiz)} onClose={()=>setQuiz(null)} onContinue={()=>{
         setQuiz(null);
-        if(quiz.id==='pore'&&zone==='cytoplasm') {advance(true);return;}
+        if(quiz.id==='pore'&&zone==='cytoplasm') {
+          advance(true, following ? ()=>showQuiz(following) : undefined);
+          return;
+        }
         if(missionCompleted||!following) return;
         const destination=following.mission<4?'nucleus':'cytoplasm';
         if(zone===destination) showQuiz(following);
