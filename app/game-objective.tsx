@@ -16,7 +16,7 @@ export function GameObjective() {
     <form method="dialog">
       <button className={styles.close} aria-label="Fermer les règles du jeu">×</button>
       <h2 id="game-objective-title">Ton objectif</h2>
-      <p className={styles.intro}>Accomplis les <strong>5 missions</strong> et remporte les <strong>20 stéthoscopes</strong> pour gagner la partie.</p>
+      <p className={styles.intro}>Le jeu comporte <strong>5 missions</strong>, chacune composée de plusieurs défis. Chaque défi réussi te rapporte <strong>1 stéthoscope</strong> et débloque le suivant.</p>
       <div className={styles.board}>
         <div className={styles.route} aria-hidden="true">
           {missionNumbers.map(number => <span key={number}>{number}</span>)}
@@ -26,7 +26,7 @@ export function GameObjective() {
           <span><strong>+1 stéthoscope</strong><small>par défi réussi</small></span>
         </div>
       </div>
-      <p className={styles.rule}>Chaque mission comporte plusieurs défis. Réussis un défi pour débloquer le suivant.</p>
+      <p className={styles.rule}>Pour gagner la partie, termine les <strong>5 missions</strong> et remporte les <strong>20 stéthoscopes</strong>.</p>
       <button className={styles.play} autoFocus>C’est parti ! <span aria-hidden="true">→</span></button>
     </form>
   </dialog>;
