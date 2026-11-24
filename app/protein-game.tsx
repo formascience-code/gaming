@@ -301,7 +301,7 @@ export default function Page() {
 
   return <main className="shell">
     <GameHeader title={gameTitle}>
-      <a className="control games-back" href="/">← Jeux</a>
+      <a className="control games-back" href="/">← Accueil</a>
 <button className="control restart-button" type="button" disabled={!ready}
         onClick={()=>restartDialog.current?.showModal()}><Icon name="reset"/> Recommencer</button><button ref={counter} className="credit-counter stethoscope-counter" onClick={()=>setResults(true)}
         aria-label={`Bilan · ${credits-(flight?1:0)} stéthoscope${credits-(flight?1:0)===1?'':'s'}`}>

@@ -82,7 +82,7 @@ export default function MetabolismGame() {
 
   return <main className="shell">
     <GameHeader title={metabolismTitle}>
-      <a className="control games-back" href="/">← Jeux</a>
+      <a className="control games-back" href="/">← Accueil</a>
       <button type="button" className="control restart-button" disabled={!ready || credits === 0 && attempts.current === 0}
         onClick={() => restart.current?.showModal()}>Recommencer</button>
       <button type="button" className="credit-counter stethoscope-counter"
