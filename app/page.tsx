@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { GameHeader } from './game-header';
 import { getAttempts } from './game-progress';
 import { loadProgress, questions, Stethoscope } from './quiz';
+import { readMetabolism } from './ue2-metabolisme/progress';
+import { metabolismQuestions } from './ue2-metabolisme/questions';
 import styles from './games.module.css';
 
 const units = [
@@ -13,7 +15,7 @@ const units = [
 
 const games = [
   { unit: 'UE2', title: 'Synthèse des protéines', href: '/ue2-synthese-des-proteines' },
-  { unit: 'UE2', title: 'Métabolisme' },
+  { unit: 'UE2', title: 'Métabolisme', href: '/ue2-metabolisme' },
   { unit: 'UE5', title: 'La mitochondrie' },
   { unit: 'UE5', title: 'Le système endomembranaire' },
 ] as const;
@@ -39,11 +41,15 @@ function UnitEmblem({ unit }: { unit: 'UE2' | 'UE5' }) {
 }
 
 export default function GamingHome() {
-  const [stats, setStats] = useState<{ score: number; attempts: number }>();
+  const [stats, setStats] = useState<Record<string, { score: number; attempts: number }>>({});
   useEffect(() => {
     function refreshStats() {
       const score = Object.keys(loadProgress().solved).length;
-      setStats({ score, attempts: getAttempts(score > 0) });
+      const metabolism = readMetabolism();
+      setStats({
+        '/ue2-synthese-des-proteines': { score, attempts: getAttempts(score > 0) },
+        '/ue2-metabolisme': { score: Object.keys(metabolism.progress.solved).length, attempts: metabolism.attempts },
+      });
     }
     refreshStats();
     window.addEventListener('pageshow', refreshStats);
@@ -64,7 +70,7 @@ export default function GamingHome() {
       <div className={styles.units}>
         {units.map(unit => {
           const unitGames = games.filter(game => game.unit === unit.id);
-          const total = unitGames.reduce((sum, game) => sum + ('href' in game ? stats?.score ?? 0 : 0), 0);
+          const total = unitGames.reduce((sum, game) => sum + ('href' in game ? stats[game.href]?.score ?? 0 : 0), 0);
           return <section key={unit.id} className={styles.unitBox} aria-labelledby={`unit-${unit.id}`}>
             <header className={styles.unitHeader}>
               <div className={styles.unitHeading}>
@@ -76,14 +82,15 @@ export default function GamingHome() {
             <ul className={styles.cards}>
                 {unitGames.map(game => {
                   const available = 'href' in game;
-                  const maximum = available ? questions.length : 20;
-                  const score = available ? stats?.score ?? 0 : 0;
+                  const maximum = available && game.href === '/ue2-synthese-des-proteines' ? questions.length : metabolismQuestions.length;
+                  const attempts = available ? stats[game.href]?.attempts ?? 0 : 0;
+                  const score = available ? stats[game.href]?.score ?? 0 : 0;
                   return <li key={game.title} className={styles.card}>
                     <div className={styles.content}>
                       <div className={styles.details}>
                         {!available && <span className={styles.labels}>À venir</span>}
                         <h4>{game.title}</h4>
-                        <p className={styles.attempts}>{available ? stats?.attempts ?? 0 : 0} {(available ? stats?.attempts : 0) === 1 ? 'tentative' : 'tentatives'}</p>
+                        <p className={styles.attempts}>{attempts} {attempts === 1 ? 'tentative' : 'tentatives'}</p>
                       </div>
                       <div className={styles.score} aria-label={`${score} stéthoscopes gagnés sur ${maximum}`}>
                         <span><Stethoscope size={19}/><span>{score}<small>/{maximum}</small></span></span>
@@ -91,7 +98,7 @@ export default function GamingHome() {
                       <progress className={styles.progress} value={score} max={maximum} aria-label={`Progression – ${game.title}`}/>
                     </div>
                     {available && <a className={styles.play} href={game.href}>
-                      {stats?.attempts ? 'Reprendre' : 'Jouer'} <span className={styles.srOnly}>à {game.title}</span><span aria-hidden="true">→</span>
+                      {attempts ? 'Reprendre' : 'Jouer'} <span className={styles.srOnly}>à {game.title}</span><span aria-hidden="true">→</span>
                     </a>}
                   </li>;
                 })}

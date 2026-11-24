@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import bank from './data/questions.json';
 
 export const questions=bank;
-export type Question=(typeof bank)[number];
+type ProteinQuestion = (typeof bank)[number];
+export type Question = ProteinQuestion & { alternative: ProteinQuestion['alternative'] & { explanation?: string } };
 export type Progress={solved:Record<string,'spontanée'|'avec aide'>; assistance:Record<string,number>; debrief?:number};
 export const progressKey='formaScience.cellQuest.quiz.v1';
 export const missions=[
@@ -37,8 +38,10 @@ export function Stethoscope({size=20}:{size?:number}) {
   </svg>;
 }
 
-export function Quiz({question,helpUsed,onHelp,onCorrect,onClose,onContinue,creditCount,continueLabel,unlockText,position,missionTotal,celebrating}:{
+export function Quiz({question,helpUsed,onHelp,onCorrect,onClose,onContinue,creditCount,continueLabel,unlockText,position,missionTotal,celebrating,questionBank=questions,missionTitles=missions}:{
   question:Question;
+  questionBank?: readonly Question[];
+  missionTitles?: readonly string[];
   helpUsed:number;
   onHelp:(level:number)=>void;
   onCorrect:()=>void;
@@ -60,7 +63,7 @@ export function Quiz({question,helpUsed,onHelp,onCorrect,onClose,onContinue,cred
   const [feedback,setFeedback]=useState<'wrong'|'explain'|'success'|null>(null);
   const current=alternative?question.alternative:question;
   const options=alternative?['Vrai','Faux']:question.options;
-  const seed=questions.indexOf(question);
+  const seed=questionBank.indexOf(question);
   const order=options.map((_,i)=>options.length===5?(i*(seed%4+1)+seed+2)%5:i);
   const count=current.answer.length;
   const isQcm=!alternative&&question.kind==='qcm';
@@ -113,7 +116,7 @@ export function Quiz({question,helpUsed,onHelp,onCorrect,onClose,onContinue,cred
 
   return <section className="quiz-dialog quiz-panel" aria-labelledby="quiz-title">
     <div className="dialog-head">
-      <div className="eyebrow">Mission {question.mission} sur {missions.length} · Défi {position} sur {missionTotal}</div>
+      <div className="eyebrow">Mission {question.mission} sur {missionTitles.length} · Défi {position} sur {missionTotal}</div>
       <button className="icon-button" aria-label="Fermer le quiz" onClick={onClose}><span aria-hidden="true">×</span></button>
     </div>
     <h2 id="quiz-title" ref={heading} tabIndex={-1}>{current.prompt}</h2>
@@ -128,7 +131,7 @@ export function Quiz({question,helpUsed,onHelp,onCorrect,onClose,onContinue,cred
       </fieldset>
       {feedback==='success'&&<div className="quiz-reward" role="status">
         <Stethoscope size={28}/>
-        <div><strong>+1 stéthoscope gagné !</strong><p>{unlockText}</p><small>{creditCount} / {questions.length} au total</small></div>
+        <div><strong>+1 stéthoscope gagné !</strong><p>{unlockText}</p><small>{creditCount} / {questionBank.length} au total</small></div>
       </div>}
       {feedback!=='explain'&&<div className="correction-tools">
         {feedback!=='success'&&hints<2&&<button className="control" type="button" onClick={reveal}>Indice {hints+1}</button>}
@@ -143,10 +146,10 @@ export function Quiz({question,helpUsed,onHelp,onCorrect,onClose,onContinue,cred
       </div>}
       {correctionOpen&&<section className="quiz-feedback" aria-label="Corrigé détaillé">
         <strong>Corrigé détaillé</strong>
-        {isQcm?<ol className="rationales">{order.map((answer,i)=><li key={answer}>
+        {isQcm&&question.rationales.length===options.length?<ol className="rationales">{order.map((answer,i)=><li key={answer}>
           <strong>{String.fromCharCode(65+i)}. {current.answer.includes(answer)?'Exact':'Faux'}</strong>
           <span>{question.rationales[answer]}</span>
-        </li>)}</ol>:<p><strong>{options[current.answer[0]]}.</strong> {question.explanation}</p>}
+        </li>)}</ol>:<p>{!isQcm&&<strong>{options[current.answer[0]]}. </strong>}{alternative ? question.alternative.explanation ?? question.explanation : question.explanation}</p>}
       </section>}
       {feedback==='success'?<button className="primary" type="button" onClick={onContinue} disabled={celebrating}>{continueLabel}</button>:
         feedback==='explain'?<button className="primary" type="button" onClick={retry}>Relever un défi équivalent</button>:
@@ -155,20 +158,22 @@ export function Quiz({question,helpUsed,onHelp,onCorrect,onClose,onContinue,cred
   </section>;
 }
 
-export function Results({progress,onClose}:{progress:Progress;onClose:()=>void}) {
+export function Results({progress,onClose,questionBank=questions,missionTitles=missions}:{
+  progress:Progress; onClose:()=>void; questionBank?:readonly Question[]; missionTitles?:readonly string[];
+}) {
   const modal=useRef<HTMLDialogElement>(null);
   useEffect(()=>{modal.current?.showModal();},[]);
   const results=Object.values(progress.solved);
   return <dialog ref={modal} className="quiz-dialog" aria-labelledby="results-title" onCancel={event=>{event.preventDefault();onClose();}}>
     <div className="dialog-head"><h2 id="results-title">Bilan</h2><button className="icon-button" onClick={onClose} aria-label="Fermer le bilan">×</button></div>
     <div className="score-grid">
-      <div><strong>{results.length}/{questions.length}</strong><span>Stéthoscopes</span></div>
+      <div><strong>{results.length}/{questionBank.length}</strong><span>Stéthoscopes</span></div>
       <div><strong>{results.filter(v=>v==='spontanée').length}</strong><span>Spontanées</span></div>
       <div><strong>{results.filter(v=>v==='avec aide').length}</strong><span>Avec aide</span></div>
     </div>
     <ol className="result-list">
-      {missions.map((title,i)=>{
-        const group=questions.filter(q=>q.mission===i+1);
+      {missionTitles.map((title,i)=>{
+        const group=questionBank.filter(q=>q.mission===i+1);
         const done=group.filter(q=>progress.solved[q.id]).length;
         return <li key={title}><span>{title}</span><strong>{done}/{group.length}</strong></li>;
       })}
