@@ -34,11 +34,6 @@ const reactions: Record<string, Reaction> = {
     input: 'CoA-SH + NAD⁺', output: 'CO₂ + NADH + H⁺',
     action: ['Décarboxyle et oxyde le pyruvate', 'puis transfère l’acétyle au CoA'],
   },
-  'krebs-entree': {
-    from: 'Acétyl-CoA + ? (4 C)', to: 'Citrate (6 C)', enzyme: 'Citrate synthase',
-    input: 'H₂O', output: 'CoA-SH',
-    action: ['Condense le groupement acétyle', 'avec le composé à identifier'],
-  },
   'krebs-regulation': {
     from: 'Isocitrate', to: 'α-cétoglutarate', carbons: [6, 5], enzyme: 'Isocitrate déshydrogénase',
     input: 'NAD⁺', output: 'CO₂ + NADH + H⁺',
@@ -185,7 +180,15 @@ function ReactionDiagram({ reaction }: { reaction: Reaction }) {
   </>;
 }
 
-function KrebsOverview() {
+function UnknownMolecule({ x, y }: { x: number; y: number }) {
+  return <g stroke="none">
+    <rect x={x - 46} y={y - 23} width="92" height="46" rx="23" fill="#f9dcd7" stroke="#bc7069" strokeWidth="2"/>
+    <text x={x - 14} y={y + 9} fontSize="30" fill="#9b292d">?</text>
+    <text x={x + 17} y={y + 6} fontSize="17" fill="#752c34">4 C</text>
+  </g>;
+}
+
+function KrebsOverview({ identifyEntry }: { identifyEntry: boolean }) {
   const intermediates = [
     { x: 477, y: 157, text: 'Oxaloacétate · 4 C' },
     { x: 670, y: 230, text: 'Citrate · 6 C' },
@@ -216,10 +219,11 @@ function KrebsOverview() {
       {pathways.map(path => <path key={path} d={path}/>)}
       <path d="M739 142Q680 140 635 190" strokeDasharray="5 5"/>
     </g>
-    {intermediates.map(item => <Molecule key={item.text} {...item} small accent={item.text.startsWith('Oxaloacétate') ? 'product' : 'substrate'}/>)}
+    {identifyEntry && <UnknownMolecule x={477} y={157}/>}
+    {intermediates.slice(identifyEntry ? 1 : 0).map(item => <Molecule key={item.text} {...item} small accent={item.text.startsWith('Oxaloacétate') ? 'product' : 'substrate'}/>)}
     <Molecule x={829} y={142} text="Acétyl-CoA · 2 C" accent="cofactor" small/>
     <text x="493" y="347" fontSize="34">Cycle de Krebs</text>
-    <text x="493" y="383" fontSize="19" fontWeight="500">L’oxaloacétate est régénéré à chaque tour.</text>
+    <text x="493" y="383" fontSize="19" fontWeight="500">{identifyEntry ? 'Première réaction · citrate synthase' : 'L’oxaloacétate est régénéré à chaque tour.'}</text>
   </>;
 }
 
@@ -317,11 +321,11 @@ export function MetabolismVisual({ id }: { id: string }) {
   const reaction = reactions[id];
   const caption = captions[id];
   const membraneReaction = membraneReactions[id];
-  const cycle = id === 'krebs-bilan';
+  const cycle = id === 'krebs-bilan' || id === 'krebs-entree';
   return <g textAnchor="middle" fill="#2b3742" fontWeight="600" stroke="#fff6ec" strokeWidth="6"
     strokeLinejoin="round" paintOrder="stroke" pointerEvents="none" aria-hidden="true">
     {reaction && <ReactionDiagram reaction={reaction}/>}
-    {cycle && <KrebsOverview/>}
+    {cycle && <KrebsOverview identifyEntry={id === 'krebs-entree'}/>}
     {membraneReaction && <>
       <Molecule x={340} y={535} text={membraneReaction[0]} small/>
       <path d="M452 535h98m-13-8 13 8-13 8" stroke="#634675" strokeWidth="3.5" strokeLinecap="round" fill="none"/>

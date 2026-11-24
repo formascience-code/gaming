@@ -34,7 +34,7 @@ const missionSummaries = [
 ];
 
 function locate(question: Question) {
-  if (question.id === 'krebs-bilan') return matrixDetail;
+  if ((question.id === 'krebs-bilan' || question.id === 'krebs-entree')) return matrixDetail;
   if (question.id === 'krebs-compartiment') return complexII;
   if (question.id === 'pdh-transport') return crista;
   if (question.id === 'pdh-bilan') return matrix;
