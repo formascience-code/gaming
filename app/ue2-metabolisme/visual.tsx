@@ -186,23 +186,23 @@ function ReactionDiagram({ reaction }: { reaction: Reaction }) {
 function KrebsOverview() {
   const intermediates = [
     { x: 477, y: 157, text: 'Oxaloacétate · 4 C' },
-    { x: 730, y: 220, text: 'Citrate · 6 C' },
-    { x: 798, y: 352, text: 'Isocitrate · 6 C' },
-    { x: 736, y: 486, text: 'α-cétoglutarate · 5 C' },
+    { x: 670, y: 230, text: 'Citrate · 6 C' },
+    { x: 740, y: 352, text: 'Isocitrate · 6 C' },
+    { x: 669, y: 482, text: 'α-cétoglutarate · 5 C' },
     { x: 480, y: 566, text: 'Succinyl-CoA · 4 C' },
-    { x: 248, y: 486, text: 'Succinate · 4 C' },
-    { x: 191, y: 352, text: 'Fumarate · 4 C' },
-    { x: 252, y: 220, text: 'Malate · 4 C' },
+    { x: 293, y: 482, text: 'Succinate · 4 C' },
+    { x: 219, y: 352, text: 'Fumarate · 4 C' },
+    { x: 293, y: 230, text: 'Malate · 4 C' },
   ];
   const pathways = [
-    'M594 161Q662 170 690 197',
-    'M767 246Q798 278 800 321',
-    'M800 382Q797 427 768 457',
-    'M692 514Q644 553 602 559',
-    'M358 559Q309 550 281 515',
-    'M221 457Q190 427 191 382',
-    'M191 322Q192 279 223 246',
-    'M293 192Q326 166 361 161',
+    'M593 176Q635 192 652 214',
+    'M711 254Q740 281 740 322',
+    'M740 382Q737 426 711 447',
+    'M617 515Q600 541 586 549',
+    'M370 549Q333 535 314 511',
+    'M250 447Q219 416 219 382',
+    'M219 322Q222 280 249 254',
+    'M338 211Q363 190 381 183',
   ];
   return <>
     <defs>
@@ -212,7 +212,7 @@ function KrebsOverview() {
     </defs>
     <g fill="none" stroke="#634675" strokeWidth="3.8" strokeLinecap="round" markerEnd="url(#krebs-arrowhead)">
       {pathways.map(path => <path key={path} d={path}/>)}
-      <path d="M739 142Q694 142 652 173" strokeDasharray="5 5"/>
+      <path d="M739 142Q680 140 635 190" strokeDasharray="5 5"/>
     </g>
     {intermediates.map(item => <Molecule key={item.text} {...item} small accent={item.text.startsWith('Oxaloacétate') ? 'product' : 'substrate'}/>)}
     <Molecule x={829} y={142} text="Acétyl-CoA · 2 C" accent="cofactor" small/>
@@ -250,7 +250,7 @@ function RespiratoryOverview() {
     {Array.from({ length: 51 }, (_, i) => <g key={i} fill="#a85d50">
       <circle cx={i * 18} cy="417" r="4"/><circle cx={i * 18} cy="441" r="4"/>
     </g>)}
-    {[[132, 'I', '#b9c6ac'], [272, 'II', '#dfc17e'], [515, 'III', '#d0bbdc'], [706, 'IV', '#e6a79a']].map(([x, label, color]) => <g key={label} transform={`translate(${x} 429)`}>
+    {([[132, 'I', '#b9c6ac'], [272, 'II', '#dfc17e'], [515, 'III', '#d0bbdc'], [706, 'IV', '#e6a79a']] as const).map(([x, label, color]) => <g key={label} transform={`translate(${x} 429)`}>
       <rect x="-36" y="-45" width="72" height="90" rx="26" fill={color} stroke="#594768" strokeWidth="2"/>
       <text y="7" fontWeight="700">{label}</text>
     </g>)}
@@ -323,7 +323,7 @@ export function MetabolismVisual({ id }: { id: string }) {
     {membraneReaction && <>
       <Molecule x={340} y={535} text={membraneReaction[0]} small/>
       <path d="M452 535h98m-13-8 13 8-13 8" stroke="#634675" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
-      <Molecule x={655} y={481} text={membraneReaction[1]} accent="product" small/>
+      <Molecule x={655} y={535} text={membraneReaction[1]} accent="product" small/>
     </>}
     {caption && <>
       <text x="500" y={membraneReaction ? 599 : 547} fontSize="26">{caption[0]}</text>
