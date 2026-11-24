@@ -144,18 +144,33 @@ function Molecule({ x, y, text, accent = 'substrate', small = false }: {
   </g>;
 }
 
+function Nucleotide({ x, y, atp }: { x: number; y: number; atp: boolean }) {
+  return <g transform={`translate(${x} ${y})`} stroke="none">
+    {atp ? <path d="M-52 0l12-8-5-11 16 3 8-10 11 8 10-11 10 11 11-8 8 10 16-3-5 11 12 8-12 8 5 11-16-3-8 10-11-8-10 11-10-11-11 8-8-10-16 3 5-11Z" fill="#f1c775"/> :
+      <rect x="-47" y="-19" width="94" height="38" rx="10" fill="#b5dce2"/>}
+    <text y="1" fontSize="21" dominantBaseline="central" fontWeight="600">{atp ? 'ATP' : 'ADP'}</text>
+  </g>;
+}
+
 function ReactionDiagram({ reaction }: { reaction: Reaction }) {
+  const phosphorylation = reaction.input === "ATP" && reaction.output === "ADP";
   const inlet = 224 + moleculeWidth(reaction.input ?? "", 20) / 2 + 9;
   const outlet = 224 + moleculeWidth(reaction.output ?? "", 20) / 2 + 9;
   return <>
     <Molecule x={465} y={217} text={reaction.from}/>
     <path d="M465 259v207m-12-15 12 15 12-15" stroke="#634675" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     <Molecule x={465} y={512} text={reaction.to} accent="product"/>
-    {reaction.input && <>
+    {phosphorylation && <>
+      <Nucleotide x={309} y={291} atp/>
+      <path d="M375 291C425 291 465 323 465 365S425 439 375 439m12-8-12 8 12 8"
+        fill="none" stroke="#634675" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <Nucleotide x={309} y={439} atp={false}/>
+    </>}
+    {reaction.input && !phosphorylation && <>
       <Molecule x={224} y={288} text={reaction.input} accent="cofactor" small/>
       <path d={`M${inlet} 288C392 288 409 311 458 326m-14 3 14-3-10-10`} stroke="#916b32" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </>}
-    {reaction.output && <>
+    {reaction.output && !phosphorylation && <>
       <Molecule x={224} y={435} text={reaction.output} accent="cofactor" small/>
       <path d={`M458 382C404 396 391 435 ${outlet} 435m13-8-13 8 13 8`} stroke="#916b32" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </>}
