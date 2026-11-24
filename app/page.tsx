@@ -38,8 +38,8 @@ export default function GamingHome() {
     <GameHeader title="Jeux de révision">{null}</GameHeader>
     <main className={styles.library}>
       <section className={styles.intro} aria-labelledby="library-title">
-        <h2 id="library-title">Choisissez votre jeu</h2>
-        <p>Réussissez les défis et gagnez des stéthoscopes.</p>
+        <h2 id="library-title">Choisis ton jeu</h2>
+        <p>Réussis les défis et gagne des stéthoscopes.</p>
       </section>
       <div className={styles.units}>
         {units.map(unit => {
