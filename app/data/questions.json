@@ -211,6 +211,32 @@
     "rationales": []
   },
   {
+    "id": "selectivite-transcription",
+    "mission": 2,
+    "context": "gène",
+    "kind": "qcd",
+    "prompt": "La présence d’un enhancer suffit à activer un gène de la même façon dans tous les types cellulaires.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      1
+    ],
+    "hints": [
+      "Repérez la protéine qui se fixe à l’enhancer.",
+      "Les types cellulaires peuvent disposer de facteurs de transcription différents."
+    ],
+    "explanation": "L’activité d’un enhancer dépend notamment des facteurs de transcription présents dans la cellule et de l’accessibilité de l’ADN.",
+    "alternative": {
+      "prompt": "Un même enhancer peut avoir une activité différente selon le type cellulaire.",
+      "answer": [
+        0
+      ]
+    },
+    "rationales": []
+  },
+  {
     "id": "coiffe",
     "mission": 3,
     "context": "pré-ARNm",
@@ -431,6 +457,32 @@
       "L’anticodon reconnaît le codon. L’acide aminé est attaché à l’extrémité 3′ de l’ARNt.",
       "L’aminoacylation forme une liaison ester entre l’acide aminé et l’ARNt."
     ]
+  },
+  {
+    "id": "aug-interne",
+    "mission": 4,
+    "context": "ARNm",
+    "kind": "qcd",
+    "prompt": "Un codon AUG rencontré au cours de l’élongation code la méthionine.",
+    "options": [
+      "Vrai",
+      "Faux"
+    ],
+    "answer": [
+      0
+    ],
+    "hints": [
+      "Distinguez la signification du codon de son rôle au début de la traduction.",
+      "Le ribosome est déjà en train de lire la séquence codante."
+    ],
+    "explanation": "Dans le code génétique standard, AUG code la méthionine. Lorsqu’il est lu pendant l’élongation, il donne une méthionine dans la chaîne en cours de synthèse.",
+    "alternative": {
+      "prompt": "Chaque AUG lu pendant l’élongation déclenche une nouvelle initiation.",
+      "answer": [
+        1
+      ]
+    },
+    "rationales": []
   },
   {
     "id": "init",
