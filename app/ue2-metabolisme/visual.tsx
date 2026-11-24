@@ -54,6 +54,14 @@ const complexes = [
   { label: 'IV', x: 18, y: 7, angle: 16, color: '#bd7b75' },
 ];
 
+function ComplexIIProtein() {
+  return <g stroke="#795822" strokeWidth=".45">
+    <rect x="-4.7" y="-2.5" width="9.4" height="5" rx="1.55" fill="#d3a759"/>
+    <path d="M-2.7 -1.45H2.6M-2.7 1.45H2.6" fill="none" opacity=".55" strokeLinecap="round"/>
+    <rect x="2.5" y="-3.85" width="6.2" height="7.7" rx="3" fill="#f0d38d"/>
+  </g>;
+}
+
 export function MembraneProteins({ id }: { id: string }) {
   if (!membraneIds.includes(id)) return null;
   const shown = id === 'chaine-lieu' ? complexes : id === 'chaine-oxygene' ? complexes.slice(3) :
@@ -63,8 +71,8 @@ export function MembraneProteins({ id }: { id: string }) {
   const navette = id === 'chaine-navette';
   return <g transform="translate(274 242) rotate(-31)" aria-hidden="true">
     {shown.map(({label, x, y, angle, color}) => <g key={label} transform={`translate(${x} ${y}) rotate(${angle})`}>
-      <g transform="rotate(90) scale(.22 .16)"><Protein color={color}/></g>
-      <text transform={`rotate(${31 - angle})`} textAnchor="middle" y="1.1" fontSize="3.6" fontWeight="700" fill="#202b31">{label}</text>
+      {label === 'II' ? <ComplexIIProtein/> : <g transform="rotate(90) scale(.22 .16)"><Protein color={color}/></g>}
+      <text transform={`${label === 'II' ? 'translate(5.6 0) ' : ''}rotate(${31 - angle})`} textAnchor="middle" y="1.1" fontSize="3.6" fontWeight="700" fill="#202b31">{label}</text>
     </g>)}
     {transporter && <g transform="translate(-7 14) rotate(18)">
       <g fill="#a6b89c" stroke="#52644d" strokeWidth=".56">
@@ -274,8 +282,9 @@ function RespiratoryOverview() {
       <circle cx={i * 18} cy="417" r="4"/><circle cx={i * 18} cy="441" r="4"/>
     </g>)}
     {([[132, 'I', '#b9c6ac'], [272, 'II', '#dfc17e'], [515, 'III', '#d0bbdc'], [706, 'IV', '#e6a79a']] as const).map(([x, label, color]) => <g key={label} transform={`translate(${x} 429)`}>
-      <rect x="-36" y={label === "II" ? 3 : -45} width="72" height={label === "II" ? 57 : 90} rx={label === "II" ? 20 : 26} fill={color} stroke="#594768" strokeWidth="2"/>
-      <text y={label === "II" ? 36 : 7} fontWeight="700">{label}</text>
+      {label === 'II' ? <g transform="rotate(90) scale(6.8)"><ComplexIIProtein/></g> :
+        <rect x="-36" y="-45" width="72" height="90" rx="26" fill={color} stroke="#594768" strokeWidth="2"/>}
+      <text y={label === "II" ? 42 : 7} fontWeight="700">{label}</text>
     </g>)}
     <g fill="none" stroke="#795822" strokeWidth="3.5" markerEnd="url(#met-electron)">
       <path d="M169 420H347"/>
