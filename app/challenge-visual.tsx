@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { Point } from './atlas';
 
 const titles:Record<string,string>={
-  pore:'Enveloppe et pore nucléaire',chromatine:'Un nucléosome','adn-liaison':'Nucléosome et ADN de liaison',enhancer:'Un enhancer éloigné du promoteur',brins:'Les deux brins d’ADN et l’ARN naissant',
+  pore:'Enveloppe et pore nucléaire',chromatine:'Un nucléosome','adn-liaison':'Nucléosome et ADN de liaison',enhancer:'Un enhancer éloigné du promoteur','selectivite-transcription':'Enhancer et activateur','aug-interne':'Le codon AUG dans l’ARNm',brins:'Les deux brins d’ADN et l’ARN naissant',
   pic:'Assemblage au promoteur',ctd:'Le CTD de l’ARN polymérase II',coiffe:'Coiffe du transcrit',
   epissage:'De l’intron en lasso aux exons réunis',polya:'Clivage et queue poly(A)',export:'Export d’un ARNm',
   codons:'Lecture de l’ARNm par triplets',arntr:'Appariement codon–anticodon',charge:'Chargement d’un ARNt',
@@ -112,6 +112,7 @@ function drawing(id:string):ReactNode {
       {text(203,57,'Brin matrice 3′–TAC–5′')}{strand(94,325,70,blue)}
       {arrow(100,320,84)}{strand(94,285,104,coral)}{text(202,128,'ARN 5′–AUG–3′')}
     </>;
+    case 'selectivite-transcription':
     case 'enhancer':return <>
       <path d="M36 105H115C159 105 128 68 150 45C174 14 236 15 260 43C284 70 254 105 300 105H382"
         fill="none" stroke={teal} strokeWidth="4" strokeLinecap="round"/>
@@ -161,6 +162,10 @@ function drawing(id:string):ReactNode {
       {strand(52,371,44,coral)}{text(130,30,'Pré-ARNm')}{text(283,30,'Clivage')}
       <path d="m275 36 15 16m0-16-15 16" stroke={dark} strokeWidth="2"/>
       {strand(52,278,94,coral)}{tag(326,94,106,'AAAAAA',gold)}{text(190,121,'Extrémité 3′ maturée')}
+    </>;
+    case 'aug-interne':return <>
+      {text(28,63,'5′')}{tag(101,59,71,'GAA')}{tag(204,59,71,'AUG',gold)}{tag(307,59,71,'GCU')}{text(382,63,'3′')}
+      {arrow(68,342,101)}{text(205,126,'Sens de lecture')}
     </>;
     case 'codons':case 'arntr':return <>
       {text(57,62,'5′')}{tag(119,58,79,'AUG',gold)}{tag(208,58,79,'GAA')}{tag(297,58,79,'GCU')}{text(365,62,'3′')}
