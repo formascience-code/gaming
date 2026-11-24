@@ -10,7 +10,7 @@ import { readMetabolism, saveMetabolism } from './progress';
 
 type Location = { point: Point; scale: number; label: string };
 
-const cytosol: Location = { point: [231, 379], scale: 2.9, label: 'Cytosol' };
+const cytosol: Location = { point: [213, 389], scale: 13, label: 'Cytosol' };
 const matrix: Location = { point: [295, 229], scale: 4.8, label: 'Matrice mitochondriale' };
 const crista: Location = { point: [284, 258], scale: 7.4, label: 'Membrane interne · crête mitochondriale' };
 const cell: Location = { point: [335, 314], scale: 1.6, label: 'Du cytosol aux mitochondries' };

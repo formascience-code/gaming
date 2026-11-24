@@ -1,16 +1,16 @@
-type Reaction = { title: string; from: string; to: string; enzyme: string; note: string };
+type Reaction = { from: string; to: string; enzyme: string; note: string };
 
 const reactions: Record<string, Reaction> = {
-  'gly-lieu': { title: 'Glycolyse', from: 'Glucose · 6 C', to: '2 pyruvates · 3 C chacun', enzyme: '10 réactions', note: 'Phase d’investissement puis phase de rendement' },
-  'gly-bilan': { title: 'ATP et coenzymes de la glycolyse', from: 'Glucose + NAD⁺', to: 'Pyruvate + NADH,H⁺', enzyme: 'Glycolyse', note: '2 ATP investis · 4 ATP formés' },
-  'gly-pfk': { title: 'Phosphorylation du fructose-6-phosphate', from: 'Fructose-6-P + ATP', to: 'Fructose-1,6-bisP + ADP', enzyme: 'Enzyme à identifier', note: 'Transfert du phosphate terminal de l’ATP' },
-  'gly-regulation': { title: 'Régulation allostérique de la PFK1', from: 'Fructose-6-P + ATP', to: 'Fructose-1,6-bisP + ADP', enzyme: 'PFK1', note: 'L’ATP peut se fixer sur le site catalytique ou sur un site régulateur' },
-  'lac-nad': { title: 'Couple pyruvate / lactate', from: 'Pyruvate', to: 'Lactate', enzyme: 'Lactate déshydrogénase', note: 'Au cours de la réaction, le coenzyme cède ses électrons' },
-  'lac-bilan': { title: 'Voie lactique', from: 'Glucose', to: '2 pyruvates → 2 lactates', enzyme: 'Glycolyse', note: 'La réduction du pyruvate régénère le NAD⁺' },
-  'pdh-bilan': { title: 'Décarboxylation oxydative du pyruvate', from: 'Pyruvate + CoA-SH + NAD⁺', to: 'Acétyl-CoA', enzyme: 'Complexe PDH', note: 'Le groupement acétyle conserve deux des trois carbones du pyruvate' },
-  'krebs-entree': { title: 'Première réaction du cycle de Krebs', from: 'Acétyl-CoA (2 C) + ? (4 C)', to: 'Citrate (6 C) + CoA-SH', enzyme: 'Citrate synthase', note: 'Le composé à identifier est régénéré en fin de cycle' },
-  'krebs-bilan': { title: 'Un tour du cycle de Krebs', from: 'Acétyl-CoA + oxaloacétate', to: 'Citrate → … → malate', enzyme: 'Cycle de Krebs', note: 'Le malate est oxydé en oxaloacétate, qui peut entrer dans un nouveau tour' },
-  'krebs-regulation': { title: 'Décarboxylation oxydative de l’isocitrate', from: 'Isocitrate + NAD⁺', to: 'α-cétoglutarate + CO₂ + NADH,H⁺', enzyme: 'Isocitrate déshydrogénase', note: 'L’ATP et l’ADP renseignent sur l’état énergétique mitochondrial' },
+  'gly-lieu': { from: 'Glucose · 6 C', to: '2 pyruvates · 3 C chacun', enzyme: '10 réactions', note: 'Phase d’investissement puis phase de rendement' },
+  'gly-bilan': { from: 'Glucose + NAD⁺', to: 'Pyruvate + NADH,H⁺', enzyme: 'Glycolyse', note: '2 ATP investis · 4 ATP formés' },
+  'gly-pfk': { from: 'Fructose-6-P + ATP', to: 'Fructose-1,6-bisP + ADP', enzyme: 'Enzyme à identifier', note: 'Transfert du phosphate terminal de l’ATP' },
+  'gly-regulation': { from: 'Fructose-6-P + ATP', to: 'Fructose-1,6-bisP + ADP', enzyme: 'PFK1', note: 'L’ATP peut se fixer sur le site catalytique ou sur un site régulateur' },
+  'lac-nad': { from: 'Pyruvate', to: 'Lactate', enzyme: 'Lactate déshydrogénase', note: 'Au cours de la réaction, le coenzyme cède ses électrons' },
+  'lac-bilan': { from: 'Glucose', to: '2 pyruvates → 2 lactates', enzyme: 'Glycolyse', note: 'La réduction du pyruvate régénère le NAD⁺' },
+  'pdh-bilan': { from: 'Pyruvate + CoA-SH + NAD⁺', to: 'Acétyl-CoA', enzyme: 'Complexe PDH', note: 'Le groupement acétyle conserve deux des trois carbones du pyruvate' },
+  'krebs-entree': { from: 'Acétyl-CoA (2 C) + ? (4 C)', to: 'Citrate (6 C) + CoA-SH', enzyme: 'Citrate synthase', note: 'Le composé à identifier est régénéré en fin de cycle' },
+  'krebs-bilan': { from: 'Acétyl-CoA + oxaloacétate', to: 'Citrate → … → malate', enzyme: 'Cycle de Krebs', note: 'Le malate est oxydé en oxaloacétate, qui peut entrer dans un nouveau tour' },
+  'krebs-regulation': { from: 'Isocitrate + NAD⁺', to: 'α-cétoglutarate + CO₂ + NADH,H⁺', enzyme: 'Isocitrate déshydrogénase', note: 'L’ATP et l’ADP renseignent sur l’état énergétique mitochondrial' },
 };
 
 const membraneIds = ['pdh-transport', 'krebs-compartiment', 'chaine-atp', 'chaine-navette', 'chaine-lieu', 'chaine-oxygene'];
@@ -74,14 +74,13 @@ export function MetabolismVisual({ id }: { id: string }) {
   return <g textAnchor="middle" fill="#2b3742" fontWeight="600" stroke="#fff6ec" strokeWidth="6"
     strokeLinejoin="round" paintOrder="stroke" pointerEvents="none" aria-hidden="true">
     {reaction && <>
-      <text x="500" y="262" fontSize="25">{reaction.title}</text>
-      <text x="245" y="392" fontSize="22">{reaction.from}</text>
-      <path d="M398 383h204m-16-10 16 10-16 10" stroke="#523a60" strokeWidth="4" fill="none"/>
-      <g transform="translate(500 335) scale(1.45)"><Protein/></g>
-      <text x="500" y="440" fontSize="21">{reaction.enzyme}</text>
-      {id === 'krebs-bilan' && <path d="M727 416C695 497 304 497 269 420m0 15v-15l15 8" stroke="#523a60" strokeWidth="3" fill="none"/>}
-      <text x="755" y="392" fontSize="22">{reaction.to}</text>
-      <text x="500" y="518" fontSize="19">{reaction.note}</text>
+      <text x="410" y="230" fontSize="25">{reaction.from}</text>
+      <path d="M410 266v185m-13-18 13 18 13-18" stroke="#523a60" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+      <g transform="translate(625 345) scale(1.45)"><Protein/></g>
+      <text x="625" y="403" fontSize="21">{reaction.enzyme}</text>
+      <text x="410" y="508" fontSize="25">{reaction.to}</text>
+      {id === 'krebs-bilan' && <path d="M260 488C125 460 125 281 260 246m-16-4 16 4-12 12" stroke="#523a60" strokeWidth="3" fill="none"/>}
+      <text x="500" y="593" fontSize="19" fontWeight="500">{reaction.note}</text>
     </>}
     {caption && <>
       <text x="500" y="547" fontSize="26">{caption[0]}</text>
