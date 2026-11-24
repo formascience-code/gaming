@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import { Stethoscope } from './quiz';
+import styles from './game-objective.module.css';
 
 export function GameObjective() {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -8,15 +10,25 @@ export function GameObjective() {
     if (objective && !objective.open) objective.showModal();
   }, []);
 
-  return <dialog ref={dialog} aria-labelledby="game-objective-title">
+  return <dialog ref={dialog} className={styles.dialog} aria-labelledby="game-objective-title">
     <form method="dialog">
-      <div className="dialog-head">
+      <button className={styles.close} aria-label="Fermer les règles du jeu">×</button>
+      <header className={styles.header}>
         <h2 id="game-objective-title">Ton objectif</h2>
-        <button className="icon-button" aria-label="Fermer les règles du jeu">×</button>
+        <p>Accomplis les 5 missions et récolte les 20 stéthoscopes pour gagner la partie.</p>
+      </header>
+      <div className={styles.stats}>
+        <div className={styles.stat}>
+          <strong>05</strong>
+          <span>Missions</span>
+        </div>
+        <div className={styles.stat}>
+          <strong><Stethoscope size={23}/> 20</strong>
+          <span>Stéthoscopes</span>
+        </div>
       </div>
-      <p>Le jeu comporte <strong>5 missions</strong>, chacune composée de plusieurs défis. Chaque défi réussi te rapporte <strong>1 stéthoscope</strong> et débloque le suivant.</p>
-      <p>Pour gagner la partie, termine les <strong>5 missions</strong> et remporte les <strong>20 stéthoscopes</strong>.</p>
-      <button className="control primary" autoFocus>C’est parti !</button>
+      <p className={styles.rule}>Chaque mission comporte plusieurs défis. Chaque défi réussi te rapporte <strong>1 stéthoscope</strong> et débloque le suivant.</p>
+      <button className={styles.play} autoFocus>C’est parti ! <span aria-hidden="true">→</span></button>
     </form>
   </dialog>;
 }

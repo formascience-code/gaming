@@ -1,0 +1,126 @@
+.dialog {
+  box-sizing: border-box;
+  width: min(500px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: clamp(20px, 5vw, 36px);
+  overflow: auto;
+  color: #f4f6f1;
+  background: radial-gradient(ellipse at top left, #294855, transparent 72%), #15252e;
+  border: 1px solid #65818a;
+  border-top: 3px solid #b6d7a1;
+  border-radius: 16px;
+  box-shadow: 0 24px 80px #0c171dd9;
+}
+
+.dialog::backdrop {
+  background: #101b25b8;
+  backdrop-filter: blur(3px);
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #e6ece8;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.close:hover {
+  border-color: #65818a;
+  background: #ffffff12;
+}
+
+.header h2 {
+  margin: 0 44px 8px 0;
+  font-size: clamp(1.75rem, 6vw, 2.55rem);
+  line-height: 1.15;
+  letter-spacing: -.045em;
+}
+
+.header p,
+.rule {
+  color: #d4e0dd;
+  font-size: .9rem;
+  line-height: 1.65;
+}
+
+.header p {
+  margin: 0 0 20px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stat {
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  padding: 12px;
+  min-width: 0;
+  border: 1px solid #516e75;
+  border-radius: 9px;
+  background: #102029;
+}
+
+.stat strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 700 1.55rem / 1.1 ui-monospace, monospace;
+  color: #ebf2e8;
+}
+
+.stat svg {
+  color: #ff8478;
+  stroke-width: 2.3;
+}
+
+.stat span {
+  font-size: .75rem;
+  color: #c6d5d2;
+}
+
+.rule {
+  margin: 18px 0;
+}
+
+.rule strong {
+  color: #ffaaa0;
+}
+
+.play {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: #c2dfad;
+  color: #14271f;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.play:hover {
+  background: #d5eac7;
+}
+
+.play:focus-visible,
+.close:focus-visible {
+  outline: 2px solid #edf7e7;
+  outline-offset: 3px;
+}
