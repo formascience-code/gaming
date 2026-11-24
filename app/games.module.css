@@ -6,35 +6,39 @@
 .card { display:flex; flex-direction:column; background:#fff; border:1px solid #b7c4ce; border-radius:15px; overflow:hidden; }
 .content { display:flex; flex-direction:column; flex:1; padding:16px; }
 .labels { display:flex; align-items:center; justify-content:space-between; gap:6px; color:#4d5964; font-size:.72rem; font-weight:600; }
-.unit { background:#ece3ef; color:#3d2248; padding:3px 9px; border-radius:20px; }
+.unit { background:#ece3ef; color:#3d2248; padding:3px 9px; border-radius:5px; }
 .content h4 { margin:10px 0 4px; line-height:1.28; font-size:1.14rem; color:#2b3742; }
 .stats { display:grid; grid-template-columns:1.25fr 1fr; gap:6px; margin:auto 0 10px; }
 .stats div { padding:7px; border-radius:8px; background:#e7edf2; }
 .stats dt { display:flex; align-items:center; gap:4px; font-size:.66rem; color:#2b3742; }
 .stats dt svg { color:#9e3326; flex:none; }
 .stats dd { margin:3px 0 0; font-weight:700; }
-.play { display:flex; justify-content:space-between; padding:9px 13px; border-radius:8px; background:#3d2248; color:#fff; font-weight:600; text-decoration:none; margin-top:10px; }
-.play:hover { background:#583664; }
+.play { display:flex; justify-content:space-between; padding:9px 13px; border-radius:8px; background:#e2bd79; color:#2b3742; font-weight:700; text-decoration:none; margin-top:10px; }
+.play:hover { background:#f0cf92; }
 .play:focus-visible { outline:3px solid #8b6027; outline-offset:2px; }
 .storage { color:#46545d; font-size:.73rem; margin:16px 0 0; }
 @media(max-width:500px) { .library { padding:16px 12px 24px; } .intro { padding:18px; }  }
 
-.units { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+.units { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:start; }
 .unitBox { min-width:0; padding:16px; border-radius:15px; border:1px solid #b7c4ce; background:#f7fafc; }
-.unitHeader { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 14px; margin-bottom:12px; }
-.unitHeader h3 { margin:0; font-size:1.16rem; color:#2b3742; }
-.unitTotal { display:inline-flex; align-items:center; gap:6px; font-size:.78rem; font-weight:600; color:#3d2248; }
-.unitTotal svg { color:#9e3326; }
-.empty { margin:0; font-size:.8rem; color:#46545d; }
+.unitHeader { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 14px; margin-bottom:14px; padding:13px 14px; border-radius:10px; background:#2b3742; color:#fffaf4; }
+.unitHeader h3 { margin:0; font-size:1.16rem; color:inherit; }
+.unitTotal { display:inline-flex; align-items:center; gap:6px; font-size:.66rem; font-weight:600; color:#fffaf4; }
+.unitTotal svg { color:#e2bd79; }
 
 .unitTotal strong { font-size:1.55rem; line-height:1; }
 .stats dd { display:flex; gap:4px; align-items:baseline; font-size:1.12rem; font-variant-numeric:tabular-nums; }
 .stats dd svg { align-self:center; flex:none; color:#9e3326; }
 .stats dd strong { font-size:1.6rem; line-height:1.15; }
 .stats dd span { font-size:.83rem; }
-.progress { appearance:none; width:100%; height:8px; border:0; border-radius:20px; overflow:hidden; background:#e4e9ee; color:#3d2248; }
+.progress { appearance:none; width:100%; height:11px; border:0; border-radius:20px; overflow:hidden; background:#e4e9ee; color:#3d2248; }
 .progress::-webkit-progress-bar { background:#e4e9ee; }
-.progress::-webkit-progress-value { background:#3d2248; }
-.progress::-moz-progress-bar { background:#3d2248; }
-@media(max-width:850px) { .units { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.progress::-webkit-progress-value { background:linear-gradient(90deg,#3d2248,#785180); }
+.progress::-moz-progress-bar { background:linear-gradient(90deg,#3d2248,#785180); }
 @media(max-width:560px) { .units { grid-template-columns:1fr; } }
+
+.activeCard { border-color:#785180; box-shadow:inset 4px 0 #3d2248; }
+.labels { align-self:flex-start; padding:3px 8px; border-radius:5px; background:#e7edf2; }
+.available { color:#3d2248; background:#ece3ef; }
+.unitTotal strong,.stats dd strong { font-size:1.95rem; }
+.unitTotal span { line-height:1.15; }
