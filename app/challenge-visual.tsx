@@ -8,7 +8,7 @@ const titles:Record<string,string>={
   codons:'Lecture de l’ARNm par triplets',arntr:'Appariement codon–anticodon',charge:'Chargement d’un ARNt',
   init:'Initiation de la traduction',elong:'Un cycle d’élongation',stop:'Libération du polypeptide',regulation:'Contrôle de l’initiation',
 };
-const teal='#367b82',pale='#a9d4cf',dark='#25454a',gold='#e7c985',coral='#d58c77',blue='#6b939f';
+const teal='#367b82',pale='#a9d4cf',dark='#2b3742',gold='#e4c683',coral='#cf9987',blue='#6b939f';
 
 function text(x:number,y:number,value:string) {
   return <text x={x} y={y} textAnchor="middle" fill={dark} fontSize="13" fontWeight="500">{value}</text>;
@@ -62,13 +62,13 @@ function ribosome(kind:string) {
   const rna='M24 93C63 109 80 91 111 91S159 103 195 100S241 89 275 98S346 87 386 97';
   return <>
     <path d="M67 87C47 64 61 22 91-5C122-33 164-46 206-45C264-44 315-20 338 20C351 43 358 72 344 86C331 99 307 99 281 96C252 93 227 94 201 96C171 98 149 95 119 96C95 97 78 98 67 87Z"
-      fill="#b6d7af" stroke="#557e50" strokeWidth="2.6"/>
+      fill="#c4d0b8" stroke="#617859" strokeWidth="2.6"/>
     <path d="M62 99C84 90 108 96 128 99C153 102 172 111 193 111C222 110 246 99 273 103C300 110 324 98 344 104C362 109 357 126 343 136C326 151 301 153 274 152C242 150 231 161 193 161C153 161 136 150 109 146C84 144 64 131 58 115C56 108 56 103 62 99Z"
-      fill="#afcfdd" stroke="#4b798d" strokeWidth="2.6"/>
+      fill="#b5ced9" stroke="#50788a" strokeWidth="2.6"/>
     {text(75,68,'60S')}{text(81,124,'40S')}
     {[126,200,274].map((x,i)=><g key={x}>
-      <path d={`M${x-29} 85V58a29 29 0 0 1 58 0v27`} fill="#d2e6ca" stroke="#789e70" strokeWidth="1.5"/>
-      <circle cx={x} cy="14" r="11" fill="#335539"/>
+      <path d={`M${x-29} 85V58a29 29 0 0 1 58 0v27`} fill="#dde5d4" stroke="#818f73" strokeWidth="1.5"/>
+      <circle cx={x} cy="14" r="11" fill="#3a513e"/>
       <text x={x} y="19" textAnchor="middle" fill="white" fontSize="15" fontWeight="700">{['E','P','A'][i]}</text>
       {codons[i]&&<text x={x} y="127" textAnchor="middle" fill="#273e62" fontSize="13" fontWeight="700">{codons[i]}</text>}
     </g>)}
@@ -77,10 +77,10 @@ function ribosome(kind:string) {
       <g fill={gold} stroke="#93652f"><path d="m203 40 8-7 8 2 7-7" fill="none"/>
         {[[203,40],[210,33],[218,35],[225,28]].map(([x,y])=><circle key={x} cx={x} cy={y} r="3.2"/>)}</g>}
     {!initiating&&(terminating?
-      <ellipse cx="274" cy="67" rx="13" ry="21" fill="#bbadd8" stroke="#654d8d" strokeWidth="2" transform="rotate(17 274 67)"/>:
+      <ellipse cx="274" cy="67" rx="13" ry="21" fill="#bba9cf" stroke="#624776" strokeWidth="2" transform="rotate(17 274 67)"/>:
       <><TransferRna x={274} y={68} scale={.7}/><circle cx="277" cy="40" r="4.3" fill={gold} stroke="#93652f"/></>)}
     <path d={rna} fill="none" stroke="#fff9ec" strokeWidth="7"/>
-    <path d={rna} fill="none" stroke="#493a69" strokeWidth="3.3" strokeLinecap="round"/>
+    <path d={rna} fill="none" stroke="#432c52" strokeWidth="3.3" strokeLinecap="round"/>
     <path d="M196 91v7m4-7v7m4-7v7" stroke="#774837" strokeWidth="1" strokeDasharray="1 1"/>
     {!initiating&&!terminating&&<path d="M270 91v6m4-6v6m4-6v6" stroke="#774837" strokeWidth="1" strokeDasharray="1 1"/>}
     {text(38,87,'5′')}{text(380,85,'3′')}{text(36,117,'ARNm')}
