@@ -239,15 +239,21 @@ function KrebsOverview({ id }: { id: string }) {
         const start = edge(index, 1);
         const end = edge((index + 1) % names.length, -1);
         return <path key={angle} d={`M${start.x} ${start.y}A${radius} ${radius} 0 0 1 ${end.x} ${end.y}`}
+          opacity={activeStep >= 0 && index !== activeStep ? .48 : 1}
           stroke={index === activeStep ? '#916b32' : undefined} strokeWidth={index === activeStep ? 5.6 : undefined}
           markerEnd={index === activeStep ? 'url(#krebs-entry-arrowhead)' : undefined}/>;
       })}
     </g>
     <path d="M500 109C500 131 471 159 500 160" fill="none"
       stroke={identifyEntry ? '#916b32' : '#634675'} strokeWidth={identifyEntry ? 5.6 : 3.8}
-      strokeLinecap="round"/>
-    {intermediates.map((item, index) => <CycleMolecule key={item.name} {...item} unknown={identifyEntry && index === 0} highlighted={activeStep >= 0 && (index === activeStep || index === activeStep + 1)}/>)}
-    <CycleMolecule x={500} y={76} name="Acétyl-CoA" count={2} highlighted/>
+      strokeLinecap="round" opacity={activeStep > 0 ? .48 : 1}/>
+    {intermediates.map((item, index) => {
+      const focused = index === activeStep || index === activeStep + 1;
+      return <g key={item.name} opacity={activeStep < 0 || focused ? 1 : .54}>
+        <CycleMolecule {...item} unknown={identifyEntry && index === 0} highlighted={activeStep >= 0 && focused}/>
+      </g>;
+    })}
+    <g opacity={activeStep > 0 ? .54 : 1}><CycleMolecule x={500} y={76} name="Acétyl-CoA" count={2} highlighted/></g>
     <text x="500" y={membraneStep ? 296 : regulation ? 337 : 380} fontSize="30">Cycle de Krebs</text>
     {membraneStep ? <>
       <path d="M397 354h206" stroke="#a85d50" strokeWidth="22"/>
@@ -259,8 +265,8 @@ function KrebsOverview({ id }: { id: string }) {
     </> : regulation ? <>
       <text x="500" y="373" fontSize="20">Isocitrate déshydrogénase</text>
       <text x="500" y="405" fontSize="17">NAD⁺ → NADH + H⁺</text>
-      <text x="500" y="432" fontSize="17">Libération de CO₂</text>
-    </> : <text x="500" y="415" fontSize="17" fontWeight="500">{identifyEntry ? 'Première réaction · citrate synthase' : 'L’oxaloacétate est régénéré à chaque tour.'}</text>}
+      <text x="500" y="432" fontSize="17" fill="#9b292d">ATP élevé · quel effet sur l’activité ?</text>
+    </> : <text x="500" y="415" fontSize="17" fontWeight="500">{identifyEntry ? 'Première réaction · citrate synthase' : 'Quels produits pour un tour ?'}</text>}
   </>;
 }
 
@@ -368,6 +374,7 @@ function ShuttleOverview() {
 function EnergyOverview({ id }: { id: string }) {
   return <g textAnchor="middle" fontSize="20" fill="#2b3742" fontWeight="600">
     <DiagramArrows/>
+    <defs><marker id="met-krebs-balance" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3" markerHeight="3" orient="auto"><path d="M0 0L10 5 0 10Z" fill="#596f51"/></marker></defs>
     <g transform="translate(638 360) scale(3.55)"><MitochondrionArt/></g>
     <text x="632" y="198" fontSize="17">Mitochondrie</text>
     <text x="131" y="302" fontSize="17">Cytosol</text>
@@ -376,8 +383,11 @@ function EnergyOverview({ id }: { id: string }) {
       <path d="M204 351H321"/><path d="M474 351H519"/>
       <path d="M643 333Q698 295 716 302" strokeDasharray="5 4"/>
       <path d="M405 326Q432 235 700 277" strokeDasharray="5 4"/>
-      <path d="M133 378V520"/><path d="M580 411V427"/>
-      <path d="M819 333V380"/><path d="M819 432V520"/>
+      
+    </g>
+    <g fill="none" stroke="#795822" strokeWidth="3.5" markerEnd="url(#met-electron)"
+      strokeLinecap="round">
+      <path d="M132 377V521"/><path d="M580 409V521"/><path d="M819 328V521"/>
     </g>
     <text x="493" y="128" fontSize="17">Électrons du NADH cytosolique · navettes</text>
     <text x="510" y="249" fontSize="15">NADH du complexe PDH</text>
@@ -386,16 +396,16 @@ function EnergyOverview({ id }: { id: string }) {
     <Molecule x={399} y={351} text="Complexe PDH" small/>
     <text x="260" y="336" fontSize="14">Pyruvate</text>
     <text x="490" y="397" fontSize="13" paintOrder="stroke" stroke="#fff6ec" strokeWidth="4">Acétyl-CoA</text>
-    <circle cx="580" cy="351" r="53" fill="#edf1e5" stroke="#87977b" strokeWidth="2"/>
-    <path d="M623 330A47 47 0 1 1 602 311" fill="none" stroke="#596f51" strokeWidth="3.5" markerEnd="url(#met-electron)"/>
-    <text x="580" y="348" fontSize="15">Cycle de</text><text x="580" y="367" fontSize="15">Krebs</text>
+    <circle cx="580" cy="351" r="55" fill="#f2f5ed" stroke="#96a58c" strokeWidth="2"/>
+    <g fill="none" stroke="#596f51" strokeWidth="4" strokeLinecap="round" markerEnd="url(#met-krebs-balance)">
+      <path d="M539 332A45 45 0 0 1 621 332"/>
+      <path d="M625 349A45 45 0 0 1 560 391"/>
+      <path d="M546 380A45 45 0 0 1 535 349"/>
+    </g>
+    <text x="580" y="349" fontSize="14">Cycle de</text><text x="580" y="368" fontSize="16">Krebs</text>
     <Molecule x={819} y={302} text="Chaîne respiratoire" small/>
-    <text x="827" y="364" fontSize="13" paintOrder="stroke" stroke="#fff6ec" strokeWidth="4">ATP synthase</text>
-    <Molecule x={580} y={452} text="GTP matriciel" small accent="cofactor"/>
-    <Molecule x={819} y={407} text="ATP matriciel" small accent="cofactor"/>
-    <text x="908" y="498" fontSize="15" paintOrder="stroke" stroke="#fff6ec" strokeWidth="4">Export de l’ATP</text>
-    <Molecule x={132} y={548} text="ATP de la glycolyse" small accent="cofactor"/>
-    <Molecule x={819} y={548} text="ATP dans le cytosol" small accent="cofactor"/>
+    <desc>Le GTP formé par le cycle de Krebs peut servir à produire de l’ATP. L’ATP mitochondrial est exporté vers le cytosol.</desc>
+    {[132, 580, 819].map(x => <Molecule key={x} x={x} y={548} text="ATP" small accent="cofactor"/>)}
     <text x="500" y="625" fontSize="19">{id === 'bilan-substrat' ? 'Glycolyse et Krebs · phosphorylation au niveau du substrat' :
       id === 'bilan-coenzymes' ? 'Suivre les coenzymes réduits produits à chaque étape' :
       'Le rendement par glucose dépend notamment de la navette utilisée'}</text>
