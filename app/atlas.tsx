@@ -91,8 +91,7 @@ export const CellArt=memo(function CellArt({nucleusRef,cellRef,detailId,detailAr
     </g>
     {[[274,242,-31,1],[282,534,24,.97],[473,592,-8,.86],[838,372,-62,.73]].map(([x,y,r,s])=>
       <g key={x} transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`} filter="url(#paper)">
-        <path d={outlineMito} fill="#efaa97" stroke="#b95f50" strokeWidth="3.1"/>
-        <path d={foldsMito} fill="#f8d5c7" stroke="#c96956" strokeWidth="4.2" strokeLinejoin="round"/>
+        <MitochondrionArt/>
       </g>)}
     <g transform="translate(297 419) rotate(-30)" filter="url(#paper)">
       {[0,1].map(i=><g key={i} transform={i===0?'translate(-24 -6)':'translate(16 13) rotate(82)'}>
@@ -158,5 +157,12 @@ export function Marker({item,onClick}:{
     <rect x={x-width/2} y={y-15} width={width} height="30" rx="7" fill={item.id==='pore'?'#225561':'#fff9ee'} stroke={item.id==='pore'?'#a9d1cb':'#dfd3bf'} strokeWidth="1.25"/>
     <text x={x} y={y+4.5} fill={item.id==='pore'?'#fffaf2':'#29434a'} textAnchor="middle" fontSize="12.6" fontWeight="600">{item.label}</text>
     </g>
+  </>;
+}
+
+export function MitochondrionArt() {
+  return <>
+        <path d={outlineMito} fill="#efaa97" stroke="#b95f50" strokeWidth="3.1"/>
+        <path d={foldsMito} fill="#f8d5c7" stroke="#c96956" strokeWidth="4.2" strokeLinejoin="round"/>
   </>;
 }

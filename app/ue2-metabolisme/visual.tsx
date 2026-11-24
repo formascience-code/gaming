@@ -1,3 +1,5 @@
+import { MitochondrionArt } from '../atlas';
+
 type Reaction = {
   from: string;
   carbons?: readonly [number, number];
@@ -331,36 +333,77 @@ function RespiratoryOverview() {
   </g>;
 }
 
-function EnergyOverview({ id }: { id: string }) {
-  return <g textAnchor="middle" fontSize="22" fill="#2b3742" fontWeight="600">
+function ShuttleOverview() {
+  return <g textAnchor="middle" fontSize="19" fill="#2b3742" fontWeight="500">
     <DiagramArrows/>
-    <path d="M255 310C255 193 426 165 588 180S924 200 934 342 866 522 664 505 255 513 255 310Z"
-      fill="#f5dbcd" stroke="#c77968" strokeWidth="5"/>
-    <path d="M289 310C300 228 464 216 555 224Q632 228 647 264T696 262Q721 218 746 260T792 271Q857 208 898 318C915 426 850 474 669 455S287 481 289 310Z"
-      fill="#fff0e5" stroke="#c77968" strokeWidth="5"/>
-    <text x="583" y="216" fontSize="17">Mitochondrie</text>
-    <text x="122" y="273" fontSize="17">Cytosol</text>
+    <text x="500" y="139" fontSize="25" fontWeight="600">Deux navettes pour les électrons du NADH</text>
+    <text x="99" y="197" fontSize="16">Cytosol</text>
+    <Molecule x={500} y={200} text="NADH cytosolique → NAD⁺" small/>
+    <path d="M48 347H952M48 369H952" stroke="#a85d50" strokeWidth="4"/>
+    <path d="M48 358H952" stroke="#efaa97" strokeWidth="16"/>
+    <text x="125" y="390" fontSize="14">Membrane interne</text>
+    <text x="129" y="329" fontSize="14">Espace intermembranaire</text>
+    <text x="99" y="444" fontSize="16">Matrice</text>
     <g fill="none" stroke="#795822" strokeWidth="3" markerEnd="url(#met-electron)">
-      <path d="M130 302Q149 157 499 150Q744 147 804 319" strokeDasharray="7 6"/>
-      <path d="M206 351H270"/><path d="M433 351H478"/><path d="M659 351H733"/>
-      <path d="M126 379V465"/><path d="M565 382V465"/><path d="M820 380V465"/>
+      <path d="M451 224Q408 245 300 247"/>
+      <path d="M549 224Q592 245 718 247"/>
+      <path d="M300 312V414"/><path d="M300 473V503"/>
+      <path d="M718 312V334"/><path d="M746 358H822"/>
     </g>
-    <text x="693" y="328" fontSize="14">NADH, FADH₂</text>
-    <text x="510" y="135" fontSize="17">Électrons du NADH cytosolique · navettes</text>
-    <Molecule x={125} y={351} text="Glycolyse" small/>
-    <Molecule x={352} y={351} text="Complexe PDH" small/>
-    <Molecule x={565} y={351} text="Cycle de Krebs" small accent="product"/>
-    <Molecule x={820} y={351} text="Chaîne respiratoire" small/>
-    <Molecule x={126} y={491} text="ATP net" small accent="cofactor"/>
-    <Molecule x={565} y={491} text="GTP" small accent="cofactor"/>
-    <Molecule x={820} y={491} text="ATP" small accent="cofactor"/>
-    <text x="500" y="606" fontSize="20">{id === 'bilan-substrat' ? 'ATP et GTP formés directement lors des réactions' :
-      id === 'bilan-coenzymes' ? 'Suivre les coenzymes réduits de la glycolyse, du complexe PDH et de Krebs' :
-      'Le rendement par glucose dépend de la navette utilisée'}</text>
+    <text x="300" y="272" fontWeight="600">Malate–aspartate</text>
+    <text x="718" y="272" fontWeight="600">Glycérol‑3‑phosphate</text>
+    <text x="300" y="303" fontSize="16">Le malate franchit la membrane interne</text>
+    <text x="718" y="303" fontSize="16">Le glycérol‑3‑phosphate est réoxydé côté externe</text>
+    <Molecule x={300} y={446} text="NADH formé dans la matrice" small/>
+    <Molecule x={300} y={533} text="Complexe I" small accent="product"/>
+    <ellipse cx="718" cy="351" rx="24" ry="17" fill="#fff2d9" stroke="#ae8b50" strokeWidth="2"/>
+    <text x="718" y="358" fontSize="15">FAD</text>
+    <circle cx="846" cy="358" r="19" fill="#fff2d9" stroke="#ae8b50" strokeWidth="2"/>
+    <text x="846" y="365" fontSize="17">Q</text>
+    <text x="753" y="402" fontSize="16">Électrons transmis à l’ubiquinone Q</text>
+    <text x="500" y="622" fontSize="18" fontWeight="600">Le NADH cytosolique lui-même ne traverse pas la membrane interne.</text>
+  </g>;
+}
+
+function EnergyOverview({ id }: { id: string }) {
+  return <g textAnchor="middle" fontSize="20" fill="#2b3742" fontWeight="600">
+    <DiagramArrows/>
+    <g transform="translate(638 360) scale(3.55)"><MitochondrionArt/></g>
+    <text x="632" y="198" fontSize="17">Mitochondrie</text>
+    <text x="131" y="302" fontSize="17">Cytosol</text>
+    <g fill="none" stroke="#795822" strokeWidth="3" markerEnd="url(#met-electron)">
+      <path d="M139 321Q188 148 516 145Q751 147 818 272" strokeDasharray="7 6"/>
+      <path d="M204 351H321"/><path d="M474 351H519"/>
+      <path d="M643 333Q698 295 716 302" strokeDasharray="5 4"/>
+      <path d="M405 326Q432 235 700 277" strokeDasharray="5 4"/>
+      <path d="M133 378V520"/><path d="M580 411V427"/>
+      <path d="M819 333V380"/><path d="M819 432V520"/>
+    </g>
+    <text x="493" y="128" fontSize="17">Électrons du NADH cytosolique · navettes</text>
+    <text x="510" y="249" fontSize="15">NADH du complexe PDH</text>
+    <text x="680" y="322" fontSize="13" paintOrder="stroke" stroke="#fff6ec" strokeWidth="4">NADH et FADH₂ de Krebs</text>
+    <Molecule x={132} y={351} text="Glycolyse" small/>
+    <Molecule x={399} y={351} text="Complexe PDH" small/>
+    <text x="260" y="336" fontSize="14">Pyruvate</text>
+    <text x="490" y="397" fontSize="13" paintOrder="stroke" stroke="#fff6ec" strokeWidth="4">Acétyl-CoA</text>
+    <circle cx="580" cy="351" r="53" fill="#edf1e5" stroke="#87977b" strokeWidth="2"/>
+    <path d="M623 330A47 47 0 1 1 602 311" fill="none" stroke="#596f51" strokeWidth="3.5" markerEnd="url(#met-electron)"/>
+    <text x="580" y="348" fontSize="15">Cycle de</text><text x="580" y="367" fontSize="15">Krebs</text>
+    <Molecule x={819} y={302} text="Chaîne respiratoire" small/>
+    <text x="827" y="364" fontSize="13" paintOrder="stroke" stroke="#fff6ec" strokeWidth="4">ATP synthase</text>
+    <Molecule x={580} y={452} text="GTP matriciel" small accent="cofactor"/>
+    <Molecule x={819} y={407} text="ATP matriciel" small accent="cofactor"/>
+    <text x="908" y="498" fontSize="15" paintOrder="stroke" stroke="#fff6ec" strokeWidth="4">Export de l’ATP</text>
+    <Molecule x={132} y={548} text="ATP de la glycolyse" small accent="cofactor"/>
+    <Molecule x={819} y={548} text="ATP dans le cytosol" small accent="cofactor"/>
+    <text x="500" y="625" fontSize="19">{id === 'bilan-substrat' ? 'Glycolyse et Krebs · phosphorylation au niveau du substrat' :
+      id === 'bilan-coenzymes' ? 'Suivre les coenzymes réduits produits à chaque étape' :
+      'Le rendement par glucose dépend notamment de la navette utilisée'}</text>
   </g>;
 }
 
 export function MetabolismVisual({ id }: { id: string }) {
+  if (id === 'chaine-navette') return <ShuttleOverview/>;
   if (hasOverview(id)) return chainOverviewIds.includes(id) ? <RespiratoryOverview/> : <EnergyOverview id={id}/>;
   if (id === 'gly-lieu' || id === 'gly-bilan') return <GlycolysisOverview showEnergy={id === 'gly-bilan'}/>;
   const reaction = reactions[id];
