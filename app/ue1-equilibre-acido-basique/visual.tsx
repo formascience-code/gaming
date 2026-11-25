@@ -53,9 +53,9 @@ function Digestive({ id, solved }: { id: string; solved: Progress['solved'] }) {
   const pancreas = id === 'pancreas';
   const highlightBasolateral = id === 'bicarbonate-sang';
   return <Frame label={pancreas ? 'Cellule canalaire du pancréas et sécrétion de bicarbonates' : 'Cellule pariétale de l’estomac et sécrétion acide'}>
-    <rect x="35" y="100" width="170" height="360" rx="24" fill="#e9eeef"/>
-    <rect x="515" y="100" width="170" height="360" rx="24" fill="#f5e7d9"/>
-    <path d="M218 99 Q359 83 501 99 Q515 101 515 115 V444 Q515 458 501 460 Q359 475 218 460 Q204 458 204 444 V115 Q204 101 218 99Z" fill="#efd9d7" stroke="#af7877" strokeWidth="4"/>
+    <rect x="35" y="100" width="170" height="360" rx="24" fill="#cedce4"/>
+    <rect x="515" y="100" width="170" height="360" rx="24" fill="#e9caa9"/>
+    <path d="M218 99 Q359 83 501 99 Q515 101 515 115 V444 Q515 458 501 460 Q359 475 218 460 Q204 458 204 444 V115 Q204 101 218 99Z" fill="#e4bcb9" stroke="#905958" strokeWidth="4"/>
     <ellipse cx="337" cy="386" rx="42" ry="29" fill="#c6a1b8" stroke="#9d7496" strokeWidth="2"/>
     <Label x={120} y={81}>Interstitium</Label><Label x={600} y={81}>{pancreas ? 'Lumière du canal' : 'Lumière gastrique'}</Label>
     <Label x={363} y={153}>{pancreas ? 'Cellule canalaire' : 'Cellule pariétale'}</Label>
@@ -63,10 +63,10 @@ function Digestive({ id, solved }: { id: string; solved: Progress['solved'] }) {
     <rect x="187" y="212" width="34" height="67" rx="12" fill="#8bbeb9" stroke="#567d79" strokeWidth="2"/>
     <rect x="497" y="212" width="36" height="67" rx="12" fill="#d7938c" stroke="#965951" strokeWidth="2"/>
     {pancreas
-      ? <rect x="582" y="194" width="58" height="36" rx="10" fill="#faefd1"/>
+      ? <rect x="582" y="194" width="58" height="36" rx="10" fill="#f8df92"/>
       : highlightBasolateral
-        ? <rect x="89" y="197" width="63" height="34" rx="10" fill="#dcece7"/>
-        : <rect x="582" y="197" width="47" height="34" rx="10" fill="#f6d7cb"/>}
+        ? <rect x="89" y="197" width="63" height="34" rx="10" fill="#b8dcd3"/>
+        : <rect x="582" y="197" width="47" height="34" rx="10" fill="#f4bcab"/>}
     {pancreas ? <>
       <Arrow path="M106 238H286"/><Label x={119} y={224}>Na⁺ + HCO₃⁻</Label>
       <Arrow path="M449 234H622"/><Label x={611} y={221}>HCO₃⁻</Label>
@@ -95,12 +95,23 @@ function Digestive({ id, solved }: { id: string; solved: Progress['solved'] }) {
   </Frame>;
 }
 
+function MovingParticle({ path, color }: { path: string; color: string }) {
+  return <circle className={styles.movingParticle} r="4.8" fill={color} stroke="#fff9ee" strokeWidth="1.4" aria-hidden="true">
+    <animateMotion path={path} dur="1.8s" repeatCount="2" fill="freeze"/>
+  </circle>;
+}
+
 function OxygenCurve({ solved }: { solved: boolean }) {
   const x = (pressure: number) => 100 + pressure * 4.4;
   const y = (saturation: number) => 422 - saturation * 3;
   const saturation = (pressure: number, p50: number) => 100 / (1 + (p50 / pressure) ** 2.7);
   const curve = (p50: number) => Array.from({ length: 121 }, (_, pressure) =>
     `${x(pressure)},${y(saturation(pressure, p50))}`).join(' ');
+
+  const release = (p50: number) => Array.from({ length: 51 }, (_, i) => {
+    const pressure = 90 - i;
+    return `${x(pressure)} ${y(saturation(pressure, p50))}`;
+  }).join('L');
 
   return <Frame label="Courbe de dissociation de HbO₂. À pH plus bas, la saturation diminue pour une même PO₂.">
     <Label x={357} y={48}>De l’hématie à la courbe de HbO₂</Label>
@@ -122,13 +133,18 @@ function OxygenCurve({ solved }: { solved: boolean }) {
     <text x="117" y="479" fill="#476785" fontSize="14">Trait plein · pH de référence</text>
     <text x="393" y="479" fill="#965951" fontSize="14">Pointillé · pH plus bas</text>
     {solved && <g className={styles.reveal}>
+      <MovingParticle path={`M${release(26.6)}`} color="#476785"/>
+      <MovingParticle path={`M${release(32)}`} color="#ac6b64"/>
+      <circle cx={x(40)} cy={y(saturation(40, 32))} r="5" fill="#ac6b64"/>
+      <text x={x(40) + 13} y={y(saturation(40, 32)) + 17} fontSize="14" fill="#8c4742">≈ 65 % · pH plus bas</text>
+      <text x={x(40) - 12} y={y(75) - 11} textAnchor="end" fontSize="14" fill="#476785">≈ 75 %</text>
       <text x="360" y="517" textAnchor="middle" fontSize="14" fill="#536b68">Effet Bohr · à PO₂ égale, la baisse du pH favorise la libération d’O₂.</text>
     </g>}
   </Frame>;
 }
 
-function Blood({ lung, buffer, ventilation, solved }: { lung: boolean; buffer: boolean; ventilation: boolean; solved: Progress["solved"] }) {
-  return <Frame height={lung ? 575 : 540} label={lung ? 'Diffusion du CO₂ du capillaire vers l’alvéole' : 'Échanges de l’hématie dans un capillaire tissulaire'}>
+function Blood({ lung, ventilation, solved }: { lung: boolean; ventilation: boolean; solved: Progress["solved"] }) {
+  return <Frame label={lung ? 'Diffusion du CO₂ du capillaire vers l’alvéole' : 'Échanges de l’hématie dans un capillaire tissulaire'}>
     {lung ? <>
       <defs>
         <linearGradient id="capillary-oxygenation"><stop stopColor="#7092b4"/><stop offset="1" stopColor="#bc7478"/></linearGradient>
@@ -168,12 +184,13 @@ function Blood({ lung, buffer, ventilation, solved }: { lung: boolean; buffer: b
       <text x="527" y="452" textAnchor="middle" fill="#87474e" fontSize="15">Sang oxygéné</text>
       <Label x={360} y={487}>Capillaire pulmonaire</Label>
       <text x="360" y="513" textAnchor="middle" fill="#654c47" fontSize="12">Pressions partielles en mmHg</text>
-      {(ventilation ? solved.ventilation : solved.alveole) && <g className={styles.reveal} key={String(ventilation)}>
-        <rect x="78" y="529" width="564" height="34" rx="10" fill="#fff7e7" stroke="#d8b8a8"/>
-        <text x="360" y="551" textAnchor="middle" fill="#654c47" fontSize="13" fontWeight="600">
-          {ventilation ? 'À production de CO₂ constante : ventilation ↑ → PaCO₂ ↓'
-            : 'Le CO₂ diffuse du sang (45 mmHg) vers l’air alvéolaire (40 mmHg).'}
-        </text>
+      {ventilation && solved.ventilation && <g className={styles.reveal}>
+        <MovingParticle path="M360 144V89" color="#9a5147"/>
+        <text x="395" y="138" fill="#783e39" fontSize="14" fontWeight="700">Si la ventilation augmente : PaCO₂ ↓</text>
+      </g>}
+      {!ventilation && solved.alveole && <g className={styles.reveal}>
+        <MovingParticle path="M337 376V290" color="#9a5147"/>
+        <text x="266" y="289" textAnchor="middle" fill="#783e39" fontSize="14" fontWeight="700">45 → 40 mmHg</text>
       </g>}
     </> : <>
       <defs>
@@ -224,7 +241,7 @@ function Blood({ lung, buffer, ventilation, solved }: { lung: boolean; buffer: b
 
       <text x="360" y="377" textAnchor="middle" fill="#654c47" fontWeight="600" fontSize="14">Réactions dans l’hématie</text>
       <rect x="30" y="393" width="378" height="100" rx="15" fill="#fff9ef" stroke="#d8b8a8"/>
-      <rect x="425" y="393" width="265" height="100" rx="15" fill={buffer ? "#f5e1e8" : "#fff9ef"} stroke={buffer ? "#b48698" : "#d8b8a8"}/>
+      <rect x="425" y="393" width="265" height="100" rx="15" fill="#fff9ef" stroke="#d8b8a8"/>
       <text x="219" y="423" textAnchor="middle" fill="#654c47" fontSize="14">Formation de bicarbonate</text>
       {solved.hematie && <g className={styles.reveal}>
       <Label x={219} y={453}>CO₂ + H₂O ⇌ H₂CO₃ ⇌ H⁺ + HCO₃⁻</Label>
@@ -286,6 +303,8 @@ function Kidney({ mode, id, solved }: { mode: 'nephron' | 'proximal' | 'urine'; 
       </g>
       <path d="M214 202L230 197" fill="none" stroke="#617970" strokeWidth="1.8" markerEnd="url(#acid-arrow)"/>
       <path d="M241 184H263" fill="none" stroke="#617970" strokeWidth="1.8" markerEnd="url(#acid-arrow)"/>
+      <text x="275" y="226" textAnchor="middle" fill="#385d52" fontSize="14" fontWeight="700">HCO₃⁻ filtré</text>
+      <MovingParticle path="M212 201L230 197L245 184H270C296 184 294 150 316 148C341 146 344 176 325 193" color="#4f8170"/>
       <Label x={183} y={115}>Glomérule</Label>
       <Label x={183} y={273}>Corpuscule rénal</Label>
       <Label x={314} y={121}>Tubule proximal</Label>
@@ -331,8 +350,14 @@ function Kidney({ mode, id, solved }: { mode: 'nephron' | 'proximal' | 'urine'; 
       <Label x={610} y={320}>HPO₄²⁻ + H⁺</Label>
       <rect x="505" y="363" width="188" height="45" rx="10" fill={id === 'ammonium' ? '#f1dda5' : '#fff8e8'} stroke="#d5bb81"/>
       <Label x={599} y={390}>NH₃ + H⁺ ⇌ NH₄⁺</Label>
-      {solved.phosphate && <g className={styles.reveal}><Label x={609} y={437}>H₂PO₄⁻ excrété</Label></g>}
-      {solved.ammonium && <g className={styles.reveal}><Label x={605} y={470}>NH₄⁺ piégé et excrété</Label></g>}
+      {solved.phosphate && <g className={styles.reveal}>
+        {id === 'phosphate' && <MovingParticle path="M395 246H554Q610 247 610 291" color="#a65550"/>}
+        <Label x={609} y={437}>H₂PO₄⁻ excrété</Label>
+      </g>}
+      {solved.ammonium && <g className={styles.reveal}>
+        <MovingParticle path="M431 352H544Q574 352 591 367" color="#785d91"/>
+        <Label x={605} y={470}>NH₄⁺ piégé et excrété</Label>
+      </g>}
       <text x="360" y="503" textAnchor="middle" fill="#654c47" fontSize="13">L’excrétion nette d’acide s’accompagne d’un apport de HCO₃⁻ au sang.</text>
     </> : <>
       <defs><linearGradient id="proximal-cell" x2="0" y2="1">
@@ -366,6 +391,8 @@ function Kidney({ mode, id, solved }: { mode: 'nephron' | 'proximal' | 'urine'; 
       <path className={styles.renalFlow} d="M553 360H435" fill="none" stroke="#a65550" strokeWidth="3.2"/>
       <text x="507" y="384" textAnchor="middle" fill="#536b68" fontSize="13">Le CO₂ diffuse dans la cellule</text>
       {solved.proximal && <g className={styles.reveal}>
+        <MovingParticle path="M607 275V317Q607 360 559 360H427" color="#a65550"/>
+        <MovingParticle path="M265 324H112" color="#4f8170"/>
         <rect x="219" y="255" width="238" height="41" rx="11" fill="#fff4e8" stroke="#dfbdb1"/>
         <Label x={338} y={281}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
         <text x="360" y="508" textAnchor="middle" fill="#654c47" fontSize="14">Le bicarbonate filtré est récupéré. Le H⁺ sécrété est recyclé.</text>
@@ -512,9 +539,9 @@ export function Detail({ mission, id, membrane, solved }: { mission: number; id:
     case 1: return <MuscleCell membrane={membrane} solved={solved}/>;
     case 2: return <Digestive id={id} solved={solved}/>;
     case 3: return id === 'hamburger' ? <div className={styles.oxygenTransition}>
-      <div className={styles.oxygenFrom} aria-hidden="true"><Blood lung={false} buffer={false} ventilation={false} solved={solved}/></div>
+      <div className={styles.oxygenFrom} aria-hidden="true"><Blood lung={false} ventilation={false} solved={solved}/></div>
       <div className={styles.oxygenTo}><OxygenCurve solved={Boolean(solved.hamburger)}/></div>
-    </div> : <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} ventilation={id === 'ventilation'} solved={solved}/>;
+    </div> : <Blood lung={id === 'alveole' || id === 'ventilation'} ventilation={id === 'ventilation'} solved={solved}/>;
     case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'} id={id} solved={solved}/>;
     default: return null;
   }

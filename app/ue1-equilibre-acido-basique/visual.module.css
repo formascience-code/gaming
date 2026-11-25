@@ -155,3 +155,8 @@
   .oxygenFrom, .renalFlow { display: none; }
   .oxygenTo { animation: none; }
 }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .movingParticle { display: none; }
+}
