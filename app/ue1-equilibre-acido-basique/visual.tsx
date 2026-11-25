@@ -2,11 +2,11 @@ import type { ReactNode } from 'react';
 import styles from './visual.module.css';
 
 const locations = [
-  { x: 155, y: 568, label: 'Muscle du bras', crop: '61 400 331 360', plate: 'muscle' },
-  { x: 486, y: 689, label: 'Appareil digestif', crop: '202 581 438 396', plate: 'atlas' },
-  { x: 461, y: 514, label: 'Poumons et sang', crop: '212 355 373 326', plate: 'atlas' },
-  { x: 473, y: 765, label: 'Reins', crop: '218 680 375 367', plate: 'reins' },
-  { x: 570, y: 518, label: 'Gaz du sang', crop: '438 409 263 259', plate: 'atlas' },
+  { x: 119, y: 481, label: 'Muscle du bras', crop: '0 230 392 510' },
+  { x: 734, y: 711, label: 'Appareil digestif', crop: '235 515 693 650' },
+  { x: 386, y: 382, label: 'Poumons et sang', crop: '218 94 714 527' },
+  { x: 811, y: 834, label: 'Reins', crop: '275 727 620 304' },
+  { x: 1021, y: 375, label: 'Gaz du sang', crop: '784 142 371 545' },
 ];
 
 export function siteLabel(mission: number) {
@@ -15,9 +15,8 @@ export function siteLabel(mission: number) {
 
 export function Anatomy({ mission, zoom, onEnter }: { mission: number; zoom: boolean; onEnter: () => void }) {
   const point = locations[mission - 1];
-  const plate = zoom || mission === 4 ? point.plate : 'atlas';
-  return <svg className={styles.canvas} viewBox={zoom ? point.crop : '0 0 810 1086'} role="group" aria-label={zoom ? `Planche anatomique : ${point.label}` : 'Planche anatomique, vue de face'}>
-    <image href={`/acido/${plate}.webp`} width="810" height="1086"/>
+  return <svg className={styles.canvas} viewBox={zoom ? point.crop : '0 0 1155 1362'} role="group" aria-label={zoom ? `Planche anatomique : ${point.label}` : 'Planche anatomique, vue de face'}>
+    <image href="/acido/torse.webp" width="1155" height="1362"/>
     <g className={styles.hotspot} transform={`translate(${point.x} ${point.y})`}
       role="button" tabIndex={0} aria-label={`Explorer : ${point.label}`} onClick={onEnter}
       onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEnter(); } }}>

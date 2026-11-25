@@ -170,7 +170,6 @@ export default function AcidGame() {
               ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} stepped={depth === 3}/>
               : <Anatomy mission={mission} zoom={depth === 1} onEnter={explore}/>}
           </div>
-          {!detail && <a className={styles.attribution} href="https://commons.wikimedia.org/wiki/File:Internal_organs.svg" target="_blank" rel="noreferrer">Planche adaptée de Mikael Häggström · domaine public</a>}
         </section>
       </div>
 
