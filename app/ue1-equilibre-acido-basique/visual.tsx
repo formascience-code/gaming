@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import type { Progress } from '../quiz';
 import styles from './visual.module.css';
 
 const locations = [
@@ -190,9 +191,7 @@ function Transporter({ fill, border }: { fill: string; border: string }) {
   </g>;
 }
 
-function MuscleCell({ membrane, id }: { membrane: boolean; id: string }) {
-  const respiration = id !== 'glycolyse';
-  const lactate = id === 'lactate';
+function MuscleCell({ membrane, solved }: { membrane: boolean; solved: Progress['solved'] }) {
   return <Frame height={membrane ? 540 : 563} label={membrane ? 'Sorties membranaires de H⁺ par NHE, de HCO₃⁻ par AE et de lactate avec H⁺ par MCT' : 'Cellule : glycolyse, respiration et formation de lactate'}>
     <defs>
       <marker id="cell-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
@@ -217,17 +216,13 @@ function MuscleCell({ membrane, id }: { membrane: boolean; id: string }) {
       <Label x={360} y={497}>Milieu extracellulaire</Label>
     </> : <>
       <path d="M99 37C175 16 531 16 612 38C679 56 700 113 699 223L697 382C696 455 653 494 575 495H144C62 493 22 456 21 382L20 206C20 114 37 54 99 37Z" fill="#f6f8f1" stroke="#94a28c" strokeWidth="2.3"/>
-      <g transform={respiration ? 'translate(0 -22)' : 'translate(0 120)'}>
-      <g className={styles.reveal}>
-      {!respiration && <rect x="240" y="39" width="240" height="130" rx="20" fill="#edf2e9" stroke="#a3b39c"/>}
+      <g transform="translate(0 -22)">
       <Label x={360} y={76}>Glucose</Label>
-      <Label x={421} y={104}>Glycolyse</Label>
+      {solved.glycolyse && <g className={styles.reveal}><Label x={421} y={104}>Glycolyse</Label></g>}
       <Label x={360} y={137}>Pyruvate</Label>
       <g fill="none" stroke="#59736c" strokeWidth="2" markerEnd="url(#cell-arrow)">
         <path d="M360 83V116"/>
       </g>
-      </g>
-      {respiration && <g className={id === 'co2' ? styles.reveal : styles.context}>
       <path d="M324 149L199 180" fill="none" stroke="#59736c" strokeWidth="2" markerEnd="url(#cell-arrow)"/>
       <text x="242" y="156" textAnchor="middle" fill="#536b68" fontSize="13">En aérobie</text>
       <rect x="45" y="193" width="298" height="196" rx="18" fill="#fcf6eb" stroke="#dbc3a5"/>
@@ -238,13 +233,12 @@ function MuscleCell({ membrane, id }: { membrane: boolean; id: string }) {
       <path d="M139 266 C139 275 150 277 150 287 S139 299 136 317 M163 265 C160 277 171 280 173 287 S172 302 165 325 M191 270 C186 281 198 284 198 292 S188 311 193 327 M217 271 C213 284 226 286 226 295 S216 310 220 330 M244 275 C237 284 244 289 249 295 S252 312 243 326" fill="none" stroke="#ac6358" strokeWidth="3.6" strokeLinecap="round"/>
       </g>
       <path d="M194 337V348" stroke="#59736c" strokeWidth="1.7" markerEnd="url(#cell-arrow)"/>
-      <Label x={194} y={365}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
-      </g>}
-      {lactate && <g className={styles.reveal}>
+      {solved.co2 && <g className={styles.reveal}><Label x={194} y={365}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label></g>}
       <path d="M396 149L521 180" fill="none" stroke="#59736c" strokeWidth="2" markerEnd="url(#cell-arrow)"/>
       <text x="481" y="156" textAnchor="middle" fill="#536b68" fontSize="13">En anaérobie</text>
       <rect x="377" y="193" width="298" height="180" rx="18" fill="#fbefed" stroke="#dbb8b1"/>
       <Label x={526} y={222}>Fermentation lactique</Label>
+      {solved.lactate && <g className={styles.reveal}>
       <Label x={526} y={261}>Pyruvate + NADH + H⁺</Label>
       <path d="M526 270V307" stroke="#59736c" strokeWidth="2" markerEnd="url(#cell-arrow)"/>
       <text x="541" y="291" fill="#536b68" fontSize="12">LDH</text>
@@ -252,14 +246,24 @@ function MuscleCell({ membrane, id }: { membrane: boolean; id: string }) {
       <rect x="409" y="407" width="234" height="34" rx="10" fill="#fbefed" stroke="#dbb8b1"/>
       <Label x={526} y={429}>Hydrolyse de l’ATP → H⁺</Label>
       </g>}
+      <Label x={526} y={460}>Lactate⁻ + H⁺</Label>
       </g>
+      {cellTransporters.map(({ name, cargo, fill, border }, index) => {
+        const x = [143, 246, 526][index];
+        return <g key={name}>
+          <g transform={`translate(${x} 495) scale(.69)`}><Transporter fill={fill} border={border}/></g>
+          <path d={`M${x} ${name === 'MCT' ? 447 : 373}V530`} fill="none" stroke="#59736c" strokeWidth="1.8" markerEnd="url(#cell-arrow)"/>
+          <text x={x + 28} y="493" fill="#273b3c" fontSize="13" fontWeight="600">{name}</text>
+          <Label x={x} y={548}>{cargo}</Label>
+        </g>;
+      })}
     </>}
   </Frame>;
 }
 
-export function Detail({ mission, id, membrane }: { mission: number; id: string; membrane: boolean }) {
+export function Detail({ mission, id, membrane, solved }: { mission: number; id: string; membrane: boolean; solved: Progress['solved'] }) {
   switch (mission) {
-    case 1: return <MuscleCell key={id} membrane={membrane} id={id}/>;
+    case 1: return <MuscleCell membrane={membrane} solved={solved}/>;
     case 2: return <Digestive pancreas={id === 'pancreas' || id === 'polarite'}/>;
     case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'}/>;
     case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'}/>;

@@ -187,7 +187,7 @@ export default function AcidGame() {
               setPoint(index);
               if (index === 0 && next?.id === 'point' && !quiz && !debrief) open(next, true);
             }}/> : focused && mission < 5
-              ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} membrane={membrane}/>
+              ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} membrane={membrane} solved={progress.solved}/>
               : <Anatomy mission={mission} zooming={zooming} onEnter={explore}/>}
           </div>
         </section>
