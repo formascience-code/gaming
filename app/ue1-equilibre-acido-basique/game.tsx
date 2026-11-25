@@ -5,7 +5,7 @@ import { GameHeader } from '../game-header';
 import { GameObjective } from '../game-objective';
 import { Quiz, Results, Stethoscope, type Progress, type Question } from '../quiz';
 import { acidMissions, acidQuestions, acidTitle, missionSummaries } from './questions';
-import { Anatomy, Davenport, Detail, siteLabel } from './visual';
+import { Anatomy, Davenport, Detail, MuscleTissue, siteLabel } from './visual';
 import styles from './visual.module.css';
 import { readAcid, saveAcid } from './progress';
 
@@ -49,6 +49,8 @@ export default function AcidGame() {
   const location = siteLabel(mission);
   const graph = mission === 5 && depth >= 2;
   const detail = depth >= 2;
+  const muscle = mission === 1;
+  const muscleTitle = ['Vue d’ensemble', location, 'Fibres musculaires striées', 'Intérieur d’une fibre musculaire', 'Sarcolemme'][depth];
   const following = quiz ? acidQuestions[acidQuestions.indexOf(quiz) + 1] : undefined;
   const group = acidQuestions.filter(question => question.mission === mission);
   const earned = group.filter(question => progress.solved[question.id]).length;
@@ -80,7 +82,7 @@ export default function AcidGame() {
   }
 
   function open(question: Question, pointPlaced = point === 0) {
-    setDepth(2);
+    setDepth(question.mission === 1 ? question.id === 'mct' ? 4 : 3 : 2);
     if (question.id === 'point' && !pointPlaced) return;
     if (attempts.current === 0) {
       attempts.current = 1;
@@ -93,11 +95,7 @@ export default function AcidGame() {
   }
 
   function explore() {
-    if (depth === 0) {
-      setDepth(1);
-    } else {
-      setDepth(2);
-    }
+    setDepth(value => Math.min(value + 1, muscle ? 3 : 2));
   }
 
   function leaveDebrief() {
@@ -155,19 +153,20 @@ export default function AcidGame() {
       <div className="visual-column">
         <section ref={stage} className={`stage ${styles.stage}`} aria-label="Exploration de l’équilibre acido-basique">
           <div className={styles.toolbar}>
-            <h2>{graph ? 'Diagramme de Davenport' : detail || depth === 1 ? location : 'Vue d’ensemble'}</h2>
+            <h2>{muscle ? muscleTitle : graph ? 'Diagramme de Davenport' : detail || depth === 1 ? location : 'Vue d’ensemble'}</h2>
             <div className={styles.controls}>
               {depth > 0 && <button type="button" className="control" onClick={() => setDepth(0)}>Vue d’ensemble</button>}
-              {depth < 2 && <button type="button" className="control" onClick={explore}>{depth === 0 ? 'Explorer la zone' : 'Gros plan'}</button>}
-              {detail && current?.id === 'mct' && <button type="button" className="control" onClick={() => setDepth(depth === 2 ? 3 : 2)}>{depth === 2 ? 'Vue cellule' : 'Zoom membrane'}</button>}
+              {depth < (muscle ? 3 : 2) && <button type="button" className="control" onClick={explore}>{depth === 0 ? 'Explorer la zone' : muscle ? depth === 1 ? 'Zoom sur le tissu' : 'Entrer dans la fibre' : 'Gros plan'}</button>}
+              {muscle && depth >= 3 && <button type="button" className="control" onClick={() => setDepth(2)}>Vue du tissu</button>}
+              {muscle && depth >= 3 && <button type="button" className="control" onClick={() => setDepth(depth === 3 ? 4 : 3)}>{depth === 3 ? 'Zoom membrane' : 'Vue de la fibre'}</button>}
             </div>
           </div>
           <div className={styles.drawing} key={`${mission}-${depth}`}>
             {graph ? <Davenport selected={point} onSelect={index => {
               setPoint(index);
               if (index === 0 && next?.id === 'point' && !quiz && !debrief) open(next, true);
-            }}/> : detail && mission < 5
-              ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} stepped={depth === 3}/>
+            }}/> : muscle && depth === 2 ? <MuscleTissue onEnter={explore}/> : detail && mission < 5
+              ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} membrane={depth === 4}/>
               : <Anatomy mission={mission} zoom={depth === 1} onEnter={explore}/>}
           </div>
         </section>

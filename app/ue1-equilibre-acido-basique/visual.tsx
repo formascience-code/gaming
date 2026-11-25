@@ -172,9 +172,62 @@ export function Davenport({ selected, onSelect }: { selected: number | null; onS
   </div>;
 }
 
+export function MuscleTissue({ onEnter }: { onEnter: () => void }) {
+  return <svg className={styles.canvas} viewBox="0 0 720 540" role="group" aria-label="Coupe longitudinale du muscle squelettique : fibres parallèles et striées">
+    <defs>
+      <pattern id="muscle-stripes" width="21" height="20" patternUnits="userSpaceOnUse">
+        <path d="M3 0V20 M7 0V20 M16 0V20" stroke="#a45f66" strokeWidth="2" opacity=".32"/>
+        <path d="M0 5H21 M0 15H21" stroke="#f5c9c7" opacity=".8"/>
+      </pattern>
+    </defs>
+    <rect width="720" height="540" fill="#e9aaa7"/>
+    <g transform="rotate(-11 360 270)">
+      {Array.from({ length: 9 }, (_, index) => {
+        const y = -68 + index * 76;
+        return <g key={y}>
+          <rect x="-85" y={y} width="890" height="65" rx="32" fill={index === 4 ? '#edaaa8' : '#d9898b'} stroke="#a35f67" strokeWidth="1.5"/>
+          <rect x="-85" y={y} width="890" height="65" rx="32" fill="url(#muscle-stripes)"/>
+          <ellipse cx={118 + index % 3 * 137} cy={y + 9} rx="19" ry="5.5" fill="#8e6179"/>
+          <ellipse cx={520 + index % 2 * 69} cy={y + 56} rx="21" ry="5.5" fill="#8e6179"/>
+        </g>;
+      })}
+    </g>
+    <g className={styles.hotspot} transform="translate(360 267)" role="button" tabIndex={0}
+       aria-label="Explorer cette fibre musculaire" onClick={onEnter}
+       onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEnter(); } }}>
+      <circle r="20" fill="#fff5d9" stroke="#956f39" strokeWidth="2"/>
+      <circle r="10" fill="#3d2248"/>
+      <path d="M-5 0H5 M0 -5V5" stroke="#fff8eb" strokeWidth="2"/>
+    </g>
+  </svg>;
+}
+
 function MuscleCell({ membrane }: { membrane: boolean }) {
-  return <Frame label={membrane ? 'Cotransport du lactate et d’un proton à travers la membrane' : 'Glycolyse, respiration et formation de lactate dans une cellule musculaire'}>
-    <rect x="36" y="62" width="648" height={membrane ? 278 : 365} rx="88" fill="#e9eee5" stroke="#899983" strokeWidth="5"/>
+  return <Frame label={membrane ? 'Sarcolemme et cotransport du lactate et des protons' : 'Coupe longitudinale d’une fibre musculaire avec noyaux périphériques, myofibrilles et mitochondrie'}>
+    <defs>
+      <pattern id="fiber-stripes" width="25" height="18" patternUnits="userSpaceOnUse">
+        <path d="M4 0V18 M10 0V18 M19 0V18" stroke="#b9767e" strokeWidth="2" opacity=".36"/>
+        <path d="M0 8H25" stroke="#e6a4a5" strokeWidth="1"/>
+      </pattern>
+      <clipPath id="muscle-fiber-outline">
+        <path d="M-36 113 C50 103 83 72 174 74 H578 C657 74 683 99 750 107 L750 435 C691 445 657 467 576 467 H171 C87 467 44 435 -36 425Z"/>
+      </clipPath>
+    </defs>
+    <rect width="720" height="540" fill="#fbefec"/>
+    {membrane ? <>
+      <path d="M0 0H720V315H0Z" fill="#f4cfce"/>
+      <path d="M0 314H720 M0 326H720" fill="none" stroke="#a45f66" strokeWidth="3"/>
+    </> : <g clipPath="url(#muscle-fiber-outline)">
+      <rect width="720" height="540" fill="#f9e4df"/>
+      {[95, 117, 421, 444].map(y => <g key={y}>
+        <rect x="-20" y={y} width="760" height="17" rx="8" fill="#edb9b7"/>
+        <rect x="-20" y={y} width="760" height="17" rx="8" fill="url(#fiber-stripes)"/>
+      </g>)}
+      <ellipse cx="113" cy="103" rx="33" ry="10" fill="#9c718f"/>
+      <ellipse cx="621" cy="122" rx="34" ry="10" fill="#9c718f"/>
+      <ellipse cx="128" cy="447" rx="32" ry="10" fill="#9c718f"/>
+      <path d="M-36 113 C50 103 83 72 174 74 H578 C657 74 683 99 750 107 L750 435 C691 445 657 467 576 467 H171 C87 467 44 435 -36 425Z" fill="none" stroke="#ab6970" strokeWidth="7"/>
+    </g>}
     {membrane ? <>
       <Label x={360} y={150}>Cytosol</Label>
       <Label x={360} y={235}>Lactate⁻ + H⁺</Label>
@@ -184,28 +237,30 @@ function MuscleCell({ membrane }: { membrane: boolean }) {
       <Label x={360} y={443}>Lactate⁻ + H⁺</Label>
       <Label x={360} y={494}>Milieu extracellulaire</Label>
     </> : <>
-      <Label x={360} y={115}>Glucose</Label>
-      <Arrow path="M360 128V171"/><Label x={437} y={151}>Glycolyse</Label>
+      <Label x={130} y={50}>Noyau périphérique</Label><path d="M130 56L114 94" stroke="#8e6179" strokeWidth="1.5"/>
+      <Label x={360} y={144}>Glucose</Label>
+      <Arrow path="M360 151V171"/><Label x={437} y={170}>Glycolyse</Label>
       <Label x={360} y={196}>Pyruvate</Label>
       <Arrow path="M334 205L196 251"/><Arrow path="M386 205L515 251"/>
-      <path d="M115 279 C110 260 136 253 172 259 C208 265 229 251 254 267 C284 285 276 323 252 333 C222 347 201 328 170 333 C140 338 113 324 115 279Z" fill="#f5d4a7" stroke="#ab7546" strokeWidth="3"/>
-      <path d="M130 281Q147 253 159 287T185 294T211 278T239 298L258 280" fill="none" stroke="#ab7546" strokeWidth="3"/>
-      <Label x={193} y={313}>Mitochondrie</Label>
+      <path d="M103 298 C96 275 119 254 153 254 C183 254 193 263 215 261 C247 258 274 270 277 296 C281 321 258 340 224 340 C197 340 184 332 158 334 C128 338 110 325 103 298Z" fill="#edaf98" stroke="#9d5651" strokeWidth="3"/>
+      <path d="M113 297 C106 279 129 262 152 263 C173 263 183 269 203 270 C231 269 259 271 267 292 C273 311 253 330 225 331 C203 332 187 322 160 326 C136 330 119 316 113 297Z" fill="#f8dcc6" stroke="#ac6358" strokeWidth="2.5"/>
+      <path d="M139 266 C139 275 150 277 150 287 S139 299 136 317 M163 265 C160 277 171 280 173 287 S172 302 165 325 M191 270 C186 281 198 284 198 292 S188 311 193 327 M217 271 C213 284 226 286 226 295 S216 310 220 330 M244 275 C237 284 244 289 249 295 S252 312 243 326" fill="none" stroke="#ac6358" strokeWidth="3.6" strokeLinecap="round"/>
+      <Label x={193} y={246}>Mitochondrie</Label>
       <Arrow path="M192 339V367"/><Label x={193} y={395}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
       <Label x={522} y={277}>Lactate déshydrogénase</Label>
       <Label x={507} y={311}>Pyruvate + NADH + H⁺</Label>
       <Arrow path="M514 320V341"/><Label x={511} y={363}>Lactate⁻ + NAD⁺</Label>
       <Label x={514} y={394}>Hydrolyse de l’ATP → H⁺</Label>
-      <rect x="471" y="409" width="76" height="35" rx="12" fill="#b4cba8" stroke="#647c58" strokeWidth="2"/>
-      <Label x={509} y={432}>MCT</Label>
-      <Arrow path="M509 447V475"/><Label x={509} y={502}>Lactate⁻ + H⁺</Label>
+      <rect x="471" y="449" width="76" height="35" rx="12" fill="#b4cba8" stroke="#647c58" strokeWidth="2"/>
+      <Label x={509} y={472}>MCT</Label>
+      <Arrow path="M509 486V505"/><Label x={509} y={528}>Lactate⁻ + H⁺</Label>
     </>}
   </Frame>;
 }
 
-export function Detail({ mission, id, stepped }: { mission: number; id: string; stepped: boolean }) {
+export function Detail({ mission, id, membrane }: { mission: number; id: string; membrane: boolean }) {
   switch (mission) {
-    case 1: return <MuscleCell membrane={id === 'mct' && !stepped}/>;
+    case 1: return <MuscleCell membrane={membrane}/>;
     case 2: return <Digestive pancreas={id === 'pancreas' || id === 'polarite'}/>;
     case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'}/>;
     case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'}/>;
