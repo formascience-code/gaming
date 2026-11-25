@@ -143,7 +143,7 @@ function Blood({ lung, buffer, solved }: { lung: boolean; buffer: boolean; solve
       <path d="M36 132H678 M36 319H678" fill="none" stroke="#e0ada7" strokeWidth="1.1"/>
       <ellipse cx="678" cy="225.5" rx="13" ry="99.5" fill="#f7d8d4" stroke="#c38c87" strokeWidth="2.5"/>
       <ellipse cx="678" cy="225.5" rx="8" ry="93.5" fill="#fae4e0" stroke="#e0ada7" strokeWidth="1"/>
-      <text x="480" y="151" fill="#654c47" fontSize="14">Capillaire tissulaire · plasma</text>
+      <text x="688" y="331" textAnchor="end" dominantBaseline="hanging" fill="#654c47" fontSize="14">Capillaire tissulaire · plasma</text>
 
       <defs>
         <radialGradient id="erythrocyte-body" cx="45%" cy="37%" r="68%">
@@ -164,15 +164,17 @@ function Blood({ lung, buffer, solved }: { lung: boolean; buffer: boolean; solve
       <ellipse cx="246" cy="263" rx="93" ry="23" fill="url(#erythrocyte-curve)"/>
       <path d="M180 218C207 241 275 248 316 218" fill="none" stroke="#a64a47" strokeWidth="2.5" strokeLinecap="round" opacity=".24"/>
       <text x="35" y="276" fill="#654c47" fontSize="14">Hématie</text>
-      <path d="M97 271L126 257" fill="none" stroke="#996761" strokeWidth="1.4"/>
       <path d="M176 101V197" fill="none" stroke="#79544f" strokeWidth="1.6" markerEnd="url(#blood-arrow)"/>
       <text x="188" y="117" fill="#654c47" fontSize="13">Diffusion vers l’hématie</text>
 
+      <path d="M351 211Q360 204 370 210Q382 220 385 237Q388 253 380 266Q374 273 362 270Q356 268 361 256Q370 237 353 222Q347 216 351 211Z"
+        fill="#e3d3e9" stroke="#8f7299" strokeWidth="1.6"/>
       <path d="M343 216H531" fill="none" stroke="#79544f" strokeWidth="1.6" markerEnd="url(#blood-arrow)"/>
-      <Label x={558} y={221}>HCO₃⁻</Label>
+      <text x="549" y="223" fill="#273b3c" fontSize="23" fontWeight="700">HCO₃⁻</text>
       <path d="M531 260H351" fill="none" stroke="#79544f" strokeWidth="1.6" markerEnd="url(#blood-arrow)"/>
-      <Label x={556} y={266}>Cl⁻</Label>
-      <text x="473" y="294" textAnchor="middle" fill="#654c47" fontSize="13">Échangeur AE1</text>
+      <text x="549" y="267" fill="#273b3c" fontSize="23" fontWeight="700">Cl⁻</text>
+      <path d="M378 272L411 289" fill="none" stroke="#8f7299" strokeWidth="1.2"/>
+      <text x="418" y="296" fill="#684f73" fontSize="13">AE1 · échangeur Cl⁻/HCO₃⁻</text>
 
       <text x="360" y="377" textAnchor="middle" fill="#654c47" fontWeight="600" fontSize="14">Réactions dans l’hématie</text>
       <rect x="30" y="393" width="378" height="100" rx="15" fill="#fff9ef" stroke="#d8b8a8"/>
@@ -192,7 +194,7 @@ function Blood({ lung, buffer, solved }: { lung: boolean; buffer: boolean; solve
   </Frame>;
 }
 
-function Kidney({ mode }: { mode: 'nephron' | 'proximal' | 'urine' }) {
+function Kidney({ mode, id, solved }: { mode: 'nephron' | 'proximal' | 'urine'; id: string; solved: Progress['solved'] }) {
   return <Frame label={mode === 'nephron' ? 'Corpuscule rénal et trajet du filtrat' : 'Échanges entre sang, cellule tubulaire et lumière'}>
     {mode === 'nephron' ? <>
       <path d="M25 75H695V288H25Z" fill="#f6ece7"/>
@@ -226,24 +228,61 @@ function Kidney({ mode }: { mode: 'nephron' | 'proximal' | 'urine' }) {
       <Label x={473} y={121}>Tubule distal</Label>
       <Label x={376} y={517}>Anse de Henlé</Label>
       <text x="599" y="376" fill="#273b3c" fontSize="14">Tube collecteur</text>
+    </> : mode === 'urine' ? <>
+      <defs>
+        <linearGradient id="renal-cell" x2="0" y2="1"><stop stopColor="#f9e7e2"/><stop offset="1" stopColor="#eacac8"/></linearGradient>
+        <marker id="renal-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M1 1L9 5L1 9" fill="none" stroke="#536b68" strokeWidth="1.5" strokeLinecap="round"/>
+        </marker>
+      </defs>
+      <Label x={94} y={74}>Vers le sang</Label>
+      <Label x={332} y={47}>Cellule intercalaire α</Label>
+      <Label x={332} y={74}>Tube collecteur</Label>
+      <Label x={598} y={74}>Lumière du tube</Label>
+      <rect x="42" y="104" width="96" height="355" rx="30" fill="#f8e1dc" stroke="#c68e88" strokeWidth="1.6"/>
+      <path d="M58 126V435 M122 126V435" stroke="#e3b2aa" strokeWidth="1.2"/>
+      <path d="M463 106Q476 97 501 99H698V461H494Q471 461 463 451Z" fill="#faf0d7"/>
+      <path d="M205 109Q323 96 445 108Q465 111 465 134V425Q465 448 445 452Q324 466 205 452Q181 449 181 425V134Q181 112 205 109Z"
+        fill="url(#renal-cell)" stroke="#ad7777" strokeWidth="2.3"/>
+      <path d="M207 116Q324 103 442 115Q458 117 458 136V424Q458 441 442 445Q325 458 207 445Q188 442 188 424V136Q188 118 207 116Z" fill="none" stroke="#d9a4a2" strokeWidth="1.1"/>
+      <ellipse cx="320" cy="407" rx="27" ry="18" fill="#c7a0b7" stroke="#a07798"/>
+      <text x="323" y="151" textAnchor="middle" fill="#71524e" fontSize="13">Anhydrase carbonique</text>
+      <rect x="212" y="163" width="222" height="42" rx="12" fill="#fff6ed" stroke="#dfbdb1"/>
+      <Label x={323} y={190}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
+
+      <rect x="168" y="230" width="33" height="52" rx="10" fill="#ddd0e9" stroke="#967aa3" strokeWidth="1.5"/>
+      <rect x="447" y="229" width="34" height="34" rx="10" fill="#eac0b7" stroke="#b07971" strokeWidth="1.5"/>
+      <g fill="none" stroke="#536b68" strokeWidth="1.65" markerEnd="url(#renal-arrow)">
+        <path d="M264 242H91"/><path d="M143 269H241"/><path d="M391 246H566"/>
+        <path d="M431 352H544"/>
+      </g>
+      <Label x={111} y={230}>HCO₃⁻</Label>
+      <Label x={222} y={292}>Cl⁻</Label>
+      <text x="169" y="302" fill="#684f73" fontSize="13">AE1</text>
+      <Label x={554} y={233}>H⁺</Label>
+      <text x="463" y="286" textAnchor="middle" fill="#79544f" fontSize="13">H⁺-ATPase</text>
+      <Label x={491} y={341}>NH₃</Label>
+
+      <rect x="527" y="294" width="166" height="42" rx="10" fill={id === 'phosphate' ? '#f1dda5' : '#fff8e8'} stroke="#d5bb81"/>
+      <Label x={610} y={320}>HPO₄²⁻ + H⁺</Label>
+      <rect x="505" y="363" width="188" height="45" rx="10" fill={id === 'ammonium' ? '#f1dda5' : '#fff8e8'} stroke="#d5bb81"/>
+      <Label x={599} y={390}>NH₃ + H⁺ ⇌ NH₄⁺</Label>
+      {solved.phosphate && <g className={styles.reveal}><Label x={609} y={437}>H₂PO₄⁻ excrété</Label></g>}
+      {solved.ammonium && <g className={styles.reveal}><Label x={605} y={470}>NH₄⁺ piégé et excrété</Label></g>}
+      <text x="360" y="503" textAnchor="middle" fill="#654c47" fontSize="13">L’excrétion nette d’acide s’accompagne d’un apport de HCO₃⁻ au sang.</text>
     </> : <>
       <rect x="40" y="105" width="155" height="345" rx="20" fill="#e4ede7"/>
       <rect x="192" y="105" width="300" height="345" rx="20" fill="#eedbd8" stroke="#ae827e" strokeWidth="3"/>
       <rect x="494" y="105" width="185" height="345" rx="20" fill="#f5e8cc"/>
       <Label x={116} y={78}>Vers le sang</Label>
-      <Label x={345} y={78}>{mode === 'proximal' ? 'Cellule du tubule proximal' : 'Cellule tubulaire'}</Label>
+      <Label x={345} y={78}>Cellule du tubule proximal</Label>
       <Label x={589} y={78}>Lumière du tubule</Label>
       <Label x={342} y={275}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
       <Arrow path="M251 326H98"/><Label x={116} y={310}>HCO₃⁻</Label>
       <Arrow path="M441 201H598"/><Label x={574} y={186}>H⁺</Label>
-      {mode === 'proximal' ? <>
-        <Label x={582} y={311}>H⁺ + HCO₃⁻</Label>
-        <Arrow path="M583 324V355"/><Label x={584} y={385}>CO₂ + H₂O</Label>
-        <Arrow path="M548 368H425"/><Label x={468} y={407}>CO₂</Label>
-      </> : <>
-        <Label x={587} y={285}>HPO₄²⁻ + H⁺</Label><Label x={587} y={320}>↓</Label><Label x={587} y={355}>H₂PO₄⁻</Label>
-        <Label x={587} y={410}>NH₄⁺ excrété</Label>
-      </>}
+      <Label x={582} y={311}>H⁺ + HCO₃⁻</Label>
+      <Arrow path="M583 324V355"/><Label x={584} y={385}>CO₂ + H₂O</Label>
+      <Arrow path="M548 368H425"/><Label x={468} y={407}>CO₂</Label>
     </>}
   </Frame>;
 }
@@ -386,7 +425,7 @@ export function Detail({ mission, id, membrane, solved }: { mission: number; id:
     case 1: return <MuscleCell membrane={membrane} solved={solved}/>;
     case 2: return <Digestive id={id} solved={solved}/>;
     case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} solved={solved}/>;
-    case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'}/>;
+    case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'} id={id} solved={solved}/>;
     default: return null;
   }
 }
