@@ -179,16 +179,34 @@ function Blood({ lung, buffer, solved }: { lung: boolean; buffer: boolean; solve
 function Kidney({ mode }: { mode: 'nephron' | 'proximal' | 'urine' }) {
   return <Frame label={mode === 'nephron' ? 'Corpuscule rénal et trajet du filtrat' : 'Échanges entre sang, cellule tubulaire et lumière'}>
     {mode === 'nephron' ? <>
-      <rect x="39" y="76" width="642" height="233" rx="25" fill="#efe0da"/>
-      <rect x="39" y="310" width="642" height="165" rx="25" fill="#e4eae5"/>
-      <Label x={110} y={110}>Cortex</Label><Label x={124} y={458}>Médullaire</Label>
-      <circle cx="205" cy="213" r="63" fill="#f9efdd" stroke="#a87f55" strokeWidth="5"/>
-      <path d="M78 191H166 C185 126 248 177 219 223 C197 258 149 220 176 192 C207 169 233 198 198 231 M170 229L91 244" fill="none" stroke="#ae625e" strokeWidth="8" strokeLinecap="round"/>
-      <path d="M265 214 C287 166 345 168 333 210 C322 243 278 246 321 269 L345 299 V420 Q346 453 376 453 Q407 452 408 420 V264 Q418 235 450 247 Q502 269 495 233 Q493 215 525 215 H579 V467" fill="none" stroke="#f9efd6" strokeWidth="19" strokeLinecap="round"/>
-      <path d="M265 214 C287 166 345 168 333 210 C322 243 278 246 321 269 L345 299 V420 Q346 453 376 453 Q407 452 408 420 V264 Q418 235 450 247 Q502 269 495 233 Q493 215 525 215 H579 V467" fill="none" stroke="#b39161" strokeWidth="3" strokeLinecap="round"/>
-      <Arrow path="M228 209H261"/><Label x={202} y={304}>Corpuscule rénal</Label>
-      <Label x={357} y={147}>Tubule proximal</Label><Label x={502} y={173}>Tubule distal</Label>
-      <Label x={375} y={492}>Anse de Henlé</Label><Label x={612} y={361}>Collecteur</Label>
+      <path d="M25 75H695V288H25Z" fill="#f6ece7"/>
+      <path d="M25 288H695V494H25Z" fill="#edf0eb"/>
+      <path d="M25 288H695" stroke="#bcc4b8" strokeDasharray="5 6"/>
+      <Label x={76} y={100}>Cortex</Label>
+      <Label x={90} y={321}>Médullaire</Label>
+
+      <circle cx="183" cy="189" r="61" fill="#fbf4eb" stroke="#ab9385" strokeWidth="1.8"/>
+      <path d="M233 184H270C296 184 294 150 316 148C341 146 344 176 325 193C308 208 339 220 339 241V305" fill="none" stroke="#ab9385" strokeWidth="17" strokeLinecap="round"/>
+      <path d="M233 184H270C296 184 294 150 316 148C341 146 344 176 325 193C308 208 339 220 339 241V305" fill="none" stroke="#eadbd1" strokeWidth="14" strokeLinecap="round"/>
+      <path d="M339 296V426C339 475 410 475 410 427V272" fill="none" stroke="#ab9385" strokeWidth="11" strokeLinecap="round"/>
+      <path d="M339 296V426C339 475 410 475 410 427V272" fill="none" stroke="#eadbd1" strokeWidth="8" strokeLinecap="round"/>
+      <path d="M410 275V199C410 164 435 145 459 152C482 159 481 187 501 188C520 189 541 170 578 184" fill="none" stroke="#ab9385" strokeWidth="17" strokeLinecap="round"/>
+      <path d="M410 275V199C410 164 435 145 459 152C482 159 481 187 501 188C520 189 541 170 578 184" fill="none" stroke="#eadbd1" strokeWidth="14" strokeLinecap="round"/>
+      <path d="M616 131C591 144 578 160 578 184V467" fill="none" stroke="#ab9385" strokeWidth="20" strokeLinecap="round"/>
+      <path d="M616 131C591 144 578 160 578 184V467" fill="none" stroke="#e4d1c5" strokeWidth="17" strokeLinecap="round"/>
+
+      <g fill="none" stroke="#c97470" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M65 222C96 244 114 230 126 206C134 190 139 184 153 185" strokeWidth="10"/>
+        <path d="M153 185C132 170 122 151 132 131" strokeWidth="7"/>
+        <path d="M151 185C146 161 175 143 199 152C224 162 226 191 211 210C196 228 165 223 154 203C144 183 171 169 189 176C207 183 210 201 201 216M161 159C177 168 190 181 194 197M205 156C199 169 184 174 169 183" strokeWidth="6"/>
+      </g>
+      <path d="M206 190H252" fill="none" stroke="#617970" strokeWidth="1.8" markerEnd="url(#acid-arrow)"/>
+      <Label x={183} y={115}>Glomérule</Label>
+      <Label x={183} y={273}>Corpuscule rénal</Label>
+      <Label x={314} y={121}>Tubule proximal</Label>
+      <Label x={473} y={121}>Tubule distal</Label>
+      <Label x={376} y={517}>Anse de Henlé</Label>
+      <text x="599" y="376" fill="#273b3c" fontSize="14">Tube collecteur</text>
     </> : <>
       <rect x="40" y="105" width="155" height="345" rx="20" fill="#e4ede7"/>
       <rect x="192" y="105" width="300" height="345" rx="20" fill="#eedbd8" stroke="#ae827e" strokeWidth="3"/>
