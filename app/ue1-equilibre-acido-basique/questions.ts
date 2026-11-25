@@ -16,7 +16,7 @@ export const missionSummaries = [
   'L’estomac sécrète des H⁺ dans sa lumière. Les canaux pancréatiques sécrètent des bicarbonates qui rejoignent le duodénum et tamponnent le contenu acide venu de l’estomac.',
   'Dans les tissus, une grande partie du CO₂ est convertie en bicarbonate. L’hémoglobine tamponne des H⁺. Dans les poumons, les réactions s’inversent et le CO₂ est expiré.',
   'Le rein récupère le bicarbonate filtré et restitue du bicarbonate neuf au sang lors de l’excrétion nette d’acide, notamment sous forme de NH₄⁺ et d’acidité titrable.',
-  'Un bicarbonate bas est le signe du trouble primaire dans ce cas. La baisse de la PaCO₂ atténue l’acidémie par compensation respiratoire.',
+  'Une acidose métabolique peut être compensée par une baisse de la PaCO₂. Dans une acidose respiratoire persistante, la hausse des bicarbonates rapproche le pH de la normale.',
 ];
 
 const vf = ['Vrai', 'Faux'];
@@ -100,11 +100,12 @@ export const acidQuestions = [
     'Une acidose métabolique', 'Une acidose respiratoire', 'Une alcalose métabolique', 'Une alcalose respiratoire', 'Un équilibre acido-basique normal',
   ], [0], 'Le pH est bas et le bicarbonate est diminué. La diminution de PaCO₂ tend au contraire à relever le pH.', ['Identifie la variable dont le changement abaisse le pH.', 'Une baisse de PaCO₂ contribue à augmenter le pH.'],
     ['Une baisse primaire de HCO₃⁻ peut produire une acidose métabolique.', true, 'La perte de base ou l’apport net d’acide abaisse le bicarbonate.']),
-  check('compensation', 5, 'Ce bilan est compatible avec une compensation respiratoire par augmentation de la ventilation alvéolaire.', vf, [0],
-    'L’augmentation de la ventilation alvéolaire diminue la PaCO₂ et atténue l’acidémie.', ['Compare la PaCO₂ à 40 mmHg.', 'Reviens à la mission sur la ventilation.'],
-    ['Dans une acidose métabolique, la compensation respiratoire attendue fait baisser la PaCO₂.', true, 'La ventilation accrue aide à éliminer le CO₂.']),
-  check('isobares', 5, 'Sur le diagramme de Davenport, que relient les courbes isobares ?', [
-    'Des points de même PaCO₂', 'Des points de même pH', 'Des points de même bicarbonate', 'Des points de même pression partielle en O₂', 'Des points de même débit de filtration glomérulaire',
-  ], [0], 'Chaque courbe réunit les couples pH et bicarbonate compatibles avec une même PaCO₂.', ['Lis les valeurs portées près des courbes.', 'Une isobare indique une pression constante.'],
-    ['Deux points sur une même isobare peuvent avoir des pH différents.', true, 'Le bicarbonate varie aussi le long de l’isobare.']),
+  check('compensation', 5, 'Le point T représente une acidose respiratoire aiguë sur l’isobare de PaCO₂ à 60 mmHg. Si la PaCO₂ reste élevée, quel point correspond à la compensation rénale ?', [
+    'Le point A', 'Le point B', 'Le point C', 'Le point de référence', 'Le point T lui-même',
+  ], [1], 'Le point B se trouve sur la même isobare que T. Les bicarbonates ont augmenté et le pH s’est rapproché de 7,40.', ['Suis l’isobare de 60 mmHg à partir de T.', 'La compensation rénale augmente le bicarbonate plasmatique et atténue l’acidémie.'],
+  ['Si la PaCO₂ reste constante, une compensation rénale se lit sur la même isobare que le trouble respiratoire initial.', true, 'La concentration de bicarbonate et le pH varient le long de cette courbe.']),
+  check('isobares', 5, 'Le point C indique un pH de 7,20, une PaCO₂ de 60 mmHg et des bicarbonates à 22,7 mmol/L. En comparaison du point T (acidose respiratoire aiguë à la même PaCO₂), comment interpréter C ?', [
+    'Une acidose respiratoire compensée par le rein', 'Une alcalose métabolique associée à une acidose respiratoire', 'Une acidose métabolique associée à une acidose respiratoire', 'Une acidose métabolique avec compensation respiratoire', 'Un équilibre acido-basique normal',
+  ], [2], 'Sur la même isobare, C présente des bicarbonates plus bas et un pH plus bas que T. Cette baisse supplémentaire de bicarbonate indique une composante métabolique acide associée.', ['Compare T et C à PaCO₂ identique.', 'Une compensation rénale du trouble respiratoire ferait monter le bicarbonate.'],
+  ['Une chute supplémentaire des bicarbonates à PaCO₂ identique peut aggraver une acidémie respiratoire.', true, 'Le rapport bicarbonate/CO₂ dissous diminue.']),
 ];

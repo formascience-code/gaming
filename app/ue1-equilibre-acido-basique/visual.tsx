@@ -148,7 +148,12 @@ const choices = [
   { ph: 7.48, bicarbonate: 16 },
 ];
 
-export function Davenport({ selected, onSelect }: { selected: number | null; onSelect: (index: number) => void }) {
+export function Davenport({ selected, onSelect, respiratory }: { selected: number | null; onSelect: (index: number) => void; respiratory: boolean }) {
+  const points = respiratory ? [
+    { ph: 7.29, bicarbonate: 18.6 },
+    { ph: 7.35, bicarbonate: 32 },
+    { ph: 7.20, bicarbonate: 22.7 },
+  ] : choices;
   return <div className={styles.graph}>
     <svg viewBox="0 0 710 530" role="img" aria-label="Diagramme de Davenport, pH en abscisse et bicarbonate en ordonnée">
       <defs><clipPath id="acid-plot"><rect x="110" y="95" width="500" height="360"/></clipPath></defs>
@@ -166,18 +171,22 @@ export function Davenport({ selected, onSelect }: { selected: number | null; onS
       <path d="M110 95V455H610" stroke="#415755" strokeWidth="2" fill="none"/>
       <Label x={185} y={70}>[HCO₃⁻] (mmol/L)</Label><Label x={520} y={70}>PaCO₂ (mmHg)</Label><Label x={365} y={516}>pH</Label>
       <circle cx={px(7.4)} cy={py(24)} r="6" fill="#3d2248"/><Label x={px(7.4) + 32} y={py(24) - 11}>Réf.</Label>
-      {choices.map(({ ph, bicarbonate }, index) => <g key={index} className={styles.hotspot} onClick={() => onSelect(index)}>
-        <circle cx={px(ph)} cy={py(bicarbonate)} r="13" fill={selected === index ? index === 0 ? '#c8ddc2' : '#ecd0c9' : '#fff0d2'} stroke="#906b48" strokeWidth="2"/>
+      {respiratory && <g>
+        <circle cx={px(7.26)} cy={py(26)} r="13" fill="#eaddee" stroke="#775585" strokeWidth="2"/>
+        <Label x={px(7.26)} y={py(26) + 6}>T</Label>
+      </g>}
+      {points.map(({ ph, bicarbonate }, index) => <g key={index} className={respiratory ? undefined : styles.hotspot} onClick={respiratory ? undefined : () => onSelect(index)}>
+        <circle cx={px(ph)} cy={py(bicarbonate)} r="13" fill={!respiratory && selected === index ? index === 0 ? '#c8ddc2' : '#ecd0c9' : '#fff0d2'} stroke="#906b48" strokeWidth="2"/>
         <Label x={px(ph)} y={py(bicarbonate) + 6}>{'ABC'[index]}</Label>
       </g>)}
     </svg>
-    <div className={styles.graphActions} aria-label="Placer le point">
+    {respiratory ? <div className={styles.graphActions}><strong>T · pH 7,26 · HCO₃⁻ 26 mmol/L · PaCO₂ 60 mmHg</strong></div> : <div className={styles.graphActions} aria-label="Placer le point">
       <strong>Bilan · pH 7,32 · HCO₃⁻ 16 mmol/L · PaCO₂ 32 mmHg</strong>
       {choices.map(({ ph, bicarbonate }, index) => <button key={index} type="button" className="control"
         aria-pressed={selected === index} aria-label={`Point ${'ABC'[index]} : pH ${ph.toFixed(2).replace('.', ',')}, ${bicarbonate} millimoles par litre`}
         onClick={() => onSelect(index)}>{'ABC'[index]}</button>)}
       <span role="status">{selected === null ? 'Repère le point correspondant au bilan.' : selected === 0 ? 'Point placé.' : 'Relis les deux axes.'}</span>
-    </div>
+    </div>}
   </div>;
 }
 

@@ -205,7 +205,7 @@ export default function AcidGame() {
             </div>
           </div>
           <div className={styles.drawing} key={`${mission}-${focused}`}>
-            {graph ? <Davenport selected={point} onSelect={index => {
+            {graph ? <Davenport selected={point} respiratory={current?.id === 'compensation' || current?.id === 'isobares'} onSelect={index => {
               setPoint(index);
               if (index === 0 && next?.id === 'point' && !quiz && !debrief) open(next, true);
             }}/> : focused && mission < 5
