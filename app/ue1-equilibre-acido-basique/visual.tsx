@@ -2,27 +2,27 @@ import type { ReactNode } from 'react';
 import styles from './visual.module.css';
 
 const locations = [
-  { x: 115, y: 616, label: 'Muscle du bras', crop: '10 255 342 633' },
-  { x: 718, y: 759, label: 'Appareil digestif', crop: '222 609 620 551' },
-  { x: 357, y: 449, label: 'Poumons et sang', crop: '216 172 650 532' },
-  { x: 755, y: 950, label: 'Reins', crop: '261 804 570 277' },
-  { x: 969, y: 524, label: 'Vaisseaux du bras', crop: '825 265 270 635' },
+  { x: 115, y: 616, label: 'Muscle du bras' },
+  { x: 718, y: 759, label: 'Appareil digestif' },
+  { x: 357, y: 449, label: 'Poumons et sang' },
+  { x: 755, y: 950, label: 'Reins' },
+  { x: 969, y: 524, label: 'Vaisseaux du bras' },
 ];
 
 export function siteLabel(mission: number) {
   return locations[mission - 1].label;
 }
 
-export function Anatomy({ mission, zoom, onEnter }: { mission: number; zoom: boolean; onEnter: () => void }) {
+export function Anatomy({ mission, onEnter }: { mission: number; onEnter: () => void }) {
   const point = locations[mission - 1];
-  return <svg className={styles.canvas} viewBox={zoom ? point.crop : '0 0 1103 1426'} role="group" aria-label={zoom ? `Planche anatomique : ${point.label}` : 'Planche anatomique, vue de face'}>
+  return <svg className={styles.canvas} viewBox="0 0 1103 1426" role="group" aria-label="Planche anatomique, vue de face">
     <image href="/acido/torse-trait.webp" width="1103" height="1426"/>
     <g className={styles.hotspot} transform={`translate(${point.x} ${point.y})`}
       role="button" tabIndex={0} aria-label={`Explorer : ${point.label}`} onClick={onEnter}
       onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEnter(); } }}>
-      <circle r={zoom ? 15 : 23} fill="#fff5d9" stroke="#956f39" strokeWidth="2"/>
-      <circle r={zoom ? 7 : 11} fill="#3d2248"/>
-      <path d={zoom ? 'M-4 0H4M0 -4V4' : 'M-6 0H6M0 -6V6'} stroke="#fff8eb" strokeWidth="2"/>
+      <circle r="23" fill="#fff5d9" stroke="#956f39" strokeWidth="2"/>
+      <circle r="11" fill="#3d2248"/>
+      <path d="M-6 0H6M0 -6V6" stroke="#fff8eb" strokeWidth="2"/>
     </g>
   </svg>;
 }
@@ -172,36 +172,6 @@ export function Davenport({ selected, onSelect }: { selected: number | null; onS
   </div>;
 }
 
-export function MuscleTissue({ onEnter }: { onEnter: () => void }) {
-  return <svg className={styles.canvas} viewBox="0 0 720 540" role="group" aria-label="Coupe longitudinale du muscle squelettique : fibres parallèles et striées">
-    <defs>
-      <pattern id="muscle-stripes" width="21" height="20" patternUnits="userSpaceOnUse">
-        <path d="M3 0V20 M7 0V20 M16 0V20" stroke="#a45f66" strokeWidth="2" opacity=".32"/>
-        <path d="M0 5H21 M0 15H21" stroke="#f5c9c7" opacity=".8"/>
-      </pattern>
-    </defs>
-    <rect width="720" height="540" fill="#e9aaa7"/>
-    <g transform="rotate(-11 360 270)">
-      {Array.from({ length: 9 }, (_, index) => {
-        const y = -68 + index * 76;
-        return <g key={y}>
-          <rect x="-85" y={y} width="890" height="65" rx="32" fill={index === 4 ? '#edaaa8' : '#d9898b'} stroke="#a35f67" strokeWidth="1.5"/>
-          <rect x="-85" y={y} width="890" height="65" rx="32" fill="url(#muscle-stripes)"/>
-          <ellipse cx={118 + index % 3 * 137} cy={y + 9} rx="19" ry="5.5" fill="#8e6179"/>
-          <ellipse cx={520 + index % 2 * 69} cy={y + 56} rx="21" ry="5.5" fill="#8e6179"/>
-        </g>;
-      })}
-    </g>
-    <g className={styles.hotspot} transform="translate(360 267)" role="button" tabIndex={0}
-       aria-label="Explorer cette fibre musculaire" onClick={onEnter}
-       onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEnter(); } }}>
-      <circle r="20" fill="#fff5d9" stroke="#956f39" strokeWidth="2"/>
-      <circle r="10" fill="#3d2248"/>
-      <path d="M-5 0H5 M0 -5V5" stroke="#fff8eb" strokeWidth="2"/>
-    </g>
-  </svg>;
-}
-
 function MuscleCell({ membrane }: { membrane: boolean }) {
   return <Frame label={membrane ? 'Sarcolemme et cotransport du lactate et des protons' : 'Coupe longitudinale d’une fibre musculaire avec noyaux périphériques, myofibrilles et mitochondrie'}>
     <defs>
@@ -214,6 +184,12 @@ function MuscleCell({ membrane }: { membrane: boolean }) {
       </clipPath>
     </defs>
     <rect width="720" height="540" fill="#fbefec"/>
+    {!membrane && <g opacity=".7">
+      {[0, 50, 485].map(y => <g key={y}>
+        <rect x="-10" y={y} width={y === 485 ? 355 : 740} height="25" rx="12" fill="#e6a8a8"/>
+        <rect x="-10" y={y} width={y === 485 ? 355 : 740} height="25" rx="12" fill="url(#fiber-stripes)"/>
+      </g>)}
+    </g>}
     {membrane ? <>
       <path d="M0 0H720V315H0Z" fill="#f4cfce"/>
       <path d="M0 314H720 M0 326H720" fill="none" stroke="#a45f66" strokeWidth="3"/>
@@ -237,7 +213,7 @@ function MuscleCell({ membrane }: { membrane: boolean }) {
       <Label x={360} y={443}>Lactate⁻ + H⁺</Label>
       <Label x={360} y={494}>Milieu extracellulaire</Label>
     </> : <>
-      <Label x={130} y={50}>Noyau périphérique</Label><path d="M130 56L114 94" stroke="#8e6179" strokeWidth="1.5"/>
+      <Label x={130} y={34}>Noyau périphérique</Label><path d="M130 40L114 94" stroke="#8e6179" strokeWidth="1.5"/>
       <Label x={360} y={144}>Glucose</Label>
       <Arrow path="M360 151V171"/><Label x={437} y={170}>Glycolyse</Label>
       <Label x={360} y={196}>Pyruvate</Label>

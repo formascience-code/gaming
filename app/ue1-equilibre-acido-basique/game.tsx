@@ -5,7 +5,7 @@ import { GameHeader } from '../game-header';
 import { GameObjective } from '../game-objective';
 import { Quiz, Results, Stethoscope, type Progress, type Question } from '../quiz';
 import { acidMissions, acidQuestions, acidTitle, missionSummaries } from './questions';
-import { Anatomy, Davenport, Detail, MuscleTissue, siteLabel } from './visual';
+import { Anatomy, Davenport, Detail, siteLabel } from './visual';
 import styles from './visual.module.css';
 import { readAcid, saveAcid } from './progress';
 
@@ -23,7 +23,7 @@ export default function AcidGame() {
   const counter = useRef<HTMLButtonElement>(null);
   const [ready, setReady] = useState(false);
   const [quiz, setQuiz] = useState<Question | null>(null);
-  const [depth, setDepth] = useState(0);
+  const [focused, setFocused] = useState(false);
   const [point, setPoint] = useState<number | null>(null);
   const [results, setResults] = useState(false);
   const attempts = useRef(0);
@@ -47,10 +47,10 @@ export default function AcidGame() {
   const credits = Object.keys(progress.solved).length;
   const displayedCredits = credits - (flight ? 1 : 0);
   const location = siteLabel(mission);
-  const graph = mission === 5 && depth >= 2;
-  const detail = depth >= 2;
-  const muscle = mission === 1;
-  const muscleTitle = ['Vue d’ensemble', location, 'Fibres musculaires striées', 'Intérieur d’une fibre musculaire', 'Sarcolemme'][depth];
+  const graph = mission === 5 && focused;
+  const membrane = current?.id === 'mct';
+  const sceneTitle = !focused ? 'Vue d’ensemble' : graph ? 'Diagramme de Davenport'
+    : mission === 1 ? membrane ? 'Muscle du bras · sarcolemme' : 'Muscle du bras · fibre striée' : location;
   const following = quiz ? acidQuestions[acidQuestions.indexOf(quiz) + 1] : undefined;
   const group = acidQuestions.filter(question => question.mission === mission);
   const earned = group.filter(question => progress.solved[question.id]).length;
@@ -82,7 +82,7 @@ export default function AcidGame() {
   }
 
   function open(question: Question, pointPlaced = point === 0) {
-    setDepth(question.mission === 1 ? question.id === 'mct' ? 4 : 3 : 2);
+    setFocused(true);
     if (question.id === 'point' && !pointPlaced) return;
     if (attempts.current === 0) {
       attempts.current = 1;
@@ -95,17 +95,18 @@ export default function AcidGame() {
   }
 
   function explore() {
-    setDepth(value => Math.min(value + 1, muscle ? 3 : 2));
+    if (quiz || showDebrief || !next) setFocused(true);
+    else open(next);
   }
 
   function leaveDebrief() {
     persist({ ...progress, debrief: undefined });
-    if (next) setDepth(0);
+    if (next) open(next);
     else setResults(true);
   }
 
   return <main className="shell">
-    <GameObjective/>
+    <GameObjective onClose={() => { if (next && !debrief) open(next); }}/>
     <GameHeader title={acidTitle}>
       <a className="control games-back" href="/">← Accueil</a>
       <button type="button" className="control restart-button" disabled={!ready || credits === 0 && attempts.current === 0}
@@ -153,21 +154,20 @@ export default function AcidGame() {
       <div className="visual-column">
         <section ref={stage} className={`stage ${styles.stage}`} aria-label="Exploration de l’équilibre acido-basique">
           <div className={styles.toolbar}>
-            <h2>{muscle ? muscleTitle : graph ? 'Diagramme de Davenport' : detail || depth === 1 ? location : 'Vue d’ensemble'}</h2>
+            <h2>{sceneTitle}</h2>
             <div className={styles.controls}>
-              {depth > 0 && <button type="button" className="control" onClick={() => setDepth(0)}>Vue d’ensemble</button>}
-              {depth < (muscle ? 3 : 2) && <button type="button" className="control" onClick={explore}>{depth === 0 ? 'Explorer la zone' : muscle ? depth === 1 ? 'Zoom sur le tissu' : 'Entrer dans la fibre' : 'Gros plan'}</button>}
-              {muscle && depth >= 3 && <button type="button" className="control" onClick={() => setDepth(2)}>Vue du tissu</button>}
-              {muscle && depth >= 3 && <button type="button" className="control" onClick={() => setDepth(depth === 3 ? 4 : 3)}>{depth === 3 ? 'Zoom membrane' : 'Vue de la fibre'}</button>}
+              {focused
+                ? <button type="button" className="control" onClick={() => setFocused(false)}>Vue d’ensemble</button>
+                : <button type="button" className="control" onClick={explore}>Revenir à la zone</button>}
             </div>
           </div>
-          <div className={styles.drawing} key={`${mission}-${depth}`}>
+          <div className={styles.drawing} key={`${mission}-${focused}`}>
             {graph ? <Davenport selected={point} onSelect={index => {
               setPoint(index);
               if (index === 0 && next?.id === 'point' && !quiz && !debrief) open(next, true);
-            }}/> : muscle && depth === 2 ? <MuscleTissue onEnter={explore}/> : detail && mission < 5
-              ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} membrane={depth === 4}/>
-              : <Anatomy mission={mission} zoom={depth === 1} onEnter={explore}/>}
+            }}/> : focused && mission < 5
+              ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} membrane={membrane}/>
+              : <Anatomy mission={mission} onEnter={explore}/>}
           </div>
         </section>
       </div>
@@ -179,11 +179,11 @@ export default function AcidGame() {
         continueLabel={debrief ? 'Voir le bilan de la mission' : 'Défi suivant'}
         onHelp={level => persist({ ...progress, assistance: { ...progress.assistance, [quiz.id]: level } })}
         onCorrect={() => award(quiz)}
-        onClose={() => { setQuiz(null); setDepth(0); start.current?.focus(); }}
+        onClose={() => { setQuiz(null); setFocused(false); start.current?.focus(); }}
         onContinue={() => {
           if (debrief || !following) {
             setQuiz(null);
-            if (debrief) setDepth(0);
+            if (debrief) setFocused(false);
           }
           else open(following);
         }}/>}
@@ -217,9 +217,8 @@ export default function AcidGame() {
           setFlight(null);
           attempts.current += 1;
           persist({ solved: {}, assistance: {} });
-          setQuiz(null);
-          setDepth(0);
           setPoint(null);
+          open(acidQuestions[0]);
         }}>Recommencer</button>
       </div>
     </dialog>

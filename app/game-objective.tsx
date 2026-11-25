@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Stethoscope } from './quiz';
 import styles from './game-objective.module.css';
 
-export function GameObjective() {
+export function GameObjective({ onClose }: { onClose?: () => void } = {}) {
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -10,7 +10,7 @@ export function GameObjective() {
     if (objective && !objective.open) objective.showModal();
   }, []);
 
-  return <dialog ref={dialog} className={styles.dialog} aria-labelledby="game-objective-title">
+  return <dialog ref={dialog} onClose={onClose} className={styles.dialog} aria-labelledby="game-objective-title">
     <form method="dialog">
       <button className={styles.close} aria-label="Fermer les règles du jeu">×</button>
       <header className={styles.header}>
