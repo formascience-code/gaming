@@ -24,6 +24,8 @@ export default function AcidGame() {
   const [ready, setReady] = useState(false);
   const [quiz, setQuiz] = useState<Question | null>(null);
   const [focused, setFocused] = useState(false);
+  const [zooming, setZooming] = useState(false);
+  const zoomTimer = useRef<number | null>(null);
   const [point, setPoint] = useState<number | null>(null);
   const [results, setResults] = useState(false);
   const attempts = useRef(0);
@@ -37,6 +39,10 @@ export default function AcidGame() {
     attempts.current = saved.attempts;
     setProgress(saved.progress);
     setReady(true);
+  }, []);
+
+  useEffect(() => () => {
+    if (zoomTimer.current !== null) window.clearTimeout(zoomTimer.current);
   }, []);
 
   const next = acidQuestions.find(question => !progress.solved[question.id]);
@@ -95,8 +101,23 @@ export default function AcidGame() {
   }
 
   function explore() {
-    if (quiz || showDebrief || !next) setFocused(true);
-    else open(next);
+    if (!ready || zoomTimer.current !== null) return;
+    const arrive = () => {
+      if (quiz || showDebrief || !next) setFocused(true);
+      else open(next);
+    };
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      arrive();
+      return;
+    }
+
+    setZooming(true);
+    zoomTimer.current = window.setTimeout(() => {
+      zoomTimer.current = null;
+      setZooming(false);
+      arrive();
+    }, 650);
   }
 
   function leaveDebrief() {
@@ -125,10 +146,10 @@ export default function AcidGame() {
           {location && <div className="zone-pill"><i/> {location}</div>}
           <p className="mission-count">{earned} / {group.length} stéthoscopes pour cette mission</p>
           <p className="guidance">{showDebrief ? 'Mission réussie. Ton bilan est disponible.' : current ? hints[mission - 1] : 'Retrouve tes résultats et tes stéthoscopes dans le bilan.'}</p>
-          <button ref={start} className="primary" disabled={!ready} onClick={() => {
+          <button ref={start} className="primary" disabled={!ready || zooming} onClick={() => {
             if (quiz) document.getElementById('quiz-title')?.focus();
             else if (showDebrief) debriefHeading.current?.focus();
-            else if (next) open(next);
+            else if (next) explore();
             else setResults(true);
           }}>{quiz ? 'Retour au défi' : showDebrief ? 'Voir le bilan de la mission' : next ? 'Relever le défi' : 'Voir le bilan'}</button>
         </section>
@@ -158,7 +179,7 @@ export default function AcidGame() {
             <div className={styles.controls}>
               {focused
                 ? <button type="button" className="control" onClick={() => setFocused(false)}>Vue d’ensemble</button>
-                : <button type="button" className="control" onClick={explore}>{quiz ? 'Revenir à la zone' : 'Explorer la zone'}</button>}
+                : <button type="button" className="control" disabled={!ready || zooming} onClick={explore}>{quiz ? 'Revenir à la zone' : 'Explorer la zone'}</button>}
             </div>
           </div>
           <div className={styles.drawing} key={`${mission}-${focused}`}>
@@ -167,7 +188,7 @@ export default function AcidGame() {
               if (index === 0 && next?.id === 'point' && !quiz && !debrief) open(next, true);
             }}/> : focused && mission < 5
               ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} membrane={membrane}/>
-              : <Anatomy mission={mission} onEnter={explore}/>}
+              : <Anatomy mission={mission} zooming={zooming} onEnter={explore}/>}
           </div>
         </section>
       </div>
@@ -179,7 +200,11 @@ export default function AcidGame() {
         continueLabel={debrief ? 'Voir le bilan de la mission' : 'Défi suivant'}
         onHelp={level => persist({ ...progress, assistance: { ...progress.assistance, [quiz.id]: level } })}
         onCorrect={() => award(quiz)}
-        onClose={() => { setQuiz(null); setFocused(false); start.current?.focus(); }}
+        onClose={() => {
+          if (zoomTimer.current !== null) window.clearTimeout(zoomTimer.current);
+          zoomTimer.current = null;
+          setZooming(false);
+          setQuiz(null); setFocused(false); start.current?.focus(); }}
         onContinue={() => {
           if (debrief || !following) {
             setQuiz(null);
@@ -214,6 +239,9 @@ export default function AcidGame() {
       <div className="restart-actions"><button type="button" className="control" onClick={() => restart.current?.close()}>Annuler</button>
         <button type="button" className="primary" onClick={() => {
           restart.current?.close();
+          if (zoomTimer.current !== null) window.clearTimeout(zoomTimer.current);
+          zoomTimer.current = null;
+          setZooming(false);
           setFlight(null);
           attempts.current += 1;
           persist({ solved: {}, assistance: {} });

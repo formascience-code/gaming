@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import styles from './visual.module.css';
 
 const locations = [
@@ -13,16 +13,21 @@ export function siteLabel(mission: number) {
   return locations[mission - 1].label;
 }
 
-export function Anatomy({ mission, onEnter }: { mission: number; onEnter: () => void }) {
+export function Anatomy({ mission, zooming, onEnter }: { mission: number; zooming: boolean; onEnter: () => void }) {
   const point = locations[mission - 1];
   return <svg className={styles.canvas} viewBox="0 0 1103 1426" role="group" aria-label="Planche anatomique, vue de face">
+    <g className={zooming ? styles.cameraZoom : undefined} style={{
+      '--zoom-x': `${551.5 - point.x * 3.3}px`,
+      '--zoom-y': `${713 - point.y * 3.3}px`,
+    } as CSSProperties}>
     <image href="/acido/torse-trait.webp" width="1103" height="1426"/>
     <g className={styles.hotspot} transform={`translate(${point.x} ${point.y})`}
-      role="button" tabIndex={0} aria-label={`Explorer : ${point.label}`} onClick={onEnter}
+      role="button" tabIndex={0} aria-disabled={zooming} aria-label={`Explorer : ${point.label}`} onClick={onEnter}
       onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEnter(); } }}>
       <circle r="23" fill="#fff5d9" stroke="#956f39" strokeWidth="2"/>
       <circle r="11" fill="#3d2248"/>
       <path d="M-6 0H6M0 -6V6" stroke="#fff8eb" strokeWidth="2"/>
+    </g>
     </g>
   </svg>;
 }
