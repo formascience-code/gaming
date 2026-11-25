@@ -2,11 +2,11 @@ import type { ReactNode } from 'react';
 import styles from './visual.module.css';
 
 const locations = [
-  { x: 119, y: 481, label: 'Muscle du bras', crop: '0 230 392 510' },
-  { x: 734, y: 711, label: 'Appareil digestif', crop: '235 515 693 650' },
-  { x: 386, y: 382, label: 'Poumons et sang', crop: '218 94 714 527' },
-  { x: 811, y: 834, label: 'Reins', crop: '275 727 620 304' },
-  { x: 1021, y: 375, label: 'Gaz du sang', crop: '784 142 371 545' },
+  { x: 115, y: 616, label: 'Muscle du bras', crop: '10 255 342 633' },
+  { x: 718, y: 759, label: 'Appareil digestif', crop: '222 609 620 551' },
+  { x: 357, y: 449, label: 'Poumons et sang', crop: '216 172 650 532' },
+  { x: 755, y: 950, label: 'Reins', crop: '261 804 570 277' },
+  { x: 969, y: 524, label: 'Vaisseaux du bras', crop: '825 265 270 635' },
 ];
 
 export function siteLabel(mission: number) {
@@ -15,8 +15,8 @@ export function siteLabel(mission: number) {
 
 export function Anatomy({ mission, zoom, onEnter }: { mission: number; zoom: boolean; onEnter: () => void }) {
   const point = locations[mission - 1];
-  return <svg className={styles.canvas} viewBox={zoom ? point.crop : '0 0 1155 1362'} role="group" aria-label={zoom ? `Planche anatomique : ${point.label}` : 'Planche anatomique, vue de face'}>
-    <image href="/acido/torse.webp" width="1155" height="1362"/>
+  return <svg className={styles.canvas} viewBox={zoom ? point.crop : '0 0 1103 1426'} role="group" aria-label={zoom ? `Planche anatomique : ${point.label}` : 'Planche anatomique, vue de face'}>
+    <image href="/acido/torse-trait.webp" width="1103" height="1426"/>
     <g className={styles.hotspot} transform={`translate(${point.x} ${point.y})`}
       role="button" tabIndex={0} aria-label={`Explorer : ${point.label}`} onClick={onEnter}
       onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEnter(); } }}>
