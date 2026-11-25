@@ -91,3 +91,20 @@
 @media (prefers-reduced-motion: reduce) {
   .cameraZoom { animation: none; }
 }
+
+.reveal {
+  animation: reveal .38s ease-out both;
+}
+
+.context {
+  opacity: .68;
+}
+
+@keyframes reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; }
+}
