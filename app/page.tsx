@@ -13,7 +13,7 @@ import styles from './games.module.css';
 const units = [
   { id: 'UE1', title: 'Chimie' },
   { id: 'UE2', title: 'Biochimie' },
-  { id: 'UE5', title: 'Biologie cellulaire' },
+  { id: 'UE5', title: 'Biologie cellulaire', hidden: true },
 ] as const;
 
 const games = [
@@ -78,7 +78,7 @@ export default function GamingHome() {
         <p>Choisis un défi et suis ta progression.</p>
       </section>
       <div className={styles.units}>
-        {units.map(unit => {
+        {units.filter(unit => !('hidden' in unit && unit.hidden)).map(unit => {
           const unitGames = games.filter(game => game.unit === unit.id);
           const total = unitGames.reduce((sum, game) => sum + ('href' in game ? stats[game.href]?.score ?? 0 : 0), 0);
           return <section key={unit.id} className={styles.unitBox} aria-labelledby={`unit-${unit.id}`}>
