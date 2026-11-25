@@ -53,9 +53,8 @@ function Digestive({ pancreas }: { pancreas: boolean }) {
   return <Frame label={pancreas ? 'Cellule canalaire du pancréas et sécrétion de bicarbonates' : 'Cellule pariétale de l’estomac et sécrétion acide'}>
     <rect x="35" y="100" width="170" height="360" rx="24" fill="#e9eeef"/>
     <rect x="515" y="100" width="170" height="360" rx="24" fill="#f5e7d9"/>
-    <path d="M204 101 Q358 82 515 101 L515 458 Q359 476 204 458Z" fill="#efd9d7" stroke="#af7877" strokeWidth="4"/>
+    <path d="M218 99 Q359 83 501 99 Q515 101 515 115 V444 Q515 458 501 460 Q359 475 218 460 Q204 458 204 444 V115 Q204 101 218 99Z" fill="#efd9d7" stroke="#af7877" strokeWidth="4"/>
     <ellipse cx="337" cy="386" rx="42" ry="29" fill="#c6a1b8" stroke="#9d7496" strokeWidth="2"/>
-    <path d="M515 112q-20 8 0 16 t0 16 t0 16 M515 355q-20 8 0 16 t0 16 t0 16" fill="none" stroke="#af7877" strokeWidth="3"/>
     <Label x={120} y={81}>Interstitium</Label><Label x={600} y={81}>{pancreas ? 'Lumière du canal' : 'Lumière gastrique'}</Label>
     <Label x={363} y={153}>{pancreas ? 'Cellule canalaire' : 'Cellule pariétale'}</Label>
     <Label x={205} y={496}>Pôle basolatéral</Label><Label x={515} y={496}>Pôle apical</Label>
@@ -239,12 +238,12 @@ function MuscleCell({ membrane, solved }: { membrane: boolean; solved: Progress[
       <text x="242" y="156" textAnchor="middle" fill="#536b68" fontSize="13">En aérobie</text>
       <rect x="45" y="193" width="298" height="196" rx="18" fill="#fcf6eb" stroke="#dbc3a5"/>
       <Label x={194} y={222}>Respiration cellulaire</Label>
-      <g transform="translate(22 31) scale(.89)">
+      <g transform="translate(22 22) scale(.89)">
       <path d="M103 298 C96 275 119 254 153 254 C183 254 193 263 215 261 C247 258 274 270 277 296 C281 321 258 340 224 340 C197 340 184 332 158 334 C128 338 110 325 103 298Z" fill="#edaf98" stroke="#9d5651" strokeWidth="3"/>
       <path d="M113 297 C106 279 129 262 152 263 C173 263 183 269 203 270 C231 269 259 271 267 292 C273 311 253 330 225 331 C203 332 187 322 160 326 C136 330 119 316 113 297Z" fill="#f8dcc6" stroke="#ac6358" strokeWidth="2.5"/>
       <path d="M139 266 C139 275 150 277 150 287 S139 299 136 317 M163 265 C160 277 171 280 173 287 S172 302 165 325 M191 270 C186 281 198 284 198 292 S188 311 193 327 M217 271 C213 284 226 286 226 295 S216 310 220 330 M244 275 C237 284 244 289 249 295 S252 312 243 326" fill="none" stroke="#ac6358" strokeWidth="3.6" strokeLinecap="round"/>
       </g>
-      <path d="M194 337V348" stroke="#59736c" strokeWidth="1.7" markerEnd="url(#cell-arrow)"/>
+      <path d="M194 328V348" stroke="#59736c" strokeWidth="1.7" markerEnd="url(#cell-arrow)"/>
       {solved.co2 && <g className={styles.reveal}><Label x={194} y={365}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label></g>}
       <path d="M396 149L521 180" fill="none" stroke="#59736c" strokeWidth="2" markerEnd="url(#cell-arrow)"/>
       <text x="481" y="156" textAnchor="middle" fill="#536b68" fontSize="13">En anaérobie</text>
