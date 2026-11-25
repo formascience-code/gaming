@@ -33,25 +33,25 @@ function check(
 }
 
 export const acidQuestions = [
-  check('glycolyse', 1, 'Quelles propositions décrivent le devenir du glucose dans la cellule ?', [
-    'La glycolyse se déroule dans le cytosol', 'La glycolyse produit du pyruvate', 'La glycolyse se déroule dans la matrice', 'La glycolyse libère directement du CO₂', 'Tout le pyruvate est obligatoirement converti en lactate',
-  ], [0, 1], 'La glycolyse cytosolique forme du pyruvate sans libérer de CO₂.', ['Repère la première flèche.', 'Lis le nom de la molécule à son extrémité.'],
-  ['Le pyruvate est un produit de la glycolyse.', true, 'Un glucose donne deux pyruvates.']),
+  check('glycolyse', 1, 'Si la concentration de H⁺ libres augmente dans le cytosol, que devient le pH ?', [
+    'Il diminue', 'Il augmente', 'Il reste constant tant que du pyruvate est présent', 'Il devient égal à la concentration de H⁺', 'Il double si la concentration de H⁺ double',
+  ], [0], 'Le pH est le logarithme décimal négatif de l’activité des H⁺. Plus celle-ci est élevée, plus le pH est bas. Sur le schéma, le passage du glucose au pyruvate correspond à la glycolyse.', ['Cherche le signe devant le logarithme.', 'Une activité en H⁺ dix fois plus élevée fait varier le pH d’une unité.'],
+  ['Une activité en H⁺ multipliée par dix fait diminuer le pH d’une unité.', true, 'Le signe négatif dans la définition du pH inverse le sens de variation.']),
   check('co2', 1, 'Le CO₂ issu du métabolisme peut conduire à la formation de H⁺ et de HCO₃⁻.', vf, [0],
     'Le CO₂ hydraté donne de l’acide carbonique, qui peut se dissocier en H⁺ et HCO₃⁻.', ['Suis la voie mitochondriale.', 'Lis l’équilibre sous la mitochondrie.'],
     ['L’hydratation du CO₂ participe à l’équilibre bicarbonate.', true, 'La réaction globale s’écrit CO₂ + H₂O ⇌ H⁺ + HCO₃⁻.']),
   check('lactate', 1, 'La réduction du pyruvate en lactate par la lactate déshydrogénase libère directement un H⁺.', vf, [1],
     'Dans le bilan indiqué, la réduction du pyruvate consomme un H⁺. L’hydrolyse de l’ATP constitue une réaction distincte.', ['Regarde de quel côté de la flèche figure H⁺.', 'Compare la réaction de la LDH et l’hydrolyse de l’ATP.'],
     ['Dans la réaction montrée, la LDH régénère du NAD⁺.', true, 'Le NADH est oxydé en NAD⁺ pendant la réduction du pyruvate.']),
-  check('mct', 1, 'Quel transporteur peut faire sortir ensemble le lactate et un H⁺ ?', [
-    'MCT', 'NHE', 'AE', 'Na⁺/K⁺-ATPase', 'CFTR',
-  ], [0], 'MCT cotransporte le lactate et H⁺. Le sens dépend des gradients.', ['Cherche la sortie qui porte les deux espèces.', 'NHE échange Na⁺ et H⁺.'],
-  ['MCT est un cotransporteur de lactate et de proton.', true, 'Les deux espèces se déplacent dans le même sens.']),
+  check('mct', 1, 'Quel est l’effet direct d’une sortie conjointe de lactate et de H⁺ sur la charge acide du cytosol, toutes choses égales par ailleurs ?', [
+    'Elle diminue la charge acide du cytosol', 'Elle augmente la charge acide du cytosol', 'Elle fait entrer du bicarbonate', 'Elle fait sortir seulement du lactate', 'Elle neutralise directement les H⁺ dans le milieu extracellulaire',
+  ], [0], 'Le cotransport par MCT transfère un H⁺ avec le lactate vers le milieu extracellulaire. La charge acide est déplacée entre compartiments.', ['Suis le H⁺ à travers la membrane.', 'Distingue un transfert de proton d’une neutralisation.'],
+  ['La sortie de lactate avec H⁺ peut soulager la charge acide du cytosol.', true, 'Le proton est transféré vers le milieu extracellulaire.']),
 
-  check('estomac', 2, 'Quelles propositions décrivent la sécrétion de la cellule pariétale ?', [
-    'La H⁺/K⁺-ATPase est apicale', 'Les H⁺ sont sécrétés vers la lumière gastrique', 'La H⁺/K⁺-ATPase est basolatérale', 'K⁺ sort vers la lumière par la H⁺/K⁺-ATPase', 'La pompe apicale sécrète les bicarbonates',
-  ], [0, 1], 'La pompe apicale expulse H⁺ vers la lumière en échange de K⁺.', ['Repère le côté apical.', 'Suis les deux flèches de la pompe.'],
-  ['La H⁺/K⁺-ATPase apicale fait entrer K⁺ dans la cellule pariétale.', true, 'K⁺ entre en échange du proton sécrété.']),
+  check('estomac', 2, 'À pouvoir tampon inchangé, quel effet la sécrétion gastrique de H⁺ tend-elle à produire dans la lumière de l’estomac ?', [
+    'Une baisse du pH', 'Une hausse du pH', 'Une baisse de l’activité des H⁺', 'Une disparition de tout effet tampon', 'Une production directe de bicarbonate dans la lumière par la pompe à H⁺',
+  ], [0], 'L’apport de H⁺ acidifie la lumière gastrique. Les tampons présents peuvent limiter l’amplitude de la baisse de pH.', ['Repère le compartiment qui reçoit les H⁺.', 'Plus l’activité des H⁺ augmente, plus le pH baisse.'],
+  ['La sécrétion de H⁺ par l’estomac tend à acidifier le contenu gastrique.', true, 'Les H⁺ sécrétés arrivent dans la lumière.']),
   check('bicarbonate-sang', 2, 'Lorsque la cellule pariétale sécrète des H⁺, des bicarbonates peuvent sortir du côté basolatéral.', vf, [0],
     'L’échangeur basolatéral Cl⁻/HCO₃⁻ permet la sortie de bicarbonate vers le milieu interstitiel et l’entrée de Cl⁻.', ['Regarde le côté opposé à la lumière.', 'Suis la flèche HCO₃⁻.'],
     ['Le Cl⁻ peut entrer dans la cellule pariétale en échange de HCO₃⁻ au pôle basolatéral.', true, 'Les deux ions circulent en sens opposés.']),
@@ -59,32 +59,32 @@ export const acidQuestions = [
     'Tamponner le contenu acide qui arrive dans le duodénum', 'Acidifier directement la lumière gastrique', 'Empêcher la sortie de H⁺ par le rein', 'Transporter l’oxygène', 'Transformer directement le lactate en pyruvate',
   ], [0], 'Le bicarbonate pancréatique rejoint le duodénum, où il tamponne l’acidité du chyme.', ['Suis le canal vers l’intestin.', 'Le bicarbonate est la base du couple CO₂/HCO₃⁻.'],
   ['Le suc pancréatique riche en bicarbonate rejoint le duodénum.', true, 'Il est déversé dans le duodénum par le système canalaire pancréatique.']),
-  check('polarite', 2, 'Dans les cellules canalaires pancréatiques, le pôle apical fait face à la lumière du canal.', vf, [0],
-    'Le pôle apical borde le canal. Le pôle basolatéral est tourné vers le milieu interstitiel.', ['Repère le trajet du bicarbonate sécrété.', 'Cherche CFTR du côté de la lumière.'],
-    ['Le pôle basolatéral borde la lumière du canal pancréatique.', false, 'C’est le pôle apical qui lui fait face.']),
+  check('polarite', 2, 'Une perte prolongée de liquide gastrique riche en HCl peut favoriser une alcalose métabolique.', vf, [0],
+    'La perte de HCl représente une perte nette d’acide pour l’organisme. La concentration plasmatique de bicarbonate peut augmenter.', ['Raisonne à l’échelle de l’organisme.', 'Une perte d’acide peut faire monter le pH sanguin.'],
+    ['Une perte d’acide gastrique peut entraîner une hausse du bicarbonate plasmatique.', true, 'Une augmentation primaire du bicarbonate est compatible avec une alcalose métabolique.']),
 
   check('hematie', 3, 'Quels événements participent au transport du CO₂ au niveau des tissus ?', [
     'Le CO₂ diffuse dans l’hématie', 'L’anhydrase carbonique accélère l’hydratation du CO₂', 'L’hémoglobine peut fixer des H⁺', 'Le CO₂ est expiré au niveau des tissus', 'L’anhydrase carbonique transforme le CO₂ en oxygène',
   ], [0, 1, 2], 'Le CO₂ tissulaire gagne l’hématie. Son hydratation est catalysée par l’anhydrase carbonique et l’hémoglobine peut tamponner les H⁺.', ['Suis le CO₂ depuis le tissu.', 'Repère le devenir des deux produits de l’équilibre.'],
   ['L’hémoglobine peut agir comme tampon dans l’hématie.', true, 'Elle fixe ou libère des H⁺ selon les conditions locales.']),
-  check('hamburger', 3, 'Dans le capillaire tissulaire, le bicarbonate sort de l’hématie en échange de chlorure.', vf, [0],
-    'Le bicarbonate produit dans l’hématie passe vers le plasma tandis que le chlorure entre.', ['Regarde les flèches de part et d’autre de la membrane.', 'L’échange est inversé au niveau pulmonaire.'],
-    ['Au niveau des tissus, la sortie de bicarbonate peut être couplée à une entrée de Cl⁻.', true, 'Cet échange électroneutre est le déplacement chlorure-bicarbonate.']),
-  check('alveole', 3, 'Au poumon, quel trajet suit le CO₂ destiné à être expiré ?', [
-    'Du sang capillaire vers l’air alvéolaire', 'De l’air alvéolaire vers le sang capillaire', 'Du tubule rénal vers l’alvéole', 'De la lumière gastrique vers le capillaire pulmonaire', 'Du plasma vers les voies aériennes uniquement sous forme de bicarbonate',
-  ], [0], 'Le CO₂ moléculaire diffuse du sang vers l’air alvéolaire en suivant son gradient de pression partielle.', ['Repère la barrière air-sang.', 'Le CO₂ est finalement expiré.'],
-  ['Le bicarbonate peut être reconverti en CO₂ au niveau pulmonaire.', true, 'La réaction inverse fournit du CO₂ diffusible vers l’alvéole.']),
+  check('hamburger', 3, 'En fixant une partie des H⁺ formés dans l’hématie, l’hémoglobine limite la baisse du pH.', vf, [0],
+    'L’hémoglobine joue un rôle tampon. La fixation d’une partie des H⁺ limite l’augmentation de leur activité libre.', ['Distingue H⁺ libre et H⁺ fixé.', 'Un tampon atténue la variation de pH.'],
+    ['L’hémoglobine peut capter des H⁺ sans les éliminer hors de l’organisme.', true, 'La fixation est réversible.']),
+  check('alveole', 3, 'Dans le système bicarbonate, quel effet a une baisse de PaCO₂ à concentration de HCO₃⁻ constante ?', [
+    'Le pH augmente', 'Le pH diminue', 'Le rapport HCO₃⁻/CO₂ dissous diminue', 'La concentration de H⁺ libres augmente', 'Le pH ne varie pas',
+  ], [0], 'Le CO₂ dissous est proportionnel à la PaCO₂. Quand celui-ci diminue à bicarbonate constant, le rapport base/acide augmente et le pH augmente.', ['Place le CO₂ dissous au dénominateur.', 'Un rapport base/acide plus grand correspond à un pH plus élevé.'],
+  ['À bicarbonate constant, une hausse de PaCO₂ tend à abaisser le pH.', true, 'La hausse du CO₂ dissous réduit le rapport base/acide.']),
   check('ventilation', 3, 'À production de CO₂ constante, augmenter la ventilation alvéolaire tend à diminuer la PaCO₂.', vf, [0],
     'Une hausse de la ventilation alvéolaire augmente l’élimination du CO₂ et abaisse sa pression partielle artérielle.', ['Imagine une augmentation du renouvellement de l’air alvéolaire.', 'Le CO₂ est éliminé plus efficacement.'],
     ['Une hypoventilation alvéolaire peut faire monter la PaCO₂.', true, 'À production constante, l’élimination est réduite.']),
 
-  check('filtration', 4, 'Le bicarbonate plasmatique peut atteindre la lumière du néphron par filtration glomérulaire.', vf, [0],
-    'Le bicarbonate est filtré au glomérule avant d’être très largement récupéré le long du tubule.', ['Suis le filtrat depuis le corpuscule.', 'La récupération intervient après la filtration.'],
-    ['Le bicarbonate filtré entre d’abord dans l’espace de Bowman.', true, 'Il suit le filtrat vers le tubule proximal.']),
-  check('proximal', 4, 'Dans le tubule proximal, quelle espèce diffuse dans la cellule après la réaction luminale entre H⁺ et HCO₃⁻ ?', [
-    'CO₂', 'Ca²⁺', 'Hémoglobine', 'O₂ produit par cette réaction', 'NH₄⁺ produit par cette réaction',
-  ], [0], 'La réaction des H⁺ sécrétés avec le bicarbonate filtré forme du CO₂, qui entre dans la cellule. Le bicarbonate y est reformé puis exporté vers le sang.', ['Suis la conversion dans la lumière.', 'Cherche une espèce neutre qui traverse la membrane.'],
-    ['La récupération d’un bicarbonate filtré ne constitue pas à elle seule une excrétion nette d’acide.', true, 'Le H⁺ sécrété pour cette récupération est recyclé.']),
+  check('filtration', 4, 'Si du bicarbonate filtré est perdu dans les urines, il s’agit d’une perte de base pour l’organisme.', vf, [0],
+    'Le bicarbonate est la base du couple CO₂/HCO₃⁻. Sa perte nette tend à diminuer la réserve alcaline.', ['Identifie la forme basique du couple.', 'Une espèce filtrée peut être récupérée ou perdue dans les urines.'],
+    ['La récupération du bicarbonate filtré évite une perte de base.', true, 'Le bicarbonate récupéré retourne au sang.']),
+  check('proximal', 4, 'Quel est le bilan acido-basique de la récupération d’un bicarbonate filtré dans le tubule proximal ?', [
+    'Elle évite une perte de base', 'Elle ajoute à elle seule un bicarbonate neuf à l’organisme', 'Elle implique nécessairement l’excrétion nette du proton utilisé', 'Elle entraîne la perte du bicarbonate dans les urines', 'Elle élimine du CO₂ par ventilation',
+  ], [0], 'Le bicarbonate retourné au sang remplace celui qui avait été filtré. Le H⁺ sécrété au cours du mécanisme est recyclé.', ['Compare le bicarbonate filtré à celui qui retourne au sang.', 'Cherche si le proton utilisé pour cette récupération est effectivement perdu dans les urines.'],
+  ['Récupérer un bicarbonate filtré et produire un bicarbonate neuf ont des bilans différents.', true, 'La récupération conserve la base déjà présente.']),
   check('phosphate', 4, 'Dans l’urine, HPO₄²⁻ peut capter un proton et former H₂PO₄⁻.', vf, [0],
     'La protonation de HPO₄²⁻ contribue à l’acidité titrable de l’urine.', ['Compare le nombre d’hydrogènes.', 'Une base peut capter un proton.'],
     ['H₂PO₄⁻ contribue à l’excrétion d’acide sous forme tamponnée.', true, 'Il est excrété dans l’urine.']),
