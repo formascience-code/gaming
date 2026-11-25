@@ -25,6 +25,7 @@ export default function AcidGame() {
   const [quiz, setQuiz] = useState<Question | null>(null);
   const [focused, setFocused] = useState(false);
   const [zooming, setZooming] = useState(false);
+  const [locating, setLocating] = useState(false);
   const zoomTimer = useRef<number | null>(null);
   const [point, setPoint] = useState<number | null>(null);
   const [results, setResults] = useState(false);
@@ -55,7 +56,7 @@ export default function AcidGame() {
   const location = siteLabel(mission);
   const graph = mission === 5 && focused;
   const membrane = current?.id === 'mct';
-  const sceneTitle = !focused ? 'Vue d’ensemble' : graph ? 'Diagramme de Davenport'
+  const sceneTitle = !focused ? locating || zooming ? location : 'Vue d’ensemble' : graph ? 'Diagramme de Davenport'
     : mission === 1 ? membrane ? 'Membrane plasmique' : 'Cellule · métabolisme du glucose' : location;
   const following = quiz ? acidQuestions[acidQuestions.indexOf(quiz) + 1] : undefined;
   const group = acidQuestions.filter(question => question.mission === mission);
@@ -117,13 +118,34 @@ export default function AcidGame() {
       zoomTimer.current = null;
       setZooming(false);
       arrive();
-    }, 650);
+    }, mission === 2 ? 1350 : 650);
   }
 
   function leaveDebrief() {
     persist({ ...progress, debrief: undefined });
-    if (next) open(next);
-    else setResults(true);
+    if (!next) {
+      setResults(true);
+      return;
+    }
+    if (next.mission !== 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      open(next);
+      return;
+    }
+
+    setFocused(false);
+    setLocating(true);
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      requestAnimationFrame(() => stage.current?.scrollIntoView({ block: 'start' }));
+    }
+    zoomTimer.current = window.setTimeout(() => {
+      setLocating(false);
+      setZooming(true);
+      zoomTimer.current = window.setTimeout(() => {
+        zoomTimer.current = null;
+        setZooming(false);
+        open(next);
+      }, 1350);
+    }, 650);
   }
 
   return <main className="shell">
@@ -146,7 +168,7 @@ export default function AcidGame() {
           {location && <div className="zone-pill"><i/> {location}</div>}
           <p className="mission-count">{earned} / {group.length} stéthoscopes pour cette mission</p>
           <p className="guidance">{showDebrief ? 'Mission réussie. Ton bilan est disponible.' : current ? hints[mission - 1] : 'Retrouve tes résultats et tes stéthoscopes dans le bilan.'}</p>
-          <button ref={start} className="primary" disabled={!ready || zooming} onClick={() => {
+          <button ref={start} className="primary" disabled={!ready || locating || zooming} onClick={() => {
             if (quiz) document.getElementById('quiz-title')?.focus();
             else if (showDebrief) debriefHeading.current?.focus();
             else if (next) explore();
@@ -179,7 +201,7 @@ export default function AcidGame() {
             <div className={styles.controls}>
               {focused
                 ? <button type="button" className="control" onClick={() => setFocused(false)}>Vue d’ensemble</button>
-                : <button type="button" className="control" disabled={!ready || zooming} onClick={explore}>{quiz ? 'Revenir à la zone' : 'Explorer la zone'}</button>}
+                : <button type="button" className="control" disabled={!ready || locating || zooming} onClick={explore}>{quiz ? 'Revenir à la zone' : 'Explorer la zone'}</button>}
             </div>
           </div>
           <div className={styles.drawing} key={`${mission}-${focused}`}>
@@ -242,6 +264,7 @@ export default function AcidGame() {
           if (zoomTimer.current !== null) window.clearTimeout(zoomTimer.current);
           zoomTimer.current = null;
           setZooming(false);
+          setLocating(false);
           setFlight(null);
           attempts.current += 1;
           persist({ solved: {}, assistance: {} });

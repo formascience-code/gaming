@@ -16,10 +16,13 @@ export function siteLabel(mission: number) {
 
 export function Anatomy({ mission, zooming, onEnter }: { mission: number; zooming: boolean; onEnter: () => void }) {
   const point = locations[mission - 1];
+  const scale = mission === 2 ? 2.2 : 3.3;
   return <svg className={styles.canvas} viewBox="0 0 1103 1426" role="group" aria-label="Planche anatomique, vue de face">
     <g className={zooming ? styles.cameraZoom : undefined} style={{
-      '--zoom-x': `${551.5 - point.x * 3.3}px`,
-      '--zoom-y': `${713 - point.y * 3.3}px`,
+      '--zoom-x': `${551.5 - point.x * scale}px`,
+      '--zoom-y': `${713 - point.y * scale}px`,
+      '--zoom-scale': scale,
+      '--zoom-duration': mission === 2 ? '1.35s' : '.65s',
     } as CSSProperties}>
     <image href="/acido/torse-trait.webp" width="1103" height="1426"/>
     <g className={styles.hotspot} transform={`translate(${point.x} ${point.y})`}

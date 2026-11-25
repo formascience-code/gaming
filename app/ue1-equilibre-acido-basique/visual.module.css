@@ -80,12 +80,12 @@
 }
 
 .cameraZoom {
-  animation: cameraZoom .65s cubic-bezier(.3,.1,.2,1) both;
+  animation: cameraZoom var(--zoom-duration, .65s) cubic-bezier(.3,.1,.2,1) both;
 }
 
 @keyframes cameraZoom {
   from { transform: translate(0, 0) scale(1); }
-  to { transform: translate(var(--zoom-x), var(--zoom-y)) scale(3.3); }
+  to { transform: translate(var(--zoom-x), var(--zoom-y)) scale(var(--zoom-scale, 3.3)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
