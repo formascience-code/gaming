@@ -90,16 +90,36 @@ function Blood({ lung }: { lung: boolean }) {
       <Label x={259} y={283}>CO₂</Label><Label x={469} y={283}>CO₂</Label>
       <Arrow path="M360 161V76"/><Label x={360} y={57}>Expiration</Label>
     </> : <>
-      <path d="M32 115H688V446H32Z" fill="#e5eeeb"/>
-      <path d="M34 109H687M34 448H687" stroke="#80a29b" strokeWidth="6"/>
-      <ellipse cx="349" cy="285" rx="188" ry="136" fill="#edbab5" stroke="#a65d59" strokeWidth="4"/>
-      <ellipse cx="349" cy="284" rx="123" ry="70" fill="#f7d6cf" stroke="#d3938c" strokeWidth="2"/>
-      <Label x={365} y={61}>Tissu</Label><Label x={103} y={410}>Plasma</Label><Label x={355} y={233}>Hématie</Label>
-      <Arrow path="M350 78V163"/><Label x={389} y={100}>CO₂</Label>
-      <Label x={349} y={283}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
-      <Label x={349} y={330}>Hb + H⁺ ⇌ HHb</Label>
-      <Arrow path="M483 250H634"/><Label x={613} y={230}>HCO₃⁻</Label>
-      <Arrow path="M634 307H492"/><Label x={615} y={338}>Cl⁻</Label>
+      <Label x={176} y={46}>Cellules des tissus</Label>
+      <text x="176" y="72" textAnchor="middle" fill="#654c47" fontSize="14">CO₂ produit par le métabolisme</text>
+      <path d="M24 126Q360 111 696 126V325Q360 340 24 325Z" fill="#fae4e0" stroke="#c38c87" strokeWidth="2.5"/>
+      <text x="480" y="151" fill="#654c47" fontSize="14">Capillaire tissulaire · plasma</text>
+
+      <path d="M116 238C118 194 185 175 253 181C325 187 378 208 380 242C382 279 321 304 250 304C179 304 113 281 116 238Z" fill="#db8f89" stroke="#995350" strokeWidth="2.6"/>
+      <path d="M123 250C142 279 191 292 248 291C312 291 357 272 375 250C366 282 310 304 250 304C186 304 135 282 123 250Z" fill="#c87773"/>
+      <path d="M162 234C181 206 218 207 253 221C281 232 311 234 335 222C321 250 281 264 246 252C212 240 185 237 162 247Z" fill="#f0b6ad"/>
+      <path d="M162 247C188 235 214 243 246 252C282 263 318 249 335 222" fill="none" stroke="#b86562" strokeWidth="1.7"/>
+      <text x="35" y="276" fill="#654c47" fontSize="14">Hématie</text>
+      <path d="M97 271L126 257" fill="none" stroke="#996761" strokeWidth="1.4"/>
+      <Arrow path="M176 84V192"/>
+      <text x="188" y="108" fill="#654c47" fontSize="13">Diffusion vers l’hématie</text>
+
+      <Arrow path="M343 216H531"/>
+      <Label x={558} y={221}>HCO₃⁻</Label>
+      <Arrow path="M531 260H351"/>
+      <Label x={556} y={266}>Cl⁻</Label>
+      <text x="473" y="294" textAnchor="middle" fill="#654c47" fontSize="13">Échangeur AE1</text>
+
+      <text x="360" y="377" textAnchor="middle" fill="#654c47" fontWeight="600" fontSize="14">Réactions dans l’hématie</text>
+      <rect x="30" y="393" width="378" height="100" rx="15" fill="#fff9ef" stroke="#d8b8a8"/>
+      <rect x="425" y="393" width="265" height="100" rx="15" fill="#fff9ef" stroke="#d8b8a8"/>
+      <text x="219" y="423" textAnchor="middle" fill="#654c47" fontSize="14">Formation de bicarbonate</text>
+      <Label x={219} y={453}>CO₂ + H₂O ⇌ H₂CO₃ ⇌ H⁺ + HCO₃⁻</Label>
+      <text x="219" y="476" textAnchor="middle" fill="#654c47" fontSize="12">Hydratation du CO₂ catalysée par l’anhydrase carbonique</text>
+      <text x="557" y="423" textAnchor="middle" fill="#654c47" fontSize="14">Tampon hémoglobine</text>
+      <Label x={557} y={453}>Hb + H⁺ ⇌ HHb</Label>
+      <text x="557" y="476" textAnchor="middle" fill="#654c47" fontSize="12">Fixation réversible des H⁺</text>
+      <text x="360" y="519" textAnchor="middle" fill="#654c47" fontSize="13">Le plasma transporte le bicarbonate vers les poumons.</text>
     </>}
   </Frame>;
 }
