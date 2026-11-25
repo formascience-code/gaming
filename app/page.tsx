@@ -6,23 +6,31 @@ import { getAttempts } from './game-progress';
 import { loadProgress, questions, Stethoscope } from './quiz';
 import { readMetabolism } from './ue2-metabolisme/progress';
 import { metabolismQuestions } from './ue2-metabolisme/questions';
+import { acidQuestions, acidRoute, acidTitle } from './ue1-equilibre-acido-basique/questions';
+import { readAcid } from './ue1-equilibre-acido-basique/progress';
 import styles from './games.module.css';
 
 const units = [
+  { id: 'UE1', title: 'Chimie' },
   { id: 'UE2', title: 'Biochimie' },
   { id: 'UE5', title: 'Biologie cellulaire' },
 ] as const;
 
 const games = [
+  { unit: 'UE1', title: acidTitle, href: acidRoute },
   { unit: 'UE2', title: 'Synthèse des protéines', href: '/ue2-synthese-des-proteines' },
   { unit: 'UE2', title: 'Métabolisme', href: '/ue2-metabolisme' },
   { unit: 'UE5', title: 'La mitochondrie' },
   { unit: 'UE5', title: 'Le système endomembranaire' },
 ] as const;
 
-function UnitEmblem({ unit }: { unit: 'UE2' | 'UE5' }) {
+function UnitEmblem({ unit }: { unit: 'UE1' | 'UE2' | 'UE5' }) {
   return <svg className={styles.emblem} viewBox="0 0 112 78" aria-hidden="true">
-    {unit === 'UE2' ? <g transform="rotate(32 56 39)">
+    {unit === 'UE1' ? <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M47 10H65 M50 11V36L32 61Q28 69 38 69H74Q84 69 80 61L62 36V11" stroke="#563562" strokeWidth="2.6"/>
+      <path d="M39 53Q49 47 58 52T73 53L79 63Q81 68 74 68H38Q31 68 34 62Z" fill="#e2bd79" stroke="#a88650" strokeWidth="1.6"/>
+      <circle cx="54" cy="43" r="2.5" fill="#a88650"/><circle cx="61" cy="59" r="2" fill="#563562"/>
+    </g> : unit === 'UE2' ? <g transform="rotate(32 56 39)">
       <path d="M44 10H68 M41 16H71 M42 22H70 M46 28H66 M46 50H66 M42 56H70 M41 62H71 M44 68H68"
         fill="none" stroke="#a88650" strokeWidth="1.6" strokeLinecap="round"/>
       <path d="M66 6C76 18 71 29 56 39S36 60 46 72"
@@ -46,7 +54,9 @@ export default function GamingHome() {
     function refreshStats() {
       const score = Object.keys(loadProgress().solved).length;
       const metabolism = readMetabolism();
+      const acid = readAcid();
       setStats({
+        [acidRoute]: { score: Object.keys(acid.progress.solved).length, attempts: acid.attempts },
         '/ue2-synthese-des-proteines': { score, attempts: getAttempts(score > 0) },
         '/ue2-metabolisme': { score: Object.keys(metabolism.progress.solved).length, attempts: metabolism.attempts },
       });
@@ -82,7 +92,7 @@ export default function GamingHome() {
             <ul className={styles.cards}>
                 {unitGames.map(game => {
                   const available = 'href' in game;
-                  const maximum = available && game.href === '/ue2-synthese-des-proteines' ? questions.length : metabolismQuestions.length;
+                  const maximum = game.unit === 'UE1' ? acidQuestions.length : available && game.href === '/ue2-synthese-des-proteines' ? questions.length : metabolismQuestions.length;
                   const attempts = available ? stats[game.href]?.attempts ?? 0 : 0;
                   const score = available ? stats[game.href]?.score ?? 0 : 0;
                   return <li key={game.title} className={styles.card}>

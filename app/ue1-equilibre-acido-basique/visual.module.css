@@ -1,0 +1,86 @@
+.stage {
+  display: grid;
+  align-items: stretch;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: #f4eee2;
+}
+
+.toolbar {
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: start;
+  gap: 6px;
+  padding: 12px 12px 0;
+}
+
+.toolbar h2 {
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: #fff8eb;
+  background: #283945;
+  font-size: clamp(.75rem, 1.8vw, 1rem);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.drawing {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  padding: 4px 5px;
+  animation: approach .28s ease-out both;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+}
+
+.body {
+  fill: #f2e2d4;
+  stroke: #b89e8d;
+  stroke-width: 2;
+}
+
+.hotspot { cursor: pointer; }
+.hotspot:focus-visible circle:first-child { stroke: #3d2248; stroke-width: 4; }
+.label { fill: #273b3c; font: 600 16px Poppins, sans-serif; }
+
+.graph {
+  display: grid;
+  width: min(100%, 660px);
+  grid-template-rows: minmax(0, 1fr) auto;
+  max-height: 100%;
+}
+
+.graph svg { width: 100%; max-height: 100%; }
+
+.graphActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: .72rem;
+}
+
+.graphActions button[aria-pressed='true'] { background: #e7d4a9; }
+@keyframes approach { from { opacity: .55; transform: scale(.97); } }
+@media (prefers-reduced-motion: reduce) { .drawing { animation: none; } }
+
+.graphActions > strong {
+  flex-basis: 100%;
+  text-align: center;
+}
