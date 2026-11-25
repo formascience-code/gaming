@@ -269,7 +269,8 @@ export default function AcidGame() {
           attempts.current += 1;
           persist({ solved: {}, assistance: {} });
           setPoint(null);
-          open(acidQuestions[0]);
+          setQuiz(null);
+          setFocused(false);
         }}>Recommencer</button>
       </div>
     </dialog>
