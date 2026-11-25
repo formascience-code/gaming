@@ -416,9 +416,9 @@ const balanceCases = {
 
 export function AcidBalances({ id, solved }: { id: keyof typeof balanceCases; solved: boolean }) {
   const cases = balanceCases[id];
-  return <Frame label="Balances du système bicarbonate : PaCO₂ à gauche et bicarbonate à droite">
+  return <Frame height={cases.length === 1 ? 540 : 592} label="Balances du système bicarbonate : PaCO₂ à gauche et bicarbonate à droite">
     {cases.map((item, index) => {
-      const offset = cases.length === 1 ? 0 : index * 240 - 100;
+      const offset = cases.length === 1 ? 0 : index * 284 - 100;
       const angle = item.acid ? -12 : 12;
       return <g key={item.label} transform={`translate(0 ${offset})`}>
         <Label x={360} y={120}>{cases.length === 1 ? item.label : `Bilan ${index === 0 ? 'A' : 'B'}${solved ? ` · ${item.label}` : ''}`}</Label>
@@ -441,7 +441,7 @@ export function AcidBalances({ id, solved }: { id: keyof typeof balanceCases; so
         </g>}
       </g>;
     })}
-    <text x="360" y={cases.length === 1 ? 393 : 531} textAnchor="middle" fill="#536b68" fontSize="13">
+    <text x="360" y={cases.length === 1 ? 393 : 575} textAnchor="middle" fill="#536b68" fontSize="13">
       {solved ? 'Le pH se rapproche de la normale. La balance illustre le sens de la compensation.' : 'À gauche : composante respiratoire · À droite : composante métabolique'}
     </text>
   </Frame>;
