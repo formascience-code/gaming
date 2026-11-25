@@ -160,3 +160,17 @@
 @media (prefers-reduced-motion: reduce) {
   .movingParticle { display: none; }
 }
+
+.balanceSettle {
+  transform-origin: 360px 264px;
+  animation: balanceSettle .62s ease-out both;
+}
+
+@keyframes balanceSettle {
+  from { transform: rotate(var(--balance-start)); }
+  to { transform: rotate(var(--balance-end)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .balanceSettle { animation: none; }
+}

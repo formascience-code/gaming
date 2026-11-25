@@ -401,6 +401,52 @@ function Kidney({ mode, id, solved }: { mode: 'nephron' | 'proximal' | 'urine'; 
   </Frame>;
 }
 
+const balanceCases = {
+  trouble: [{ label: 'Acidose métabolique', ph: '7,32', carbon: '32', bicarbonate: '16', acid: true,
+    primary: 'HCO₃⁻ ↓ en premier', compensation: 'Poumons · PaCO₂ ↓' }],
+  compensation: [{ label: 'Acidose respiratoire', ph: '7,26', carbon: '60', bicarbonate: '26', acid: true,
+    primary: 'PaCO₂ ↑ en premier', compensation: 'Reins · HCO₃⁻ ↑' }],
+  isobares: [
+    { label: 'Alcalose respiratoire', ph: '7,47', carbon: '32', bicarbonate: '22,5', acid: false,
+      primary: 'PaCO₂ ↓ en premier', compensation: 'Reins · HCO₃⁻ ↓' },
+    { label: 'Alcalose métabolique', ph: '7,48', carbon: '48', bicarbonate: '34,5', acid: false,
+      primary: 'HCO₃⁻ ↑ en premier', compensation: 'Poumons · PaCO₂ ↑' },
+  ],
+};
+
+export function AcidBalances({ id, solved }: { id: keyof typeof balanceCases; solved: boolean }) {
+  const cases = balanceCases[id];
+  return <Frame label="Balances du système bicarbonate : PaCO₂ à gauche et bicarbonate à droite">
+    {cases.map((item, index) => {
+      const offset = cases.length === 1 ? 0 : index * 240 - 100;
+      const angle = item.acid ? -12 : 12;
+      return <g key={item.label} transform={`translate(0 ${offset})`}>
+        <Label x={360} y={120}>{cases.length === 1 ? item.label : `Bilan ${index === 0 ? 'A' : 'B'}${solved ? ` · ${item.label}` : ''}`}</Label>
+        <text x="360" y="148" textAnchor="middle" fill="#654c47" fontSize="14">pH mesuré · {item.ph}</text>
+        <path d="M360 264L329 321H391Z" fill="#d7e2dd" stroke="#5f7771" strokeWidth="2"/>
+        <g key={String(solved)} className={solved ? styles.balanceSettle : undefined}
+          style={{ '--balance-start': `${angle}deg`, '--balance-end': `${angle / 3}deg` } as CSSProperties}
+          transform={`rotate(${solved ? angle / 3 : angle} 360 264)`}>
+          <path d="M126 264H594" stroke="#506d68" strokeWidth="4" strokeLinecap="round"/>
+          <rect x="145" y="201" width="150" height="62" rx="9" fill="#eec9bc" stroke="#a86960" strokeWidth="2"/>
+          <rect x="425" y="201" width="150" height="62" rx="9" fill="#c6ded8" stroke="#618c81" strokeWidth="2"/>
+          <Label x={220} y={226}>PaCO₂</Label>
+          <Label x={500} y={226}>HCO₃⁻</Label>
+          <text x="220" y="248" textAnchor="middle" fontSize="14">{item.carbon} mmHg</text>
+          <text x="500" y="248" textAnchor="middle" fontSize="14">{item.bicarbonate} mmol/L</text>
+        </g>
+        {solved && <g className={styles.reveal}>
+          <text x="188" y="352" textAnchor="middle" fill="#854d44" fontSize="14" fontWeight="600">{item.primary}</text>
+          <text x="520" y="352" textAnchor="middle" fill="#365f54" fontSize="14" fontWeight="600">{item.compensation}</text>
+        </g>}
+      </g>;
+    })}
+    <text x="360" y={cases.length === 1 ? 393 : 531} textAnchor="middle" fill="#536b68" fontSize="13">
+      {solved ? 'Le pH se rapproche de la normale. La balance illustre le sens de la compensation.' : 'À gauche : composante respiratoire · À droite : composante métabolique'}
+    </text>
+  </Frame>;
+}
+
 const px = (ph: number) => 110 + (ph - 7.1) * 1000;
 const py = (bicarbonate: number) => 455 - (bicarbonate - 8) * 10;
 const choices = [

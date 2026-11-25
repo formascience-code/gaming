@@ -105,10 +105,10 @@ export const acidQuestions = [
     'Acidose métabolique avec baisse compensatrice de PaCO₂', 'Acidose métabolique avec hausse compensatrice de PaCO₂', 'Acidose respiratoire avec baisse compensatrice de HCO₃⁻', 'Alcalose respiratoire avec hausse compensatrice de HCO₃⁻', 'Alcalose métabolique avec baisse compensatrice de PaCO₂',
   ], [0], 'Le pH est bas et le bicarbonate est diminué. La diminution de PaCO₂ tend au contraire à relever le pH.', ['Identifie la variable dont le changement abaisse le pH.', 'Une baisse de PaCO₂ contribue à augmenter le pH.'],
     ['Une baisse primaire de HCO₃⁻ peut produire une acidose métabolique.', true, 'La perte de base ou l’apport net d’acide abaisse le bicarbonate.']),
-  check('compensation', 5, 'Le point T représente une acidose respiratoire aiguë sur l’isobare de PaCO₂ à 60 mmHg. Si la PaCO₂ reste élevée, quel point correspond à la compensation rénale ?', [
-    'Le point A', 'Le point B', 'Le point C', 'Le point de référence', 'Le point T lui-même',
-  ], [1], 'Le point B se trouve sur la même isobare que T. Les bicarbonates ont augmenté et le pH s’est rapproché de 7,40.', ['Suis l’isobare de 60 mmHg à partir de T.', 'La compensation rénale augmente le bicarbonate plasmatique et atténue l’acidémie.'],
-  ['Si la PaCO₂ reste constante, une compensation rénale se lit sur la même isobare que le trouble respiratoire initial.', true, 'La concentration de bicarbonate et le pH varient le long de cette courbe.']),
+  check('compensation', 5, 'Une acidose respiratoire aiguë est illustrée par la balance. Si la PaCO₂ reste élevée, quel changement rénal rapproche le pH de la normale ?', [
+    'Une hausse du bicarbonate plasmatique', 'Une baisse du bicarbonate plasmatique', 'Une hausse de PaCO₂', 'Une diminution de l’excrétion nette d’acide', 'Une baisse supplémentaire du pH',
+  ], [0], 'La rétention et la production rénale de bicarbonate augmentent le rapport HCO₃⁻/CO₂ dissous et atténuent l’acidémie.', ['La PaCO₂ reste élevée.', 'Pour augmenter le rapport base/acide, il faut augmenter le numérateur.'],
+  ['Si la PaCO₂ reste élevée, la hausse du bicarbonate peut atténuer l’acidémie respiratoire.', true, 'Le rapport HCO₃⁻/CO₂ dissous augmente.']),
   check('isobares', 5, 'Compare deux bilans. A : pH 7,47, PaCO₂ 32 mmHg, HCO₃⁻ 22,5 mmol/L. B : pH 7,48, PaCO₂ 48 mmHg, HCO₃⁻ 34,5 mmol/L. Quelles propositions sont exactes ?', [
     'A correspond à une alcalose respiratoire',
     'B correspond à une alcalose métabolique',
