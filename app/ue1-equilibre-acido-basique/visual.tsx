@@ -79,7 +79,7 @@ function Digestive({ pancreas }: { pancreas: boolean }) {
   </Frame>;
 }
 
-function Blood({ lung }: { lung: boolean }) {
+function Blood({ lung, buffer }: { lung: boolean; buffer: boolean }) {
   return <Frame label={lung ? 'Diffusion du CO₂ du capillaire vers l’alvéole' : 'Échanges de l’hématie dans un capillaire tissulaire'}>
     {lung ? <>
       <path d="M282 60V128 C218 120 165 153 173 222 C181 296 258 321 361 301 C475 320 548 276 546 210 C544 146 488 121 438 128 V60" fill="#dbede7" stroke="#649491" strokeWidth="5"/>
@@ -90,8 +90,14 @@ function Blood({ lung }: { lung: boolean }) {
       <Label x={259} y={283}>CO₂</Label><Label x={469} y={283}>CO₂</Label>
       <Arrow path="M360 161V76"/><Label x={360} y={57}>Expiration</Label>
     </> : <>
-      <Label x={176} y={46}>Cellules des tissus</Label>
-      <text x="176" y="72" textAnchor="middle" fill="#654c47" fontSize="14">CO₂ produit par le métabolisme</text>
+      <defs>
+        <marker id="blood-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M1 1L9 5L1 9" fill="none" stroke="#79544f" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        </marker>
+      </defs>
+      <rect x="124" y="24" width="104" height="46" rx="14" fill="#efd5c0" stroke="#c69b81"/>
+      <text x="176" y="55" textAnchor="middle" fill="#683c36" fontSize="27" fontWeight="700">CO₂</text>
+      <text x="176" y="91" textAnchor="middle" fill="#654c47" fontSize="13">Produit par les tissus</text>
       <path d="M36 126H678V325H36Z" fill="#fae4e0"/>
       <path d="M36 126H678 M36 325H678" fill="none" stroke="#c38c87" strokeWidth="2.5"/>
       <path d="M36 132H678 M36 319H678" fill="none" stroke="#e0ada7" strokeWidth="1.1"/>
@@ -104,18 +110,18 @@ function Blood({ lung }: { lung: boolean }) {
       <ellipse cx="248" cy="232" rx="47" ry="16" fill="#ebb0a8"/>
       <text x="35" y="276" fill="#654c47" fontSize="14">Hématie</text>
       <path d="M97 271L126 257" fill="none" stroke="#996761" strokeWidth="1.4"/>
-      <Arrow path="M176 84V192"/>
-      <text x="188" y="108" fill="#654c47" fontSize="13">Diffusion vers l’hématie</text>
+      <path d="M176 101V197" fill="none" stroke="#79544f" strokeWidth="1.6" markerEnd="url(#blood-arrow)"/>
+      <text x="188" y="117" fill="#654c47" fontSize="13">Diffusion vers l’hématie</text>
 
-      <Arrow path="M343 216H531"/>
+      <path d="M343 216H531" fill="none" stroke="#79544f" strokeWidth="1.6" markerEnd="url(#blood-arrow)"/>
       <Label x={558} y={221}>HCO₃⁻</Label>
-      <Arrow path="M531 260H351"/>
+      <path d="M531 260H351" fill="none" stroke="#79544f" strokeWidth="1.6" markerEnd="url(#blood-arrow)"/>
       <Label x={556} y={266}>Cl⁻</Label>
       <text x="473" y="294" textAnchor="middle" fill="#654c47" fontSize="13">Échangeur AE1</text>
 
       <text x="360" y="377" textAnchor="middle" fill="#654c47" fontWeight="600" fontSize="14">Réactions dans l’hématie</text>
       <rect x="30" y="393" width="378" height="100" rx="15" fill="#fff9ef" stroke="#d8b8a8"/>
-      <rect x="425" y="393" width="265" height="100" rx="15" fill="#fff9ef" stroke="#d8b8a8"/>
+      <rect x="425" y="393" width="265" height="100" rx="15" fill={buffer ? "#f5e1e8" : "#fff9ef"} stroke={buffer ? "#b48698" : "#d8b8a8"}/>
       <text x="219" y="423" textAnchor="middle" fill="#654c47" fontSize="14">Formation de bicarbonate</text>
       <Label x={219} y={453}>CO₂ + H₂O ⇌ H₂CO₃ ⇌ H⁺ + HCO₃⁻</Label>
       <text x="219" y="476" textAnchor="middle" fill="#654c47" fontSize="12">Hydratation du CO₂ catalysée par l’anhydrase carbonique</text>
@@ -299,7 +305,7 @@ export function Detail({ mission, id, membrane, solved }: { mission: number; id:
   switch (mission) {
     case 1: return <MuscleCell membrane={membrane} solved={solved}/>;
     case 2: return <Digestive pancreas={id === 'pancreas' || id === 'polarite'}/>;
-    case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'}/>;
+    case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'}/>;
     case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'}/>;
     default: return null;
   }
