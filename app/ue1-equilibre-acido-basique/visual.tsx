@@ -92,13 +92,16 @@ function Blood({ lung }: { lung: boolean }) {
     </> : <>
       <Label x={176} y={46}>Cellules des tissus</Label>
       <text x="176" y="72" textAnchor="middle" fill="#654c47" fontSize="14">CO₂ produit par le métabolisme</text>
-      <path d="M24 126Q360 111 696 126V325Q360 340 24 325Z" fill="#fae4e0" stroke="#c38c87" strokeWidth="2.5"/>
+      <path d="M36 126H678V325H36Z" fill="#fae4e0"/>
+      <path d="M36 126H678 M36 325H678" fill="none" stroke="#c38c87" strokeWidth="2.5"/>
+      <path d="M36 132H678 M36 319H678" fill="none" stroke="#e0ada7" strokeWidth="1.1"/>
+      <ellipse cx="678" cy="225.5" rx="13" ry="99.5" fill="#f7d8d4" stroke="#c38c87" strokeWidth="2.5"/>
+      <ellipse cx="678" cy="225.5" rx="8" ry="93.5" fill="#fae4e0" stroke="#e0ada7" strokeWidth="1"/>
       <text x="480" y="151" fill="#654c47" fontSize="14">Capillaire tissulaire · plasma</text>
 
-      <path d="M116 238C118 194 185 175 253 181C325 187 378 208 380 242C382 279 321 304 250 304C179 304 113 281 116 238Z" fill="#db8f89" stroke="#995350" strokeWidth="2.6"/>
-      <path d="M123 250C142 279 191 292 248 291C312 291 357 272 375 250C366 282 310 304 250 304C186 304 135 282 123 250Z" fill="#c87773"/>
-      <path d="M162 234C181 206 218 207 253 221C281 232 311 234 335 222C321 250 281 264 246 252C212 240 185 237 162 247Z" fill="#f0b6ad"/>
-      <path d="M162 247C188 235 214 243 246 252C282 263 318 249 335 222" fill="none" stroke="#b86562" strokeWidth="1.7"/>
+      <ellipse cx="248" cy="246" rx="132" ry="59" fill="#bd6966" stroke="#995350" strokeWidth="2.6"/>
+      <ellipse cx="248" cy="235" rx="131" ry="53" fill="#db8f89" stroke="#995350" strokeWidth="1.4"/>
+      <ellipse cx="248" cy="232" rx="47" ry="16" fill="#ebb0a8"/>
       <text x="35" y="276" fill="#654c47" fontSize="14">Hématie</text>
       <path d="M97 271L126 257" fill="none" stroke="#996761" strokeWidth="1.4"/>
       <Arrow path="M176 84V192"/>
