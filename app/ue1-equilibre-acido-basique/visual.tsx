@@ -95,6 +95,37 @@ function Digestive({ id, solved }: { id: string; solved: Progress['solved'] }) {
   </Frame>;
 }
 
+function OxygenCurve({ solved }: { solved: boolean }) {
+  const x = (pressure: number) => 100 + pressure * 4.4;
+  const y = (saturation: number) => 422 - saturation * 3;
+  const saturation = (pressure: number, p50: number) => 100 / (1 + (p50 / pressure) ** 2.7);
+  const curve = (p50: number) => Array.from({ length: 121 }, (_, pressure) =>
+    `${x(pressure)},${y(saturation(pressure, p50))}`).join(' ');
+
+  return <Frame label="Courbe de dissociation de HbO₂. À pH plus bas, la saturation diminue pour une même PO₂.">
+    <Label x={357} y={56}>Dissociation de HbO₂</Label>
+    <text x="100" y="99" fontSize="14" fill="#536b68">Saturation de l’Hb en O₂ (%)</text>
+    {[0, 25, 50, 75, 100].map(value => <g key={value}>
+      <path d={`M100 ${y(value)}H628`} stroke="#dedbd0"/>
+      <text x="87" y={y(value) + 4} textAnchor="end" fontSize="13">{value}</text>
+    </g>)}
+    <path d="M100 119V422H628" fill="none" stroke="#536b68" strokeWidth="1.8"/>
+    <polyline points={curve(26.6)} fill="none" stroke="#476785" strokeWidth="3"/>
+    <polyline points={curve(32)} fill="none" stroke="#ac6b64" strokeWidth="2.8" strokeDasharray="7 4"/>
+    {[40, 90].map(value => <g key={value}>
+      <path d={`M${x(value)} 422V${y(saturation(value, 26.6))}`} stroke="#7790a5" strokeDasharray="4 4"/>
+      <circle cx={x(value)} cy={y(saturation(value, 26.6))} r="5" fill="#476785"/>
+      <text x={x(value)} y="445" textAnchor="middle" fontSize="14">{value}</text>
+    </g>)}
+    <text x="628" y="446" textAnchor="end" fontSize="14">PO₂ (mmHg)</text>
+    <text x="117" y="479" fill="#476785" fontSize="14">Trait plein · pH de référence</text>
+    <text x="393" y="479" fill="#965951" fontSize="14">Pointillé · pH plus bas</text>
+    {solved && <g className={styles.reveal}>
+      <text x="360" y="517" textAnchor="middle" fontSize="14" fill="#536b68">Effet Bohr · à PO₂ égale, la baisse du pH favorise la libération d’O₂.</text>
+    </g>}
+  </Frame>;
+}
+
 function Blood({ lung, buffer, ventilation, solved }: { lung: boolean; buffer: boolean; ventilation: boolean; solved: Progress["solved"] }) {
   return <Frame height={lung ? 575 : 540} label={lung ? 'Diffusion du CO₂ du capillaire vers l’alvéole' : 'Échanges de l’hématie dans un capillaire tissulaire'}>
     {lung ? <>
@@ -438,7 +469,7 @@ export function Detail({ mission, id, membrane, solved }: { mission: number; id:
   switch (mission) {
     case 1: return <MuscleCell membrane={membrane} solved={solved}/>;
     case 2: return <Digestive id={id} solved={solved}/>;
-    case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} ventilation={id === 'ventilation'} solved={solved}/>;
+    case 3: return id === 'hamburger' ? <OxygenCurve solved={Boolean(solved.hamburger)}/> : <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} ventilation={id === 'ventilation'} solved={solved}/>;
     case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'} id={id} solved={solved}/>;
     default: return null;
   }

@@ -67,9 +67,14 @@ export const acidQuestions = [
     'Le CO₂ diffuse dans l’hématie', 'L’anhydrase carbonique accélère l’hydratation du CO₂', 'L’hémoglobine peut fixer des H⁺', 'Le CO₂ est expiré au niveau des tissus', 'L’anhydrase carbonique transforme le CO₂ en oxygène',
   ], [0, 1, 2], 'Le CO₂ tissulaire gagne l’hématie. Son hydratation est catalysée par l’anhydrase carbonique et l’hémoglobine peut tamponner les H⁺.', ['Suis le CO₂ depuis le tissu.', 'Repère le devenir des deux produits de l’équilibre.'],
   ['L’hémoglobine peut agir comme tampon dans l’hématie.', true, 'Elle fixe ou libère des H⁺ selon les conditions locales.']),
-  check('hamburger', 3, 'En fixant une partie des H⁺ formés dans l’hématie, l’hémoglobine limite la baisse du pH.', vf, [0],
-    'L’hémoglobine joue un rôle tampon. La fixation d’une partie des H⁺ limite l’augmentation de leur activité libre.', ['Distingue H⁺ libre et H⁺ fixé.', 'Un tampon atténue la variation de pH.'],
-    ['L’hémoglobine peut capter des H⁺ sans les éliminer hors de l’organisme.', true, 'La fixation est réversible.']),
+  check('hamburger', 3, 'Quelles propositions sont exactes à propos de la courbe de dissociation de HbO₂ et de l’effet Bohr ?', [
+    'À 40 mmHg, la saturation est d’environ 75 % sur la courbe de référence',
+    'Entre 90 et 40 mmHg, la saturation baisse d’environ 20 à 25 points',
+    'À PO₂ identique, une baisse du pH réduit l’affinité de l’hémoglobine pour l’O₂',
+    'Une baisse du pH déplace la courbe vers la gauche',
+    'Sur le plateau, une baisse de PO₂ fait chuter fortement la saturation',
+  ], [0, 1, 2], 'Le plateau préserve le chargement en O₂ aux poumons. La pente plus forte aux PO₂ tissulaires facilite sa libération. À PO₂ identique, une baisse du pH déplace la courbe vers la droite et favorise la dissociation de HbO₂.', ['Compare les points à 40 et 90 mmHg.', 'Pour l’effet Bohr, compare les deux courbes à la même PO₂.'],
+  ['À PO₂ identique, l’effet Bohr favorise la libération d’O₂ quand le pH diminue.', true, 'La baisse de pH diminue l’affinité de l’hémoglobine pour l’O₂.']),
   check('alveole', 3, 'Dans le système bicarbonate, quel effet a une baisse de PaCO₂ à concentration de HCO₃⁻ constante ?', [
     'Le pH augmente', 'Le pH diminue', 'Le rapport HCO₃⁻/CO₂ dissous diminue', 'La concentration de H⁺ libres augmente', 'Le pH ne varie pas',
   ], [0], 'Le CO₂ dissous est proportionnel à la PaCO₂. Quand celui-ci diminue à bicarbonate constant, le rapport base/acide augmente et le pH augmente.', ['Place le CO₂ dissous au dénominateur.', 'Un rapport base/acide plus grand correspond à un pH plus élevé.'],
@@ -96,16 +101,20 @@ export const acidQuestions = [
   check('point', 5, 'Avec un pH de 7,32 et des bicarbonates à 16 mmol/L, le point se situe en bas et à gauche du point de référence (7,40 ; 24 mmol/L).', vf, [0],
     'Le pH et les bicarbonates sont tous deux inférieurs aux valeurs de référence.', ['Lis les axes horizontal et vertical.', 'Compare 7,32 à 7,40 et 16 à 24.'],
     ['Il faut lire la concentration en bicarbonate sur l’axe vertical.', true, 'Le pH se lit sur l’axe horizontal.']),
-  check('trouble', 5, 'Le bilan donne pH 7,32, HCO₃⁻ 16 mmol/L et PaCO₂ 32 mmHg. Quel trouble primaire explique l’acidémie ?', [
-    'Une acidose métabolique', 'Une acidose respiratoire', 'Une alcalose métabolique', 'Une alcalose respiratoire', 'Un équilibre acido-basique normal',
+  check('trouble', 5, 'Le bilan donne pH 7,32, HCO₃⁻ 16 mmol/L et PaCO₂ 32 mmHg. Quel couple associe le trouble primaire et l’évolution de la PaCO₂ ?', [
+    'Acidose métabolique avec baisse compensatrice de PaCO₂', 'Acidose métabolique avec hausse compensatrice de PaCO₂', 'Acidose respiratoire avec baisse compensatrice de HCO₃⁻', 'Alcalose respiratoire avec hausse compensatrice de HCO₃⁻', 'Alcalose métabolique avec baisse compensatrice de PaCO₂',
   ], [0], 'Le pH est bas et le bicarbonate est diminué. La diminution de PaCO₂ tend au contraire à relever le pH.', ['Identifie la variable dont le changement abaisse le pH.', 'Une baisse de PaCO₂ contribue à augmenter le pH.'],
     ['Une baisse primaire de HCO₃⁻ peut produire une acidose métabolique.', true, 'La perte de base ou l’apport net d’acide abaisse le bicarbonate.']),
   check('compensation', 5, 'Le point T représente une acidose respiratoire aiguë sur l’isobare de PaCO₂ à 60 mmHg. Si la PaCO₂ reste élevée, quel point correspond à la compensation rénale ?', [
     'Le point A', 'Le point B', 'Le point C', 'Le point de référence', 'Le point T lui-même',
   ], [1], 'Le point B se trouve sur la même isobare que T. Les bicarbonates ont augmenté et le pH s’est rapproché de 7,40.', ['Suis l’isobare de 60 mmHg à partir de T.', 'La compensation rénale augmente le bicarbonate plasmatique et atténue l’acidémie.'],
   ['Si la PaCO₂ reste constante, une compensation rénale se lit sur la même isobare que le trouble respiratoire initial.', true, 'La concentration de bicarbonate et le pH varient le long de cette courbe.']),
-  check('isobares', 5, 'Le point C indique un pH de 7,20, une PaCO₂ de 60 mmHg et des bicarbonates à 22,7 mmol/L. En comparaison du point T (acidose respiratoire aiguë à la même PaCO₂), comment interpréter C ?', [
-    'Une acidose respiratoire compensée par le rein', 'Une alcalose métabolique associée à une acidose respiratoire', 'Une acidose métabolique associée à une acidose respiratoire', 'Une acidose métabolique avec compensation respiratoire', 'Un équilibre acido-basique normal',
-  ], [2], 'Sur la même isobare, C présente des bicarbonates plus bas et un pH plus bas que T. Cette baisse supplémentaire de bicarbonate indique une composante métabolique acide associée.', ['Compare T et C à PaCO₂ identique.', 'Une compensation rénale du trouble respiratoire ferait monter le bicarbonate.'],
-  ['Une chute supplémentaire des bicarbonates à PaCO₂ identique peut aggraver une acidémie respiratoire.', true, 'Le rapport bicarbonate/CO₂ dissous diminue.']),
+  check('isobares', 5, 'Compare deux bilans. A : pH 7,47, PaCO₂ 32 mmHg, HCO₃⁻ 22,5 mmol/L. B : pH 7,48, PaCO₂ 48 mmHg, HCO₃⁻ 34,5 mmol/L. Quelles propositions sont exactes ?', [
+    'A correspond à une alcalose respiratoire',
+    'B correspond à une alcalose métabolique',
+    'Si A persiste, la compensation rénale tend à diminuer le bicarbonate plasmatique',
+    'Dans B, la hausse de PaCO₂ va dans le sens de la compensation respiratoire',
+    'Dans les deux bilans, l’élévation du pH traduit une hausse primaire du bicarbonate',
+  ], [0, 1, 2, 3], 'Dans A, la baisse primaire de PaCO₂ explique l’alcalémie. Si elle persiste, le rein abaisse le bicarbonate. Dans B, la hausse primaire du bicarbonate explique l’alcalémie. L’augmentation de PaCO₂ par hypoventilation tend à ramener le pH vers la normale.', ['Les deux pH sont élevés. Identifie, dans chaque bilan, le changement qui explique cette hausse.', 'La compensation agit sur l’autre composante du rapport HCO₃⁻/CO₂ dissous.'],
+  ['Une alcalose métabolique peut être compensée par une hausse de PaCO₂.', true, 'L’hypoventilation augmente la PaCO₂, ce qui atténue l’alcalémie.']),
 ];

@@ -54,10 +54,10 @@ export default function AcidGame() {
   const credits = Object.keys(progress.solved).length;
   const displayedCredits = credits - (flight ? 1 : 0);
   const location = siteLabel(mission);
-  const graph = mission === 5 && focused;
+  const graph = mission === 5 && focused && current?.id !== 'isobares';
   const membrane = current?.id === 'mct';
   const sceneTitle = !focused ? locating || zooming ? location : 'Vue d’ensemble' : graph ? 'Diagramme de Davenport'
-    : mission === 1 ? membrane ? 'Membrane plasmique' : 'Cellule · métabolisme du glucose' : location;
+    : current?.id === 'isobares' ? 'Comparer deux bilans artériels' : mission === 1 ? membrane ? 'Membrane plasmique' : 'Cellule · métabolisme du glucose' : location;
   const following = quiz ? acidQuestions[acidQuestions.indexOf(quiz) + 1] : undefined;
   const group = acidQuestions.filter(question => question.mission === mission);
   const earned = group.filter(question => progress.solved[question.id]).length;
@@ -208,7 +208,15 @@ export default function AcidGame() {
             {graph ? <Davenport selected={point} respiratory={current?.id === 'compensation' || current?.id === 'isobares'} onSelect={index => {
               setPoint(index);
               if (index === 0 && next?.id === 'point' && !quiz && !debrief) open(next, true);
-            }}/> : focused && mission < 5
+            }}/> : focused && current?.id === 'isobares' ? <table className="route-card">
+              <caption>Gaz du sang artériel</caption>
+              <thead><tr><th scope="col">Paramètre</th><th scope="col">Bilan A</th><th scope="col">Bilan B</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">pH</th><td>7,47</td><td>7,48</td></tr>
+                <tr><th scope="row">PaCO₂ (mmHg)</th><td>32</td><td>48</td></tr>
+                <tr><th scope="row">HCO₃⁻ (mmol/L)</th><td>22,5</td><td>34,5</td></tr>
+              </tbody>
+            </table> : focused && mission < 5
               ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} membrane={membrane} solved={progress.solved}/>
               : <Anatomy mission={mission} zooming={zooming} onEnter={explore}/>}
           </div>
