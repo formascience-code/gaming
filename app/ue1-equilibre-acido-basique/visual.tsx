@@ -49,7 +49,9 @@ function Label({ x, y, children }: { x: number; y: number; children: ReactNode }
   return <text x={x} y={y} textAnchor="middle" className={styles.label}>{children}</text>;
 }
 
-function Digestive({ pancreas }: { pancreas: boolean }) {
+function Digestive({ id, solved }: { id: string; solved: Progress['solved'] }) {
+  const pancreas = id === 'pancreas';
+  const highlightBasolateral = id === 'bicarbonate-sang';
   return <Frame label={pancreas ? 'Cellule canalaire du pancréas et sécrétion de bicarbonates' : 'Cellule pariétale de l’estomac et sécrétion acide'}>
     <rect x="35" y="100" width="170" height="360" rx="24" fill="#e9eeef"/>
     <rect x="515" y="100" width="170" height="360" rx="24" fill="#f5e7d9"/>
@@ -60,6 +62,11 @@ function Digestive({ pancreas }: { pancreas: boolean }) {
     <Label x={205} y={496}>Pôle basolatéral</Label><Label x={515} y={496}>Pôle apical</Label>
     <rect x="187" y="212" width="34" height="67" rx="12" fill="#8bbeb9" stroke="#567d79" strokeWidth="2"/>
     <rect x="497" y="212" width="36" height="67" rx="12" fill="#d7938c" stroke="#965951" strokeWidth="2"/>
+    {pancreas
+      ? <rect x="582" y="194" width="58" height="36" rx="10" fill="#faefd1"/>
+      : highlightBasolateral
+        ? <rect x="89" y="197" width="63" height="34" rx="10" fill="#dcece7"/>
+        : <rect x="582" y="197" width="47" height="34" rx="10" fill="#f6d7cb"/>}
     {pancreas ? <>
       <Arrow path="M106 238H286"/><Label x={119} y={224}>Na⁺ + HCO₃⁻</Label>
       <Arrow path="M449 234H622"/><Label x={611} y={221}>HCO₃⁻</Label>
@@ -76,6 +83,15 @@ function Digestive({ pancreas }: { pancreas: boolean }) {
       <rect x="498" y="359" width="35" height="29" rx="7" fill="#ad9abf" stroke="#7d658e" strokeWidth="2"/>
       <Arrow path="M447 373H619"/><Label x={609} y={359}>Cl⁻</Label>
     </>}
+    {solved[id] && <g className={styles.reveal} key={id}>
+      <rect x="95" y="508" width="530" height="26" rx="8" fill="#fff8e8"/>
+      <text x="360" y="526" textAnchor="middle" fill="#5e5045" fontSize="13">
+        {pancreas ? 'Le bicarbonate pancréatique tamponne l’acidité dans le duodénum.'
+          : highlightBasolateral ? 'Le bicarbonate quitte la cellule vers le milieu interstitiel.'
+          : id === 'polarite' ? 'Une perte prolongée de HCl gastrique peut entraîner une alcalose métabolique.'
+          : 'La sécrétion de H⁺ abaisse le pH de la lumière gastrique.'}
+      </text>
+    </g>}
   </Frame>;
 }
 
@@ -185,9 +201,10 @@ function Kidney({ mode }: { mode: 'nephron' | 'proximal' | 'urine' }) {
       <Label x={76} y={100}>Cortex</Label>
       <Label x={90} y={321}>Médullaire</Label>
 
-      <circle cx="183" cy="189" r="61" fill="#fbf4eb" stroke="#ab9385" strokeWidth="1.8"/>
-      <path d="M233 184H270C296 184 294 150 316 148C341 146 344 176 325 193C308 208 339 220 339 241V305" fill="none" stroke="#ab9385" strokeWidth="17" strokeLinecap="round"/>
-      <path d="M233 184H270C296 184 294 150 316 148C341 146 344 176 325 193C308 208 339 220 339 241V305" fill="none" stroke="#eadbd1" strokeWidth="14" strokeLinecap="round"/>
+      <path d="M126 165C139 132 176 117 208 134C226 143 239 159 243 176H255V192H244C242 220 224 244 197 250C167 257 139 241 127 216"
+        fill="#fbf4eb" stroke="#ab9385" strokeWidth="1.8" strokeLinecap="round"/>
+      <path d="M249 184H270C296 184 294 150 316 148C341 146 344 176 325 193C308 208 339 220 339 241V305" fill="none" stroke="#ab9385" strokeWidth="17" strokeLinecap="round"/>
+      <path d="M249 184H270C296 184 294 150 316 148C341 146 344 176 325 193C308 208 339 220 339 241V305" fill="none" stroke="#eadbd1" strokeWidth="14" strokeLinecap="round"/>
       <path d="M339 296V426C339 475 410 475 410 427V272" fill="none" stroke="#ab9385" strokeWidth="11" strokeLinecap="round"/>
       <path d="M339 296V426C339 475 410 475 410 427V272" fill="none" stroke="#eadbd1" strokeWidth="8" strokeLinecap="round"/>
       <path d="M410 275V199C410 164 435 145 459 152C482 159 481 187 501 188C520 189 541 170 578 184" fill="none" stroke="#ab9385" strokeWidth="17" strokeLinecap="round"/>
@@ -196,11 +213,13 @@ function Kidney({ mode }: { mode: 'nephron' | 'proximal' | 'urine' }) {
       <path d="M616 131C591 144 578 160 578 184V467" fill="none" stroke="#e4d1c5" strokeWidth="17" strokeLinecap="round"/>
 
       <g fill="none" stroke="#c97470" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M65 222C96 244 114 230 126 206C134 190 139 184 153 185" strokeWidth="10"/>
-        <path d="M153 185C132 170 122 151 132 131" strokeWidth="7"/>
-        <path d="M151 185C146 161 175 143 199 152C224 162 226 191 211 210C196 228 165 223 154 203C144 183 171 169 189 176C207 183 210 201 201 216M161 159C177 168 190 181 194 197M205 156C199 169 184 174 169 183" strokeWidth="6"/>
+        <path d="M65 222C93 242 111 230 125 205C132 193 140 188 150 187" strokeWidth="10"/>
+        <path d="M150 179C131 166 121 148 132 129" strokeWidth="7"/>
+        <path d="M150 187C154 168 169 153 184 152C203 150 217 163 218 180C220 197 208 216 192 221C177 225 161 216 155 205C151 199 149 193 150 187Z" strokeWidth="7"/>
+        <path d="M151 187C175 175 201 183 215 199M162 163C177 169 188 183 191 197C194 206 191 216 186 222M213 164C207 174 198 182 192 185M155 203C173 205 190 204 208 212M150 179L151 187" strokeWidth="4.5"/>
       </g>
-      <path d="M206 190H252" fill="none" stroke="#617970" strokeWidth="1.8" markerEnd="url(#acid-arrow)"/>
+      <path d="M214 202L230 197" fill="none" stroke="#617970" strokeWidth="1.8" markerEnd="url(#acid-arrow)"/>
+      <path d="M241 184H263" fill="none" stroke="#617970" strokeWidth="1.8" markerEnd="url(#acid-arrow)"/>
       <Label x={183} y={115}>Glomérule</Label>
       <Label x={183} y={273}>Corpuscule rénal</Label>
       <Label x={314} y={121}>Tubule proximal</Label>
@@ -365,7 +384,7 @@ function MuscleCell({ membrane, solved }: { membrane: boolean; solved: Progress[
 export function Detail({ mission, id, membrane, solved }: { mission: number; id: string; membrane: boolean; solved: Progress['solved'] }) {
   switch (mission) {
     case 1: return <MuscleCell membrane={membrane} solved={solved}/>;
-    case 2: return <Digestive pancreas={id === 'pancreas' || id === 'polarite'}/>;
+    case 2: return <Digestive id={id} solved={solved}/>;
     case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} solved={solved}/>;
     case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'}/>;
     default: return null;
