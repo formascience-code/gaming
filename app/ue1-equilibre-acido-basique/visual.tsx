@@ -95,8 +95,8 @@ function Digestive({ id, solved }: { id: string; solved: Progress['solved'] }) {
   </Frame>;
 }
 
-function Blood({ lung, buffer, solved }: { lung: boolean; buffer: boolean; solved: Progress["solved"] }) {
-  return <Frame label={lung ? 'Diffusion du CO₂ du capillaire vers l’alvéole' : 'Échanges de l’hématie dans un capillaire tissulaire'}>
+function Blood({ lung, buffer, ventilation, solved }: { lung: boolean; buffer: boolean; ventilation: boolean; solved: Progress["solved"] }) {
+  return <Frame height={lung ? 575 : 540} label={lung ? 'Diffusion du CO₂ du capillaire vers l’alvéole' : 'Échanges de l’hématie dans un capillaire tissulaire'}>
     {lung ? <>
       <defs>
         <linearGradient id="capillary-oxygenation"><stop stopColor="#7092b4"/><stop offset="1" stopColor="#bc7478"/></linearGradient>
@@ -109,19 +109,26 @@ function Blood({ lung, buffer, solved }: { lung: boolean; buffer: boolean; solve
       <text x="309" y="134" textAnchor="end" fill="#74574d" fontSize="15">Alvéole</text>
       <Label x={360} y={195}>Air alvéolaire</Label>
       <Label x={360} y={222}>PO₂ = 105</Label>
+      {!ventilation && <rect x="301" y="229" width="118" height="27" rx="8" fill="#efd5c0"/>}
       <Label x={360} y={247}>PCO₂ = 40</Label>
+      {ventilation && <g className={styles.reveal}>
+        <path d="M360 145V98" fill="none" stroke="#79544f" strokeWidth="2" markerEnd="url(#alveolar-arrow)"/>
+        <text x="395" y="116" fill="#68483f" fontSize="14" fontWeight="600">Ventilation alvéolaire</text>
+      </g>}
 
       <path d="M103 344H617V422H103Z" fill="url(#capillary-oxygenation)"/>
       <ellipse cx="617" cy="383" rx="13" ry="39" fill="#bc7478"/>
       <ellipse cx="103" cy="383" rx="13" ry="39" fill="#91adc8" stroke="#698ba9" strokeWidth="1.2"/>
+      {!ventilation && <rect x="138" y="384" width="110" height="28" rx="8" fill="#4e6887"/>}
       <g fill="#fff" fontSize="15" textAnchor="middle" fontWeight="600">
         <text x="193" y="376">PO₂ = 40</text><text x="193" y="402">PCO₂ = 45</text>
         <text x="527" y="376">PO₂ = 105</text><text x="527" y="402">PCO₂ = 40</text>
       </g>
       <g fill="none" stroke="#534b4b" strokeWidth="2" markerEnd="url(#alveolar-arrow)">
         <path d="M39 383H94"/><path d="M634 383H681"/>
-        <path d="M337 376V290"/><path d="M383 290V376"/>
+        <path d="M383 290V376"/>
       </g>
+      <path d="M337 376V290" fill="none" stroke="#79544f" strokeWidth="2.2" markerEnd="url(#alveolar-arrow)"/>
       <rect x="274" y="306" width="49" height="28" rx="8" fill="#efd5c0"/>
       <Label x={298} y={325}>CO₂</Label>
       <Label x={408} y={325}>O₂</Label>
@@ -129,6 +136,13 @@ function Blood({ lung, buffer, solved }: { lung: boolean; buffer: boolean; solve
       <text x="527" y="452" textAnchor="middle" fill="#87474e" fontSize="15">Sang oxygéné</text>
       <Label x={360} y={487}>Capillaire pulmonaire</Label>
       <text x="360" y="513" textAnchor="middle" fill="#654c47" fontSize="12">Pressions partielles en mmHg</text>
+      {(ventilation ? solved.ventilation : solved.alveole) && <g className={styles.reveal} key={String(ventilation)}>
+        <rect x="78" y="529" width="564" height="34" rx="10" fill="#fff7e7" stroke="#d8b8a8"/>
+        <text x="360" y="551" textAnchor="middle" fill="#654c47" fontSize="13" fontWeight="600">
+          {ventilation ? 'À production de CO₂ constante : ventilation ↑ → PaCO₂ ↓'
+            : 'Le CO₂ diffuse du sang (45 mmHg) vers l’air alvéolaire (40 mmHg).'}
+        </text>
+      </g>}
     </> : <>
       <defs>
         <marker id="blood-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
@@ -424,7 +438,7 @@ export function Detail({ mission, id, membrane, solved }: { mission: number; id:
   switch (mission) {
     case 1: return <MuscleCell membrane={membrane} solved={solved}/>;
     case 2: return <Digestive id={id} solved={solved}/>;
-    case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} solved={solved}/>;
+    case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} ventilation={id === 'ventilation'} solved={solved}/>;
     case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'} id={id} solved={solved}/>;
     default: return null;
   }
