@@ -83,52 +83,36 @@ function Blood({ lung, buffer, solved }: { lung: boolean; buffer: boolean; solve
   return <Frame label={lung ? 'Diffusion du CO₂ du capillaire vers l’alvéole' : 'Échanges de l’hématie dans un capillaire tissulaire'}>
     {lung ? <>
       <defs>
-        <marker id="lung-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
-          <path d="M1 1L9 5L1 9" fill="none" stroke="#814c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <linearGradient id="capillary-oxygenation"><stop stopColor="#7092b4"/><stop offset="1" stopColor="#bc7478"/></linearGradient>
+        <marker id="alveolar-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M1 1L9 5L1 9" fill="none" stroke="#534b4b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </marker>
       </defs>
-      <path d="M321 67V148
-        C303 158 284 157 272 142
-        C250 111 198 108 173 135
-        C150 158 153 187 168 207
-        C139 232 144 269 170 292
-        C193 311 223 308 241 296
-        C253 328 286 340 316 329
-        C337 323 350 310 357 296
-        C373 314 393 322 418 321
-        C453 320 476 300 482 277
-        C511 284 542 268 550 242
-        C559 218 549 194 530 181
-        C543 153 525 124 499 113
-        C468 100 433 107 414 133
-        C403 149 391 152 382 148V67" fill="#fff8ee" stroke="#bd817b" strokeWidth="3" strokeLinejoin="round"/>
-      <path d="M168 207C189 194 218 199 234 217 M241 296C233 277 236 256 249 242
-        M357 296C370 275 366 251 352 237 M482 277C462 269 451 253 451 233
-        M530 181C509 183 491 195 481 211" fill="none" stroke="#c8938a" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M333 80V146C287 158 256 193 256 237C256 293 302 335 360 335C418 335 464 293 464 237C464 193 433 158 387 146V80Z" fill="#f8e9dc" stroke="#bd9a88" strokeWidth="1.7"/>
+      <ellipse cx="360" cy="80" rx="27" ry="9" fill="#fff4ea" stroke="#bd9a88" strokeWidth="1.7"/>
+      <text x="309" y="134" textAnchor="end" fill="#74574d" fontSize="15">Alvéole</text>
+      <Label x={360} y={195}>Air alvéolaire</Label>
+      <Label x={360} y={222}>PO₂ = 105</Label>
+      <Label x={360} y={247}>PCO₂ = 40</Label>
 
-      <path d="M77 335C143 320 204 321 253 329C322 364 385 359 435 348C500 312 574 313 644 331" fill="none" stroke="#a86568" strokeWidth="54"/>
-      <path d="M77 335C143 320 204 321 253 329C322 364 385 359 435 348C500 312 574 313 644 331" fill="none" stroke="#f1c1ba" strokeWidth="47"/>
-      <ellipse cx="77" cy="335" rx="9" ry="26" fill="#e8ada8" stroke="#a86568" strokeWidth="2"/>
-      <ellipse cx="644" cy="331" rx="9" ry="26" fill="#f7d7cf" stroke="#a86568" strokeWidth="2"/>
-      {[[117,335,-9],[203,327,4],[298,355,6],[406,350,-12],[518,319,0],[600,330,10]].map(([x, y, angle]) =>
-        <g key={x} transform={`translate(${x} ${y}) rotate(${angle})`}>
-          <ellipse rx="16" ry="7" fill="#ce817d" stroke="#a85c5c" strokeWidth="1"/>
-          <ellipse cy="-1" rx="6" ry="2.5" fill="#e7aaa3"/>
-        </g>
-      )}
-
-      <Label x={351} y={39}>Vers l’air expiré</Label>
-      <path d="M349 196V62" fill="none" stroke="#814c46" strokeWidth="1.8" markerEnd="url(#lung-arrow)"/>
-      <Label x={267} y={209}>Air alvéolaire</Label>
-      <rect x="373" y="204" width="74" height="42" rx="13" fill="#efd5c0" stroke="#c69b81"/>
-      <text x="410" y="233" textAnchor="middle" fill="#683c36" fontSize="23" fontWeight="700">CO₂</text>
-      <path d="M423 359V257" fill="none" stroke="#814c46" strokeWidth="1.8" markerEnd="url(#lung-arrow)"/>
-      <path d="M524 282L444 324" fill="none" stroke="#9a6d63" strokeWidth="1.2"/>
-      <text x="531" y="280" fill="#654c47" fontSize="13">Barrière air-sang</text>
-      <Label x={360} y={401}>Capillaire pulmonaire</Label>
-      <path d="M90 420H630" fill="none" stroke="#dab9ab"/>
-      <text x="360" y="452" textAnchor="middle" fill="#654c47" fontSize="15">Le CO₂ diffuse du sang vers l’air alvéolaire.</text>
-      <text x="360" y="478" textAnchor="middle" fill="#654c47" fontSize="13">Sa pression partielle est plus élevée dans le sang qui arrive.</text>
+      <path d="M103 344H617V422H103Z" fill="url(#capillary-oxygenation)"/>
+      <ellipse cx="617" cy="383" rx="13" ry="39" fill="#bc7478"/>
+      <ellipse cx="103" cy="383" rx="13" ry="39" fill="#91adc8" stroke="#698ba9" strokeWidth="1.2"/>
+      <g fill="#fff" fontSize="15" textAnchor="middle" fontWeight="600">
+        <text x="193" y="376">PO₂ = 40</text><text x="193" y="402">PCO₂ = 45</text>
+        <text x="527" y="376">PO₂ = 105</text><text x="527" y="402">PCO₂ = 40</text>
+      </g>
+      <g fill="none" stroke="#534b4b" strokeWidth="2" markerEnd="url(#alveolar-arrow)">
+        <path d="M39 383H94"/><path d="M634 383H681"/>
+        <path d="M337 376V290"/><path d="M383 290V376"/>
+      </g>
+      <rect x="274" y="306" width="49" height="28" rx="8" fill="#efd5c0"/>
+      <Label x={298} y={325}>CO₂</Label>
+      <Label x={408} y={325}>O₂</Label>
+      <text x="193" y="452" textAnchor="middle" fill="#3e5c76" fontSize="15">Sang désoxygéné</text>
+      <text x="527" y="452" textAnchor="middle" fill="#87474e" fontSize="15">Sang oxygéné</text>
+      <Label x={360} y={487}>Capillaire pulmonaire</Label>
+      <text x="360" y="513" textAnchor="middle" fill="#654c47" fontSize="12">Pressions partielles en mmHg</text>
     </> : <>
       <defs>
         <marker id="blood-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
