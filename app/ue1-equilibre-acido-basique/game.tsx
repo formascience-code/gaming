@@ -50,7 +50,7 @@ export default function AcidGame() {
   const graph = mission === 5 && focused;
   const membrane = current?.id === 'mct';
   const sceneTitle = !focused ? 'Vue d’ensemble' : graph ? 'Diagramme de Davenport'
-    : mission === 1 ? membrane ? 'Muscle du bras · sarcolemme' : 'Muscle du bras · fibre striée' : location;
+    : mission === 1 ? membrane ? 'Membrane plasmique' : 'Cellule · métabolisme du glucose' : location;
   const following = quiz ? acidQuestions[acidQuestions.indexOf(quiz) + 1] : undefined;
   const group = acidQuestions.filter(question => question.mission === mission);
   const earned = group.filter(question => progress.solved[question.id]).length;

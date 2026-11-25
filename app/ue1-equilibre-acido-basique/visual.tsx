@@ -173,63 +173,51 @@ export function Davenport({ selected, onSelect }: { selected: number | null; onS
 }
 
 function MuscleCell({ membrane }: { membrane: boolean }) {
-  return <Frame label={membrane ? 'Sarcolemme et cotransport du lactate et des protons' : 'Coupe longitudinale d’une fibre musculaire avec noyaux périphériques, myofibrilles et mitochondrie'}>
+  return <Frame label={membrane ? 'Cotransport du lactate et des protons à travers la membrane' : 'Cellule : glycolyse, respiration et formation de lactate'}>
     <defs>
-      <pattern id="fiber-stripes" width="25" height="18" patternUnits="userSpaceOnUse">
-        <path d="M4 0V18 M10 0V18 M19 0V18" stroke="#b9767e" strokeWidth="2" opacity=".36"/>
-        <path d="M0 8H25" stroke="#e6a4a5" strokeWidth="1"/>
-      </pattern>
-      <clipPath id="muscle-fiber-outline">
-        <path d="M-36 113 C50 103 83 72 174 74 H578 C657 74 683 99 750 107 L750 435 C691 445 657 467 576 467 H171 C87 467 44 435 -36 425Z"/>
-      </clipPath>
+      <marker id="cell-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+        <path d="M0 0L10 5L0 10Z" fill="#59736c"/>
+      </marker>
     </defs>
-    <rect width="720" height="540" fill="#fbefec"/>
-    {!membrane && <g opacity=".7">
-      {[0, 50, 485].map(y => <g key={y}>
-        <rect x="-10" y={y} width={y === 485 ? 355 : 740} height="25" rx="12" fill="#e6a8a8"/>
-        <rect x="-10" y={y} width={y === 485 ? 355 : 740} height="25" rx="12" fill="url(#fiber-stripes)"/>
-      </g>)}
-    </g>}
     {membrane ? <>
-      <path d="M0 0H720V315H0Z" fill="#f4cfce"/>
-      <path d="M0 314H720 M0 326H720" fill="none" stroke="#a45f66" strokeWidth="3"/>
-    </> : <g clipPath="url(#muscle-fiber-outline)">
-      <rect width="720" height="540" fill="#f9e4df"/>
-      {[95, 117, 421, 444].map(y => <g key={y}>
-        <rect x="-20" y={y} width="760" height="17" rx="8" fill="#edb9b7"/>
-        <rect x="-20" y={y} width="760" height="17" rx="8" fill="url(#fiber-stripes)"/>
-      </g>)}
-      <ellipse cx="113" cy="103" rx="33" ry="10" fill="#9c718f"/>
-      <ellipse cx="621" cy="122" rx="34" ry="10" fill="#9c718f"/>
-      <ellipse cx="128" cy="447" rx="32" ry="10" fill="#9c718f"/>
-      <path d="M-36 113 C50 103 83 72 174 74 H578 C657 74 683 99 750 107 L750 435 C691 445 657 467 576 467 H171 C87 467 44 435 -36 425Z" fill="none" stroke="#ab6970" strokeWidth="7"/>
-    </g>}
-    {membrane ? <>
-      <Label x={360} y={150}>Cytosol</Label>
-      <Label x={360} y={235}>Lactate⁻ + H⁺</Label>
-      <rect x="317" y="312" width="86" height="54" rx="18" fill="#b4cba8" stroke="#647c58" strokeWidth="3"/>
-      <Arrow path="M360 253V413"/>
-      <Label x={434} y={343}>MCT</Label>
-      <Label x={360} y={443}>Lactate⁻ + H⁺</Label>
-      <Label x={360} y={494}>Milieu extracellulaire</Label>
+      <path d="M0 0H720V294H0Z" fill="#eef1e9"/>
+      <path d="M0 294H720 M0 308H720" fill="none" stroke="#90a08a" strokeWidth="2"/>
+      <Label x={360} y={85}>Cytosol</Label>
+      <rect x="269" y="141" width="182" height="45" rx="12" fill="#fafbf7" stroke="#b4c1ae"/>
+      <Label x={360} y={170}>Lactate⁻ + H⁺</Label>
+      <rect x="321" y="275" width="78" height="51" rx="14" fill="#d9e5d3" stroke="#90a08a" strokeWidth="2"/>
+      <Label x={360} y={307}>MCT</Label>
+      <g stroke="#59736c" strokeWidth="2" markerEnd="url(#cell-arrow)"><path d="M360 197V263"/><path d="M360 337V378"/></g>
+      <Label x={360} y={409}>Lactate⁻ + H⁺</Label>
+      <Label x={360} y={470}>Milieu extracellulaire</Label>
     </> : <>
-      <Label x={130} y={34}>Noyau périphérique</Label><path d="M130 40L114 94" stroke="#8e6179" strokeWidth="1.5"/>
-      <Label x={360} y={144}>Glucose</Label>
-      <Arrow path="M360 151V171"/><Label x={437} y={170}>Glycolyse</Label>
-      <Label x={360} y={196}>Pyruvate</Label>
-      <Arrow path="M334 205L196 251"/><Arrow path="M386 205L515 251"/>
+      <path d="M99 37C175 16 531 16 612 38C679 56 700 113 699 223L697 382C696 455 653 494 575 495H144C62 493 22 456 21 382L20 206C20 114 37 54 99 37Z" fill="#f6f8f1" stroke="#94a28c" strokeWidth="2.3"/>
+      <Label x={360} y={76}>Glucose</Label>
+      <Label x={421} y={104}>Glycolyse</Label>
+      <Label x={360} y={137}>Pyruvate</Label>
+      <g fill="none" stroke="#59736c" strokeWidth="2" markerEnd="url(#cell-arrow)">
+        <path d="M360 83V116"/><path d="M324 149L199 180"/><path d="M396 149L521 180"/>
+      </g>
+      <rect x="45" y="193" width="298" height="196" rx="18" fill="#fcf6eb" stroke="#dbc3a5"/>
+      <rect x="377" y="193" width="298" height="196" rx="18" fill="#fbefed" stroke="#dbb8b1"/>
+      <Label x={194} y={222}>Respiration cellulaire</Label>
+      <g transform="translate(22 31) scale(.89)">
       <path d="M103 298 C96 275 119 254 153 254 C183 254 193 263 215 261 C247 258 274 270 277 296 C281 321 258 340 224 340 C197 340 184 332 158 334 C128 338 110 325 103 298Z" fill="#edaf98" stroke="#9d5651" strokeWidth="3"/>
       <path d="M113 297 C106 279 129 262 152 263 C173 263 183 269 203 270 C231 269 259 271 267 292 C273 311 253 330 225 331 C203 332 187 322 160 326 C136 330 119 316 113 297Z" fill="#f8dcc6" stroke="#ac6358" strokeWidth="2.5"/>
       <path d="M139 266 C139 275 150 277 150 287 S139 299 136 317 M163 265 C160 277 171 280 173 287 S172 302 165 325 M191 270 C186 281 198 284 198 292 S188 311 193 327 M217 271 C213 284 226 286 226 295 S216 310 220 330 M244 275 C237 284 244 289 249 295 S252 312 243 326" fill="none" stroke="#ac6358" strokeWidth="3.6" strokeLinecap="round"/>
-      <Label x={193} y={246}>Mitochondrie</Label>
-      <Arrow path="M192 339V367"/><Label x={193} y={395}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
-      <Label x={522} y={277}>Lactate déshydrogénase</Label>
-      <Label x={507} y={311}>Pyruvate + NADH + H⁺</Label>
-      <Arrow path="M514 320V341"/><Label x={511} y={363}>Lactate⁻ + NAD⁺</Label>
-      <Label x={514} y={394}>Hydrolyse de l’ATP → H⁺</Label>
-      <rect x="471" y="449" width="76" height="35" rx="12" fill="#b4cba8" stroke="#647c58" strokeWidth="2"/>
-      <Label x={509} y={472}>MCT</Label>
-      <Arrow path="M509 486V505"/><Label x={509} y={528}>Lactate⁻ + H⁺</Label>
+      </g>
+      <Label x={194} y={365}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
+      <Label x={526} y={222}>Formation du lactate</Label>
+      <Label x={526} y={261}>Pyruvate + NADH + H⁺</Label>
+      <path d="M526 270V307" stroke="#59736c" strokeWidth="2" markerEnd="url(#cell-arrow)"/>
+      <text x="541" y="291" fill="#536b68" fontSize="12">LDH</text>
+      <Label x={526} y={332}>Lactate⁻ + NAD⁺</Label>
+      <rect x="409" y="407" width="234" height="34" rx="10" fill="#fbefed" stroke="#dbb8b1"/>
+      <Label x={526} y={429}>Hydrolyse de l’ATP → H⁺</Label>
+      <rect x="488" y="475" width="76" height="33" rx="11" fill="#d9e5d3" stroke="#90a08a" strokeWidth="2"/>
+      <Label x={526} y={497}>MCT</Label>
+      <path d="M526 511V522" stroke="#59736c" strokeWidth="1.8" markerEnd="url(#cell-arrow)"/>
+      <text x="576" y="529" fill="#273b3c" fontSize="14">Lactate⁻ + H⁺</text>
     </>}
   </Frame>;
 }
