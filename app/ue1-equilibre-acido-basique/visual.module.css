@@ -1,7 +1,7 @@
 .stage {
   display: grid;
   align-items: stretch;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   background: #f4eee2;
 }
 
@@ -48,10 +48,12 @@
   max-height: 100%;
 }
 
-.body {
-  fill: #f2e2d4;
-  stroke: #b89e8d;
-  stroke-width: 2;
+.attribution {
+  justify-self: center;
+  margin: 0 8px 8px;
+  color: #52605a;
+  font-size: .61rem;
+  text-align: center;
 }
 
 .hotspot { cursor: pointer; }

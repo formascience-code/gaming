@@ -10,7 +10,7 @@ import styles from './visual.module.css';
 import { readAcid, saveAcid } from './progress';
 
 const hints = [
-  'Explore le muscle, puis suis le devenir du pyruvate et les échanges à la membrane.',
+  'Explore le muscle du bras, puis suis le devenir du pyruvate et les échanges à la membrane.',
   'Repère les sécrétions de l’estomac et du pancréas.',
   'Suis le CO₂ des tissus jusqu’à l’air expiré.',
   'Suis le filtrat du glomérule vers les tubules du néphron.',
@@ -170,6 +170,7 @@ export default function AcidGame() {
               ? <Detail mission={mission} id={current?.mission === mission ? current.id : acidQuestions.find(question => question.mission === mission)!.id} stepped={depth === 3}/>
               : <Anatomy mission={mission} zoom={depth === 1} onEnter={explore}/>}
           </div>
+          {!detail && <a className={styles.attribution} href="https://commons.wikimedia.org/wiki/File:Internal_organs.svg" target="_blank" rel="noreferrer">Planche adaptée de Mikael Häggström · domaine public</a>}
         </section>
       </div>
 

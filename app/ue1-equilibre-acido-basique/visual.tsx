@@ -2,11 +2,11 @@ import type { ReactNode } from 'react';
 import styles from './visual.module.css';
 
 const locations = [
-  { x: 207, y: 573, label: 'Muscle de la cuisse', crop: '112 456 200 208' },
-  { x: 341, y: 350, label: 'Appareil digestif', crop: '164 238 295 244' },
-  { x: 343, y: 186, label: 'Poumons et sang', crop: '171 113 280 194' },
-  { x: 376, y: 343, label: 'Reins', crop: '170 268 290 194' },
-  { x: 252, y: 197, label: 'Gaz du sang', crop: '179 125 220 170' },
+  { x: 155, y: 568, label: 'Muscle du bras', crop: '61 400 331 360', plate: 'muscle' },
+  { x: 486, y: 689, label: 'Appareil digestif', crop: '202 581 438 396', plate: 'atlas' },
+  { x: 461, y: 514, label: 'Poumons et sang', crop: '212 355 373 326', plate: 'atlas' },
+  { x: 473, y: 765, label: 'Reins', crop: '218 680 375 367', plate: 'reins' },
+  { x: 570, y: 518, label: 'Gaz du sang', crop: '438 409 263 259', plate: 'atlas' },
 ];
 
 export function siteLabel(mission: number) {
@@ -15,31 +15,9 @@ export function siteLabel(mission: number) {
 
 export function Anatomy({ mission, zoom, onEnter }: { mission: number; zoom: boolean; onEnter: () => void }) {
   const point = locations[mission - 1];
-  const renal = mission === 4;
-  return <svg className={styles.canvas} viewBox={zoom ? point.crop : '42 0 536 684'} role="group" aria-label="Carte anatomique, vue de face">
-    <path className={styles.body} d="M280 13 C239 18 236 44 241 73 C244 94 256 109 270 118 L270 137 C252 147 216 147 193 158 C173 166 157 188 146 218 L112 319 L73 417 Q67 435 79 441 Q91 446 101 428 L156 331 L189 261 Q193 312 190 355 Q184 408 170 448 Q155 484 156 542 L151 655 Q153 670 173 670 L224 670 Q239 669 242 651 L257 553 Q272 507 308 478 Q344 507 359 553 L374 651 Q377 669 392 670 L443 670 Q463 670 465 655 L460 542 Q461 484 446 448 Q432 408 426 355 Q423 312 427 261 L460 331 L515 428 Q525 446 537 441 Q549 435 543 417 L504 319 L470 218 C459 188 443 166 423 158 C400 147 364 147 346 137 L346 118 C360 109 372 94 375 73 C380 44 377 18 336 13 Q309 6 280 13Z"/>
-    <path d="M200 507 C185 558 181 593 184 638 Q195 651 214 636 L235 547 Q235 521 200 507Z" fill="#d68f87" stroke="#a85e58" strokeWidth="2"/>
-    <path d="M202 526 Q191 588 192 631 M212 526 Q203 583 200 634 M221 533 Q213 586 207 634" fill="none" stroke="#efb6ac" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M308 127 V171 M308 166 L264 191 M308 166 L349 187" fill="none" stroke="#6b8b8d" strokeWidth="12" strokeLinecap="round"/>
-    <path d="M284 158 C263 146 239 167 225 195 C214 216 209 244 215 260 C232 276 264 263 288 244 Q296 223 290 193Z M332 158 C354 148 377 167 390 195 C401 219 405 245 401 260 Q379 270 359 258 Q371 230 343 227 Q334 224 327 230 Q321 220 325 194Z" fill="#a3ccc7" stroke="#568784" strokeWidth="2"/>
-    <path d="M290 177 Q269 183 253 209 M325 177 Q351 184 372 211 M219 231 Q251 224 280 205" fill="none" stroke="#6c9d98" strokeWidth="3"/>
-    <path d="M305 214 C288 201 274 217 279 235 C284 257 311 270 338 281 C357 262 370 238 360 219 C350 202 329 207 319 222Z" fill="#c87b79" stroke="#8f514e" strokeWidth="2"/>
-    <path d="M322 229 C347 201 320 195 307 210 M311 251 Q301 312 304 401 M306 306 L251 340 M306 305 L365 341 M304 400 L225 512 M304 400 L390 518" fill="none" stroke="#ad625f" strokeOpacity=".52" strokeWidth="5" strokeLinecap="round"/>
-    {renal ? <>
-      <path d="M271 368 Q273 426 302 448 M357 358 Q356 421 324 448" fill="none" stroke="#cbad75" strokeWidth="6"/>
-      <path d="M294 445 Q313 433 332 445 Q333 466 313 471 Q292 466 294 445Z" fill="#edd3a8" stroke="#b58e58" strokeWidth="2"/>
-      <path d="M260 321 C243 306 224 329 225 358 C226 388 244 397 258 381 Q269 370 264 358 Q254 349 267 340 Q275 331 260 321Z M361 308 C380 295 397 312 397 342 C396 369 379 385 366 368 Q354 355 363 345 Q372 338 359 329 Q350 320 361 308Z" fill="#c88385" stroke="#874f58" strokeWidth="2"/>
-    </> : <>
-      <path d="M327 126 Q323 178 319 244 L326 303" fill="none" stroke="#ba8174" strokeWidth="8" opacity=".65"/>
-      <path d="M221 295 Q237 268 279 275 Q308 276 327 289 Q313 315 287 330 L234 350 Q218 344 221 295Z" fill="#8e6c83" stroke="#614a62" strokeWidth="2"/>
-      <path d="M326 291 Q331 313 345 305 C364 289 386 305 384 329 Q380 365 345 381 Q312 396 292 368 Q284 355 299 349 Q314 355 323 341 Q335 328 326 306Z" fill="#dfa28d" stroke="#a66053" strokeWidth="2"/>
-      <path d="M299 363 Q279 371 284 391 Q290 410 310 407" fill="none" stroke="#b97862" strokeWidth="13" strokeLinecap="round"/>
-      <path d="M290 386 Q315 374 357 371 Q369 380 349 386 L305 398 Q292 400 290 386Z" fill="#e1b675" stroke="#9f7546" strokeWidth="2"/>
-      <path d="M299 391 Q330 383 354 378" fill="none" stroke="#a66c56" strokeWidth="2"/>
-      <path d="M269 415 C289 398 329 403 350 419 Q359 432 339 436 L281 434 Q269 450 294 454 H343 Q354 472 321 476 L284 470" fill="none" stroke="#e7ab91" strokeWidth="11" strokeLinecap="round"/>
-      <path d="M254 466 Q241 439 249 404 Q250 390 268 402 Q314 414 365 398 Q376 397 376 416 L373 451 Q372 475 346 483 Q320 483 314 504" fill="none" stroke="#af705f" strokeWidth="17" strokeLinecap="round"/>
-      <path d="M254 466 Q241 439 249 404 Q250 390 268 402 Q314 414 365 398 Q376 397 376 416 L373 451 Q372 475 346 483 Q320 483 314 504" fill="none" stroke="#cc917b" strokeWidth="12" strokeLinecap="round" strokeDasharray="8 2"/>
-    </>}
+  const plate = zoom || mission === 4 ? point.plate : 'atlas';
+  return <svg className={styles.canvas} viewBox={zoom ? point.crop : '0 0 810 1086'} role="group" aria-label={zoom ? `Planche anatomique : ${point.label}` : 'Planche anatomique, vue de face'}>
+    <image href={`/acido/${plate}.webp`} width="810" height="1086"/>
     <g className={styles.hotspot} transform={`translate(${point.x} ${point.y})`}
       role="button" tabIndex={0} aria-label={`Explorer : ${point.label}`} onClick={onEnter}
       onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEnter(); } }}>
