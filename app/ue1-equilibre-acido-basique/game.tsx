@@ -106,7 +106,7 @@ export default function AcidGame() {
   }
 
   return <main className="shell">
-    <GameObjective onClose={() => { if (next && !debrief) open(next); }}/>
+    <GameObjective/>
     <GameHeader title={acidTitle}>
       <a className="control games-back" href="/">← Accueil</a>
       <button type="button" className="control restart-button" disabled={!ready || credits === 0 && attempts.current === 0}
@@ -158,7 +158,7 @@ export default function AcidGame() {
             <div className={styles.controls}>
               {focused
                 ? <button type="button" className="control" onClick={() => setFocused(false)}>Vue d’ensemble</button>
-                : <button type="button" className="control" onClick={explore}>Revenir à la zone</button>}
+                : <button type="button" className="control" onClick={explore}>{quiz ? 'Revenir à la zone' : 'Explorer la zone'}</button>}
             </div>
           </div>
           <div className={styles.drawing} key={`${mission}-${focused}`}>
