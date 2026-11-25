@@ -27,8 +27,8 @@ export function Anatomy({ mission, onEnter }: { mission: number; onEnter: () => 
   </svg>;
 }
 
-function Frame({ children, label }: { children: ReactNode; label: string }) {
-  return <svg className={styles.canvas} viewBox="0 0 720 540" role="img" aria-label={label}>
+function Frame({ children, label, height = 540 }: { children: ReactNode; label: string; height?: number }) {
+  return <svg className={styles.canvas} viewBox={`0 0 720 ${height}`} role="img" aria-label={label}>
     <defs><marker id="acid-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#536b68"/></marker></defs>
     {children}
   </svg>;
@@ -179,7 +179,7 @@ const cellTransporters = [
 ];
 
 function MuscleCell({ membrane }: { membrane: boolean }) {
-  return <Frame label={membrane ? 'Sorties membranaires de H⁺ par NHE, de HCO₃⁻ par AE et de lactate avec H⁺ par MCT' : 'Cellule : glycolyse, respiration et formation de lactate'}>
+  return <Frame height={membrane ? 540 : 563} label={membrane ? 'Sorties membranaires de H⁺ par NHE, de HCO₃⁻ par AE et de lactate avec H⁺ par MCT' : 'Cellule : glycolyse, respiration et formation de lactate'}>
     <defs>
       <marker id="cell-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
         <path d="M0 0L10 5L0 10Z" fill="#59736c"/>
@@ -205,6 +205,7 @@ function MuscleCell({ membrane }: { membrane: boolean }) {
       <Label x={360} y={497}>Milieu extracellulaire</Label>
     </> : <>
       <path d="M99 37C175 16 531 16 612 38C679 56 700 113 699 223L697 382C696 455 653 494 575 495H144C62 493 22 456 21 382L20 206C20 114 37 54 99 37Z" fill="#f6f8f1" stroke="#94a28c" strokeWidth="2.3"/>
+      <g transform="translate(0 -22)">
       <Label x={360} y={76}>Glucose</Label>
       <Label x={421} y={104}>Glycolyse</Label>
       <Label x={360} y={137}>Pyruvate</Label>
@@ -231,14 +232,15 @@ function MuscleCell({ membrane }: { membrane: boolean }) {
       <rect x="409" y="407" width="234" height="34" rx="10" fill="#fbefed" stroke="#dbb8b1"/>
       <Label x={526} y={429}>Hydrolyse de l’ATP → H⁺</Label>
       <Label x={526} y={460}>Lactate⁻ + H⁺</Label>
+      </g>
       {cellTransporters.map(({ name, cargo, x, fill, border }) => <g key={name}>
         <g fill="none" stroke="#59736c" strokeWidth="1.8" markerEnd="url(#cell-arrow)">
-          <path d={`M${x} ${name === 'MCT' ? 466 : 395}V478`}/>
-          <path d={`M${x} 506V517`}/>
+          <path d={`M${x} ${name === 'MCT' ? 447 : 373}V478`}/>
+          <path d={`M${x} 510V530`}/>
         </g>
         <rect x={x - 36} y="482" width="72" height="24" rx="9" fill={fill} stroke={border} strokeWidth="1.5"/>
         <Label x={x} y={500}>{name}</Label>
-        <Label x={x} y={536}>{cargo}</Label>
+        <Label x={x} y={548}>{cargo}</Label>
       </g>)}
     </>}
   </Frame>;
