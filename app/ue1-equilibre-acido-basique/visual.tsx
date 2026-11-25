@@ -103,7 +103,8 @@ function OxygenCurve({ solved }: { solved: boolean }) {
     `${x(pressure)},${y(saturation(pressure, p50))}`).join(' ');
 
   return <Frame label="Courbe de dissociation de HbO₂. À pH plus bas, la saturation diminue pour une même PO₂.">
-    <Label x={357} y={56}>Dissociation de HbO₂</Label>
+    <Label x={357} y={48}>De l’hématie à la courbe de HbO₂</Label>
+    <text x="360" y="75" textAnchor="middle" fontSize="14" fill="#536b68">Comment l’hémoglobine libère-t-elle l’O₂ dans les tissus ?</text>
     <text x="100" y="99" fontSize="14" fill="#536b68">Saturation de l’Hb en O₂ (%)</text>
     {[0, 25, 50, 75, 100].map(value => <g key={value}>
       <path d={`M100 ${y(value)}H628`} stroke="#dedbd0"/>
@@ -239,6 +240,24 @@ function Blood({ lung, buffer, ventilation, solved }: { lung: boolean; buffer: b
   </Frame>;
 }
 
+function RenalCapillary() {
+  return <g>
+    <defs>
+      <linearGradient id="renal-blood">
+        <stop stopColor="#edb7af"/><stop offset=".52" stopColor="#f8d6cf"/><stop offset="1" stopColor="#dda09a"/>
+      </linearGradient>
+    </defs>
+    <path d="M50 113V436C50 451 121 451 121 436V113Z" fill="url(#renal-blood)" stroke="#b87a76" strokeWidth="1.8"/>
+    <ellipse cx="85.5" cy="113" rx="35.5" ry="10" fill="#c98a85" stroke="#b87a76" strokeWidth="1.8"/>
+    <ellipse cx="85.5" cy="113" rx="28" ry="6" fill="#f4c5bc"/>
+    {[162, 216, 300, 371, 422].map((y, index) =>
+      <g key={y} transform={`translate(${index % 2 ? 77 : 94} ${y}) rotate(${index % 2 ? -19 : 20})`}>
+        <ellipse rx="16" ry="8" fill="#c87b76" stroke="#ab625e"/>
+        <ellipse rx="6" ry="2.5" fill="#e9a49b"/>
+      </g>)}
+  </g>;
+}
+
 function Kidney({ mode, id, solved }: { mode: 'nephron' | 'proximal' | 'urine'; id: string; solved: Progress['solved'] }) {
   return <Frame label={mode === 'nephron' ? 'Corpuscule rénal et trajet du filtrat' : 'Échanges entre sang, cellule tubulaire et lumière'}>
     {mode === 'nephron' ? <>
@@ -284,8 +303,7 @@ function Kidney({ mode, id, solved }: { mode: 'nephron' | 'proximal' | 'urine'; 
       <Label x={332} y={47}>Cellule intercalaire α</Label>
       <Label x={332} y={74}>Tube collecteur</Label>
       <Label x={598} y={74}>Lumière du tube</Label>
-      <rect x="42" y="104" width="96" height="355" rx="30" fill="#f8e1dc" stroke="#c68e88" strokeWidth="1.6"/>
-      <path d="M58 126V435 M122 126V435" stroke="#e3b2aa" strokeWidth="1.2"/>
+      <RenalCapillary/>
       <path d="M463 106Q476 97 501 99H698V461H494Q471 461 463 451Z" fill="#faf0d7"/>
       <path d="M205 109Q323 96 445 108Q465 111 465 134V425Q465 448 445 452Q324 466 205 452Q181 449 181 425V134Q181 112 205 109Z"
         fill="url(#renal-cell)" stroke="#ad7777" strokeWidth="2.3"/>
@@ -304,6 +322,7 @@ function Kidney({ mode, id, solved }: { mode: 'nephron' | 'proximal' | 'urine'; 
       <Label x={111} y={230}>HCO₃⁻</Label>
       <Label x={222} y={292}>Cl⁻</Label>
       <text x="169" y="302" fill="#684f73" fontSize="13">AE1</text>
+      <path className={styles.renalFlow} d="M395 246H557" fill="none" stroke="#a65550" strokeWidth="3.2"/>
       <Label x={554} y={233}>H⁺</Label>
       <text x="463" y="286" textAnchor="middle" fill="#79544f" fontSize="13">H⁺-ATPase</text>
       <Label x={491} y={341}>NH₃</Label>
@@ -316,18 +335,41 @@ function Kidney({ mode, id, solved }: { mode: 'nephron' | 'proximal' | 'urine'; 
       {solved.ammonium && <g className={styles.reveal}><Label x={605} y={470}>NH₄⁺ piégé et excrété</Label></g>}
       <text x="360" y="503" textAnchor="middle" fill="#654c47" fontSize="13">L’excrétion nette d’acide s’accompagne d’un apport de HCO₃⁻ au sang.</text>
     </> : <>
-      <rect x="40" y="105" width="155" height="345" rx="20" fill="#e4ede7"/>
-      <rect x="192" y="105" width="300" height="345" rx="20" fill="#eedbd8" stroke="#ae827e" strokeWidth="3"/>
-      <rect x="494" y="105" width="185" height="345" rx="20" fill="#f5e8cc"/>
-      <Label x={116} y={78}>Vers le sang</Label>
-      <Label x={345} y={78}>Cellule du tubule proximal</Label>
-      <Label x={589} y={78}>Lumière du tubule</Label>
-      <Label x={342} y={275}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
-      <Arrow path="M251 326H98"/><Label x={116} y={310}>HCO₃⁻</Label>
-      <Arrow path="M441 201H598"/><Label x={574} y={186}>H⁺</Label>
-      <Label x={582} y={311}>H⁺ + HCO₃⁻</Label>
-      <Arrow path="M583 324V355"/><Label x={584} y={385}>CO₂ + H₂O</Label>
-      <Arrow path="M548 368H425"/><Label x={468} y={407}>CO₂</Label>
+      <defs><linearGradient id="proximal-cell" x2="0" y2="1">
+        <stop stopColor="#f9e9e0"/><stop offset="1" stopColor="#e9c7c4"/>
+      </linearGradient></defs>
+      <RenalCapillary/>
+      <path d="M493 104H686Q699 104 699 121V442Q699 457 686 457H493Z" fill="#faf0d8"/>
+      <path d="M212 112Q352 92 472 110Q490 113 490 134V424Q490 448 468 452Q350 466 214 451Q190 448 190 426V137Q190 115 212 112Z" fill="url(#proximal-cell)" stroke="#ad7777" strokeWidth="2.3"/>
+      <path d="M198 137V422Q198 440 216 443Q349 457 468 444" fill="none" stroke="#d9a4a2" strokeWidth="1.2"/>
+      <g stroke="#ba8682" strokeWidth="1.4" strokeLinecap="round">
+        {Array.from({ length: 29 }, (_, i) => <path key={i} d={`M490 ${133 + i * 10}H500`}/>)}
+      </g>
+      <ellipse cx="334" cy="410" rx="27" ry="16" fill="#c9a7bc" stroke="#a07798"/>
+      <Label x={86} y={78}>Vers le sang</Label>
+      <Label x={340} y={78}>Cellule du tubule proximal</Label>
+      <Label x={590} y={78}>Lumière du tubule</Label>
+
+      <rect x="176" y="305" width="29" height="37" rx="9" fill="#ddd0e9" stroke="#967aa3"/>
+      <rect x="477" y="181" width="28" height="37" rx="9" fill="#eac0b7" stroke="#b07971"/>
+      <Arrow path="M267 324H112"/><Arrow path="M432 200H611"/>
+      <path className={styles.renalFlow} d="M260 324H118 M435 200H603" fill="none" stroke="#a65550" strokeWidth="3.2"/>
+      <Label x={144} y={306}>HCO₃⁻</Label>
+      <Label x={595} y={180}>H⁺ sécrété</Label>
+      <text x="189" y="361" textAnchor="middle" fill="#684f73" fontSize="13">NBCe1</text>
+      <text x="461" y="226" textAnchor="end" fill="#79544f" fontSize="13">NHE3</text>
+      <rect x="532" y="234" width="150" height="109" rx="14" fill="#fff9ec" stroke="#d5bb81"/>
+      <Label x={607} y={262}>H⁺ + HCO₃⁻ filtré</Label>
+      <Arrow path="M607 273V302"/>
+      <Label x={607} y={327}>CO₂ + H₂O</Label>
+      <Arrow path="M559 360H427"/>
+      <path className={styles.renalFlow} d="M553 360H435" fill="none" stroke="#a65550" strokeWidth="3.2"/>
+      <text x="507" y="384" textAnchor="middle" fill="#536b68" fontSize="13">Le CO₂ diffuse dans la cellule</text>
+      {solved.proximal && <g className={styles.reveal}>
+        <rect x="219" y="255" width="238" height="41" rx="11" fill="#fff4e8" stroke="#dfbdb1"/>
+        <Label x={338} y={281}>CO₂ + H₂O ⇌ H⁺ + HCO₃⁻</Label>
+        <text x="360" y="508" textAnchor="middle" fill="#654c47" fontSize="14">Le bicarbonate filtré est récupéré. Le H⁺ sécrété est recyclé.</text>
+      </g>}
     </>}
   </Frame>;
 }
@@ -469,7 +511,10 @@ export function Detail({ mission, id, membrane, solved }: { mission: number; id:
   switch (mission) {
     case 1: return <MuscleCell membrane={membrane} solved={solved}/>;
     case 2: return <Digestive id={id} solved={solved}/>;
-    case 3: return id === 'hamburger' ? <OxygenCurve solved={Boolean(solved.hamburger)}/> : <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} ventilation={id === 'ventilation'} solved={solved}/>;
+    case 3: return id === 'hamburger' ? <div className={styles.oxygenTransition}>
+      <div className={styles.oxygenFrom} aria-hidden="true"><Blood lung={false} buffer={false} ventilation={false} solved={solved}/></div>
+      <div className={styles.oxygenTo}><OxygenCurve solved={Boolean(solved.hamburger)}/></div>
+    </div> : <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} ventilation={id === 'ventilation'} solved={solved}/>;
     case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'} id={id} solved={solved}/>;
     default: return null;
   }
