@@ -79,7 +79,7 @@ function Digestive({ pancreas }: { pancreas: boolean }) {
   </Frame>;
 }
 
-function Blood({ lung, buffer }: { lung: boolean; buffer: boolean }) {
+function Blood({ lung, buffer, solved }: { lung: boolean; buffer: boolean; solved: Progress["solved"] }) {
   return <Frame label={lung ? 'Diffusion du CO₂ du capillaire vers l’alvéole' : 'Échanges de l’hématie dans un capillaire tissulaire'}>
     {lung ? <>
       <defs>
@@ -145,9 +145,24 @@ function Blood({ lung, buffer }: { lung: boolean; buffer: boolean }) {
       <ellipse cx="678" cy="225.5" rx="8" ry="93.5" fill="#fae4e0" stroke="#e0ada7" strokeWidth="1"/>
       <text x="480" y="151" fill="#654c47" fontSize="14">Capillaire tissulaire · plasma</text>
 
-      <ellipse cx="248" cy="246" rx="132" ry="59" fill="#bd6966" stroke="#995350" strokeWidth="2.6"/>
-      <ellipse cx="248" cy="235" rx="131" ry="53" fill="#db8f89" stroke="#995350" strokeWidth="1.4"/>
-      <ellipse cx="248" cy="232" rx="47" ry="16" fill="#ebb0a8"/>
+      <defs>
+        <radialGradient id="erythrocyte-body" cx="45%" cy="37%" r="68%">
+          <stop offset="0%" stopColor="#ac4848"/>
+          <stop offset="38%" stopColor="#c2615b"/>
+          <stop offset="63%" stopColor="#dc8279"/>
+          <stop offset="82%" stopColor="#ba5652"/>
+          <stop offset="100%" stopColor="#923c40"/>
+        </radialGradient>
+        <radialGradient id="erythrocyte-curve">
+          <stop offset="0%" stopColor="#f8b7a8" stopOpacity=".83"/>
+          <stop offset="100%" stopColor="#f8b7a8" stopOpacity="0"/>
+        </radialGradient>
+      </defs>
+      <path d="M116 239C116 207 163 178 226 176C290 173 348 195 373 224
+        C392 246 367 274 336 288C298 306 228 308 181 297C141 288 116 267 116 239Z"
+        fill="url(#erythrocyte-body)" stroke="#9f4b48" strokeWidth="1.5"/>
+      <ellipse cx="246" cy="263" rx="93" ry="23" fill="url(#erythrocyte-curve)"/>
+      <path d="M180 218C207 241 275 248 316 218" fill="none" stroke="#a64a47" strokeWidth="2.5" strokeLinecap="round" opacity=".24"/>
       <text x="35" y="276" fill="#654c47" fontSize="14">Hématie</text>
       <path d="M97 271L126 257" fill="none" stroke="#996761" strokeWidth="1.4"/>
       <path d="M176 101V197" fill="none" stroke="#79544f" strokeWidth="1.6" markerEnd="url(#blood-arrow)"/>
@@ -163,11 +178,15 @@ function Blood({ lung, buffer }: { lung: boolean; buffer: boolean }) {
       <rect x="30" y="393" width="378" height="100" rx="15" fill="#fff9ef" stroke="#d8b8a8"/>
       <rect x="425" y="393" width="265" height="100" rx="15" fill={buffer ? "#f5e1e8" : "#fff9ef"} stroke={buffer ? "#b48698" : "#d8b8a8"}/>
       <text x="219" y="423" textAnchor="middle" fill="#654c47" fontSize="14">Formation de bicarbonate</text>
+      {solved.hematie && <g className={styles.reveal}>
       <Label x={219} y={453}>CO₂ + H₂O ⇌ H₂CO₃ ⇌ H⁺ + HCO₃⁻</Label>
       <text x="219" y="476" textAnchor="middle" fill="#654c47" fontSize="12">Hydratation du CO₂ catalysée par l’anhydrase carbonique</text>
+      </g>}
       <text x="557" y="423" textAnchor="middle" fill="#654c47" fontSize="14">Tampon hémoglobine</text>
+      {solved.hamburger && <g className={styles.reveal}>
       <Label x={557} y={453}>Hb + H⁺ ⇌ HHb</Label>
       <text x="557" y="476" textAnchor="middle" fill="#654c47" fontSize="12">Fixation réversible des H⁺</text>
+      </g>}
       <text x="360" y="519" textAnchor="middle" fill="#654c47" fontSize="13">Le plasma transporte le bicarbonate vers les poumons.</text>
     </>}
   </Frame>;
@@ -345,7 +364,7 @@ export function Detail({ mission, id, membrane, solved }: { mission: number; id:
   switch (mission) {
     case 1: return <MuscleCell membrane={membrane} solved={solved}/>;
     case 2: return <Digestive pancreas={id === 'pancreas' || id === 'polarite'}/>;
-    case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'}/>;
+    case 3: return <Blood lung={id === 'alveole' || id === 'ventilation'} buffer={id === 'hamburger'} solved={solved}/>;
     case 4: return <Kidney mode={id === 'filtration' ? 'nephron' : id === 'proximal' ? 'proximal' : 'urine'}/>;
     default: return null;
   }
